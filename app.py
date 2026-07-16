@@ -5,7 +5,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.cluster import KMeans
-from datetime import datetime, timedelta
 
 # =====================================================================
 # 1. SETUP PREMIUM (WHOOP-STYLE UI)
@@ -54,12 +53,18 @@ st.markdown("""
     }
     .ai-insight h4 { color: #60A5FA !important; margin-top: 0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;}
     .ai-insight p { color: #D1D5DB !important; font-size: 15px; margin-bottom: 0; line-height: 1.6;}
+    
+    /* Stile dei Tabs */
+    .stTabs [data-baseweb="tab-list"] { background-color: transparent; }
+    .stTabs [data-baseweb="tab"] { color: #9CA3AF; }
+    .stTabs [aria-selected="true"] { color: #FFFFFF !important; border-bottom-color: #3B82F6 !important;}
 </style>
 """, unsafe_allow_html=True)
 
 # =====================================================================
-# 2. MOTORE DATI (ANTIPROIETTILE)
+# 2. MOTORE DATI SIMULATO (PERFETTO PER I MODELLI AI)
 # =====================================================================
+@st.cache_data
 def inizializza_database():
     np.random.seed(42)
     n = 150 # Dati storici
@@ -83,7 +88,7 @@ def inizializza_database():
             ore_sonno.append(np.random.uniform(6.5, 8))
             stress.append(np.random.uniform(3, 6))
             rpe.append(np.random.uniform(5, 7))
-        else: # Overreach (Stress elevato, dorme poco, battiti anomali)
+        else: # Overreach
             distanza.append(np.random.uniform(15, 25))
             velocita.append(np.random.uniform(10, 12.5))
             fc_media.append(np.random.uniform(160, 185)) 
@@ -97,7 +102,7 @@ def inizializza_database():
         'RPE': rpe, 'Ore Sonno': ore_sonno, 'Stress Lavoro': stress, 'Ore Lavoro': np.random.uniform(6, 10, n)
     })
     
-    # Formule matematiche sicure (.clip previene divisioni per zero ed errori di Scikit-Learn)
+    # Formule matematiche sicure (.clip previene divisioni per zero)
     df['SMA'] = (df['Stress Lavoro'] * df['RPE']) / df['Ore Sonno'].clip(lower=0.1)
     df['ISLR'] = (df['Ore Lavoro'] * df['Stress Lavoro']) / df['Distanza (km)'].clip(lower=0.1)
     df['IITR'] = (df['Temp (°C)'] * df['Vento (km/h)']) / df['Distanza (km)'].clip(lower=0.1)
@@ -136,7 +141,7 @@ with st.sidebar:
     rpe_input = st.slider("Fatica Percepita (RPE)", 1, 10, 6)
 
 # =====================================================================
-# 4. ADDESTRAMENTO MODELLO AI (Senza Errori)
+# 4. ADDESTRAMENTO MODELLO AI
 # =====================================================================
 features_usate = ['Distanza (km)', 'Velocità (km/h)', 'Ore Sonno', 'Stress Lavoro', 'FC Media']
 X = df[features_usate]
@@ -145,11 +150,10 @@ y = df['Overload']
 rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
 rf_model.fit(X, y)
 
-# Prevenzione errore Scikit-Learn: creiamo un vero DataFrame per l'input odierno
 input_odierno = pd.DataFrame([[distanza_input, velocita_input, ore_sonno_input, stress_input, fc_input]], columns=features_usate)
 prob_overload = rf_model.predict_proba(input_odierno)[0][1] * 100
 
-# Calcolo Metriche "Whoop Style": Recovery (0-100%) e Strain (0-21)
+# Metriche in stile WHOOP
 recovery_score = 100 - prob_overload
 strain_score = min(21.0, (distanza_input * 0.5) + (fc_input * 0.05) + (rpe_input * 0.5) + (stress_input * 0.2))
 
@@ -159,7 +163,6 @@ strain_score = min(21.0, (distanza_input * 0.5) + (fc_input * 0.05) + (rpe_input
 st.title("Cruscotto Predittivo")
 st.markdown("Monitoraggio in tempo reale del bilanciamento tra carico allostatico e capacità di recupero.")
 
-# --- METRICHE PRINCIPALI (Gauges ad anello tipo Whoop) ---
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -184,7 +187,7 @@ with col2:
         mode = "gauge+number",
         value = strain_score,
         number = {'font': {'color': '#3B82F6', 'size': 50}},
-        title = {'text': "DAY STRAIN (SFORZO ODIERNO)", 'font': {'color': '#9CA3AF', 'size': 14}},
+        title = {'text': "DAY STRAIN (SFORZO)", 'font': {'color': '#9CA3AF', 'size': 14}},
         gauge = {
             'axis': {'range': [0, 21], 'visible': False},
             'bar': {'color': "#3B82F6", 'thickness': 0.8},
@@ -195,9 +198,8 @@ with col2:
     st.plotly_chart(fig_strain, use_container_width=True)
 
 with col3:
-    # Mostriamo i KPI Proprietari della tua tesi
     sma_odierno = (stress_input * rpe_input) / max(ore_sonno_input, 0.1)
-    idet_odierno = (fc_input * 20) / max(velocita_input, 0.1) # 20°C temperatura fissa per semplicità
+    idet_odierno = (fc_input * 20) / max(velocita_input, 0.1) 
     
     st.markdown("<div style='padding-top: 20px;'></div>", unsafe_allow_html=True)
     st.markdown(f"<h3 style='color: #9CA3AF; font-size: 14px; text-align: center;'>KPI TESI</h3>", unsafe_allow_html=True)
@@ -206,9 +208,8 @@ with col3:
     st.markdown(f"<h1 style='color: #FFFFFF; font-size: 36px; text-align: center; margin-bottom: 0;'>{idet_odierno:.0f}</h1>", unsafe_allow_html=True)
     st.markdown(f"<p style='color: #9CA3AF; font-size: 12px; text-align: center;'>Degrado Fisiologico (IDET)</p>", unsafe_allow_html=True)
 
-# Spiegazione Medica
 if recovery_score > 66:
-    testo_ai = "Il tuo sistema nervoso centrale ha assorbito perfettamente l'ultimo allenamento. Sei in piena fase di supercompensazione: i parametri sono ottimali per affrontare carichi elevati (Strain target consigliato: 14.0 - 18.0)."
+    testo_ai = "Il tuo sistema nervoso centrale ha assorbito perfettamente l'ultimo allenamento. Sei in piena fase di supercompensazione: i parametri sono ottimali per affrontare carichi elevati."
 elif recovery_score > 33:
     testo_ai = "Il corpo sta accumulando fatica strutturale o lo stress mentale lavorativo sta inibendo il recupero completo. Si raccomanda un allenamento di mantenimento."
 else:
@@ -229,7 +230,6 @@ tab1, tab2, tab3 = st.tabs(["IDENTIFICAZIONE ZONE (CLUSTERING)", "TREND FISIOLOG
 with tab1:
     st.markdown("### Segmentazione Profili Allenamento")
     
-    # Clustering Sicuro
     kmeans = KMeans(n_clusters=3, random_state=42)
     df['Cluster'] = kmeans.fit_predict(df[['Ore Sonno', 'FC Media']])
     
@@ -251,19 +251,34 @@ with tab1:
 with tab2:
     st.markdown("### Decadimento dell'Efficienza Aerobica")
     
+    # GRAFICO DI BASE
     fig_reg = px.scatter(
-        df, x="Velocità (km/h)", y="FC Media", trendline="ols",
+        df, x="Velocità (km/h)", y="FC Media",
         color_discrete_sequence=['#9CA3AF'], template="plotly_dark",
         labels={"Velocità (km/h)": "Velocità Espressa", "FC Media": "Costo Fisiologico (BPM)"}
     )
-    fig_reg.data[1].line.color = '#EF4444' # Colora la linea di regressione di rosso
+    
+    # LA SOLUZIONE AL CRASH: Calcolo manuale della retta di regressione usando Numpy
+    x_vals = df["Velocità (km/h)"]
+    y_vals = df["FC Media"]
+    m, b = np.polyfit(x_vals, y_vals, 1) # y = mx + b
+    
+    # Aggiungo la retta al grafico
+    fig_reg.add_trace(go.Scatter(
+        x=x_vals, 
+        y=m*x_vals + b, 
+        mode='lines', 
+        name='Trend OLS', 
+        line=dict(color='#EF4444', width=3)
+    ))
+    
     fig_reg.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', margin=dict(t=20, b=20))
     st.plotly_chart(fig_reg, use_container_width=True)
     
     st.markdown("""
     <div class='ai-insight'>
         <h4>Interpretazione del Trend (Regressione Lineare)</h4>
-        <p>La linea rossa rappresenta il tuo standard di efficienza. Se in una giornata il tuo puntino si posiziona molto al di sopra della retta rossa (battiti alti ma corsa lenta), significa che fattori esterni (stress lavorativo calcolato nel KPI ISLR o calore termico IDET) stanno boicottando la tua performance muscolare.</p>
+        <p>La linea rossa rappresenta il tuo standard di efficienza. Se in una giornata il tuo puntino si posiziona molto al di sopra della retta rossa (battiti alti ma corsa lenta), significa che fattori esterni (stress lavorativo o calore termico) stanno boicottando la tua performance muscolare innescando il sovrallenamento.</p>
     </div>
     """, unsafe_allow_html=True)
 
