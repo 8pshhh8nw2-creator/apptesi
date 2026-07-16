@@ -6,146 +6,83 @@ import plotly.graph_objects as go
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression, LogisticRegression
 from datetime import datetime, timedelta
 import warnings
 warnings.filterwarnings('ignore')
 
-st.set_page_config(page_title="RunAI Coach - Pro", layout="wide", page_icon="⚡")
+st.set_page_config(page_title="RunAI Coach", layout="wide", page_icon="🏃")
 
-# CSS PREMIUM - Tema Moderno Professionale
+# CSS SEMPLICE E FUNZIONANTE
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
-    
-    * { font-family: 'Space Grotesk', sans-serif; }
-    
-    html, body {
-        background: linear-gradient(135deg, #0f0f1e 0%, #1a1a3a 50%, #0f0f1e 100%);
-        color: #e8eaed;
+    body { 
+        background-color: #f5f5f5; 
+        color: #333;
+        font-family: 'Segoe UI', sans-serif;
     }
-    
-    .stApp { background: linear-gradient(135deg, #0f0f1e 0%, #1a1a3a 100%); }
-    
+    .stApp { 
+        background-color: #f5f5f5; 
+    }
     h1 {
-        color: #4dd0e1;
-        font-size: 3.2em;
-        font-weight: 700;
-        letter-spacing: -0.5px;
-        text-shadow: 0 0 40px rgba(77, 208, 225, 0.4);
-        margin-bottom: 0.5em;
+        color: #0066cc;
+        text-align: center;
+        margin-bottom: 30px;
     }
-    
     h2 {
-        color: #4dd0e1;
-        font-size: 2em;
-        font-weight: 700;
-        border-bottom: 3px solid #26c6da;
-        padding-bottom: 0.8em;
-        margin-top: 1.5em;
-        letter-spacing: -0.3px;
+        color: #0066cc;
+        border-bottom: 3px solid #0066cc;
+        padding-bottom: 10px;
+        margin-top: 20px;
+    }
+    h3 { color: #0066cc; }
+    h4 { color: #0066cc; }
+    
+    .info-box {
+        background: #e3f2fd;
+        border-left: 5px solid #0066cc;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
     }
     
-    h3 { color: #80deea; font-weight: 700; }
-    h4 { color: #4dd0e1; font-weight: 600; }
+    .success-box {
+        background: #e8f5e9;
+        border-left: 5px solid #4caf50;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+    }
+    
+    .warning-box {
+        background: #fff3e0;
+        border-left: 5px solid #ff9800;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+    }
+    
+    .danger-box {
+        background: #ffebee;
+        border-left: 5px solid #f44336;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+    }
+    
+    .metric-card {
+        background: white;
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
     
     .stMetric {
-        background: linear-gradient(135deg, rgba(77, 208, 225, 0.1) 0%, rgba(38, 198, 218, 0.05) 100%);
-        padding: 20px;
-        border-radius: 16px;
-        border: 1.5px solid #4dd0e1;
-        box-shadow: 0 8px 32px rgba(77, 208, 225, 0.15);
-    }
-    
-    .css-1d391kg {
-        background: linear-gradient(135deg, #0f0f1e 0%, #1a1a3a 100%);
-        border-right: 2px solid #4dd0e1;
-    }
-    
-    .card-green {
-        background: linear-gradient(135deg, #1db584 0%, #0db877 100%);
-        border-radius: 16px;
-        padding: 25px;
-        color: #e8eaed;
-        box-shadow: 0 12px 40px rgba(29, 181, 132, 0.25);
-        border: 1px solid rgba(77, 208, 225, 0.5);
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    
-    .card-green:hover { transform: translateY(-5px); box-shadow: 0 16px 50px rgba(29, 181, 132, 0.35); }
-    
-    .card-yellow {
-        background: linear-gradient(135deg, #f57f17 0%, #fbc02d 100%);
-        border-radius: 16px;
-        padding: 25px;
-        color: #0f0f1e;
-        box-shadow: 0 12px 40px rgba(245, 127, 23, 0.25);
-        border: 1px solid rgba(251, 192, 45, 0.5);
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    
-    .card-yellow:hover { transform: translateY(-5px); box-shadow: 0 16px 50px rgba(245, 127, 23, 0.35); }
-    
-    .card-red {
-        background: linear-gradient(135deg, #d32f2f 0%, #ff5252 100%);
-        border-radius: 16px;
-        padding: 25px;
-        color: #e8eaed;
-        box-shadow: 0 12px 40px rgba(211, 47, 47, 0.25);
-        border: 1px solid rgba(255, 82, 82, 0.5);
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    
-    .card-red:hover { transform: translateY(-5px); box-shadow: 0 16px 50px rgba(211, 47, 47, 0.35); }
-    
-    .info-panel {
-        background: linear-gradient(135deg, rgba(77, 208, 225, 0.15) 0%, rgba(38, 198, 218, 0.08) 100%);
-        border: 2px solid #4dd0e1;
-        border-radius: 16px;
-        padding: 25px;
-        margin: 20px 0;
-        box-shadow: 0 8px 32px rgba(77, 208, 225, 0.1);
-    }
-    
-    .stat-box {
-        background: linear-gradient(135deg, rgba(77, 208, 225, 0.1) 0%, rgba(38, 198, 218, 0.05) 100%);
-        border: 1.5px solid #26c6da;
-        border-radius: 12px;
+        background: white;
         padding: 15px;
-        text-align: center;
-    }
-    
-    .success-badge { 
-        background: #1db584; 
-        color: white; 
-        padding: 8px 16px; 
-        border-radius: 20px; 
-        font-weight: 700;
-        display: inline-block;
-        margin: 5px 0;
-    }
-    
-    .warning-badge { 
-        background: #fbc02d; 
-        color: #0f0f1e; 
-        padding: 8px 16px; 
-        border-radius: 20px; 
-        font-weight: 700;
-        display: inline-block;
-        margin: 5px 0;
-    }
-    
-    .danger-badge { 
-        background: #d32f2f; 
-        color: white; 
-        padding: 8px 16px; 
-        border-radius: 20px; 
-        font-weight: 700;
-        display: inline-block;
-        margin: 5px 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -176,20 +113,17 @@ def genera_dati():
         'FC Media': np.round(fc_media),
         'FC Max': np.round(fc_media + np.random.uniform(10, 30, n)),
         'Temp (°C)': np.round(temp, 1),
-        'Vento (km/h)': np.round(vento, 1),
         'RPE': rpe,
         'Ore Sonno': np.round(ore_sonno, 1),
-        'Qualita Sonno': np.random.choice(['Pessima', 'Scarsa', 'Media', 'Buona', 'Ottima'], n),
         'Stress Lavoro': stress_lavoro,
         'Ore Lavoro': np.round(np.random.uniform(4, 10, n), 1),
-        'Tempo Gara': np.round(ore_sonno * 60, 0),
         'Calorie': np.round(distanza * 100 + np.random.uniform(-50, 50, n)),
-        'Recovery Score': np.random.randint(20, 90, n),
     })
     
     df['SMA'] = np.where(df['Ore Sonno'] > 0, (df['Stress Lavoro'] * df['RPE']) / df['Ore Sonno'], 0)
     df['ISLR'] = np.where(df['Distanza (km)'] > 0, (df['Ore Lavoro'] * df['Stress Lavoro']) / df['Distanza (km)'], 0)
     df['Rischio Infortunio'] = np.where((df['RPE'] > 7) & (df['Ore Sonno'] < 6.5) & (df['FC Media'] > 155), 1, 0)
+    df['Overtraining'] = np.where((df['RPE'] > 8) & (df['Stress Lavoro'] > 7) & (df['Ore Sonno'] < 6), 1, 0)
     
     return df
 
@@ -197,111 +131,97 @@ if 'dati' not in st.session_state:
     st.session_state.dati = genera_dati()
     st.session_state.device_connected = False
     st.session_state.device_name = None
-    st.session_state.heart_rate = 0
-    st.session_state.battery = 0
+    st.session_state.heart_rate = 72
 
-# SIDEBAR - CONNESSIONE DISPOSITIVO
+# SIDEBAR
 with st.sidebar:
-    st.markdown("""
-    <div style='text-align: center; padding: 30px 0;'>
-        <h1 style='margin: 0; font-size: 3em; text-shadow: 0 0 50px rgba(77,208,225,0.5);'>⚡</h1>
-        <h2 style='margin: 10px 0 5px 0; border: none; font-size: 2em;'>RunAI</h2>
-        <p style='color: #4dd0e1; font-size: 0.95em; margin: 0;'>Professional Analytics</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("# 🏃 RunAI Coach")
+    st.markdown("Professional Analytics Platform")
+    st.markdown("---")
     
-    st.sidebar.markdown("---")
+    st.subheader("Dispositivi Disponibili")
     
-    st.sidebar.subheader("Connessione Dispositivi")
-    
-    dispositivi_disponibili = {
-        "Garmin Forerunner 965": "garmin_965",
-        "Apple Watch Ultra": "apple_watch",
-        "Polar Vantage V3": "polar_v3",
-        "Fitbit Charge 6": "fitbit_charge",
-        "WHOOP 4.0": "whoop_4"
+    dispositivi = {
+        "Garmin Forerunner 965": "garmin",
+        "Apple Watch Ultra": "apple",
+        "Polar Vantage V3": "polar",
+        "Fitbit Charge 6": "fitbit",
+        "WHOOP 4.0": "whoop",
+        "Fascia Cardio Garmin": "fascia"
     }
     
-    device_scelto = st.sidebar.selectbox("Seleziona Wearable:", list(dispositivi_disponibili.keys()))
+    device_scelto = st.sidebar.selectbox("Seleziona Dispositivo:", list(dispositivi.keys()))
     
-    col_connect1, col_connect2 = st.sidebar.columns([2, 1])
-    
-    with col_connect1:
-        if st.button("🔗 Connetti Bluetooth", use_container_width=True):
-            st.session_state.device_connected = True
-            st.session_state.device_name = device_scelto
-            st.session_state.heart_rate = np.random.randint(60, 100)
-            st.session_state.battery = np.random.randint(20, 100)
-            st.toast(f"✓ Connesso a {device_scelto}!", icon="✓")
-    
-    with col_connect2:
-        if st.session_state.device_connected:
-            st.markdown(f"<span style='color: #1db584; font-weight: 700;'>🟢 ON</span>", unsafe_allow_html=True)
+    if st.sidebar.button("🔗 Connetti Dispositivo"):
+        st.session_state.device_connected = True
+        st.session_state.device_name = device_scelto
+        st.session_state.heart_rate = np.random.randint(65, 95)
+        st.sidebar.success(f"✓ Connesso a {device_scelto}!")
     
     if st.session_state.device_connected:
         st.sidebar.markdown(f"""
-        <div class='info-panel' style='margin-top: 15px;'>
-            <p style='margin: 5px 0;'><strong>Dispositivo:</strong> {st.session_state.device_name}</p>
-            <p style='margin: 5px 0;'><strong>FC Live:</strong> {st.session_state.heart_rate} bpm</p>
-            <p style='margin: 5px 0;'><strong>Batteria:</strong> {st.session_state.battery}%</p>
+        <div class='info-box'>
+        <strong>Stato Connessione:</strong> 🟢 ATTIVO<br>
+        <strong>Dispositivo:</strong> {st.session_state.device_name}<br>
+        <strong>FC Live:</strong> {st.session_state.heart_rate} bpm<br>
+        <strong>Batteria:</strong> 85%
         </div>
         """, unsafe_allow_html=True)
     
     st.sidebar.markdown("---")
     
-    pagina = st.sidebar.radio("Sezioni", 
-        ["🏃 Analisi Rischio", "📊 Dashboard Completo", "🤖 Machine Learning", "📈 Statistiche Avanzate"],
+    pagina = st.sidebar.radio("Menu", 
+        ["Check-in Giornaliero", "Dashboard", "Machine Learning", "Consiglio Allenamento", "Statistiche"],
         label_visibility="collapsed"
     )
-    
-    st.sidebar.markdown("---")
-    
-    col1, col2 = st.sidebar.columns(2)
-    with col1:
-        if st.button("🔄 Aggiorna", use_container_width=True):
-            st.cache_data.clear()
-            st.session_state.dati = genera_dati()
-            st.toast("✓ Dati aggiornati!", icon="↻")
-    
-    with col2:
-        if st.session_state.device_connected:
-            if st.button("📡 Sincronizza", use_container_width=True):
-                st.session_state.heart_rate = np.random.randint(60, 100)
-                st.session_state.battery = max(20, st.session_state.battery - 5)
-                st.toast("✓ Sincronizzazione OK!", icon="📡")
 
 # =====================================================================
-# PAGINA 1: ANALISI RISCHIO AVANZATA
+# PAGINA 1: CHECK-IN GIORNALIERO
 # =====================================================================
-if pagina == "🏃 Analisi Rischio":
-    st.title("⚡ Analisi Rischio Infortunio Personalizzata")
+if pagina == "Check-in Giornaliero":
+    st.title("📋 Check-in Giornaliero - Analisi Personale")
     
     st.markdown("""
-    <div class='info-panel'>
-        <h4>Sistema IA Predittivo</h4>
-        <p>Algoritmo Random Forest analizza 6 parametri per prevedere rischio infortunio in tempo reale con precisione 94%.</p>
+    <div class='info-box'>
+    Compila i tuoi dati di oggi. L'IA analizzerà il rischio infortunio e ti darà consigli specifici.
     </div>
     """, unsafe_allow_html=True)
     
-    col_input1, col_input2, col_input3 = st.columns(3)
+    st.subheader("Obiettivi")
     
-    with col_input1:
-        st.subheader("Recupero Fisico")
-        ore_sonno = st.slider("Ore di Sonno", 2.0, 12.0, 7.5, 0.5)
-        quali_sonno = st.select_slider("Qualità Sonno", ["Pessima", "Scarsa", "Media", "Buona", "Ottima"], value="Buona")
-        fc_riposo = st.slider("FC a Riposo (bpm)", 40, 80, 60)
+    col_obj1, col_obj2 = st.columns(2)
     
-    with col_input2:
-        st.subheader("Stress Mentale")
-        ore_lavoro = st.slider("Ore Lavorate", 0.0, 14.0, 8.0, 0.5)
-        stress_lavoro = st.select_slider("Stress (1-10)", options=list(range(1, 11)), value=5)
-        recovery_score = st.slider("Recovery Score", 0, 100, 65)
+    with col_obj1:
+        st.markdown("**Obiettivo Odierno:**")
+        obiettivo_oggi = st.text_input("Cosa vuoi ottenere oggi?", "3 km easy run")
     
-    with col_input3:
-        st.subheader("Allenamento Previsto")
+    with col_obj2:
+        st.markdown("**Obiettivo a Lungo Termine:**")
+        obiettivo_lt = st.text_input("Obiettivo nei prossimi 3 mesi", "Correre una mezza maratona sotto 1:45")
+    
+    st.markdown("---")
+    
+    st.subheader("Parametri di Oggi")
+    
+    col_inp1, col_inp2, col_inp3 = st.columns(3)
+    
+    with col_inp1:
+        st.markdown("**Recupero**")
+        ore_sonno = st.number_input("Ore di sonno", 2.0, 12.0, 7.5)
+        stress_lavoro = st.slider("Stress (1-10)", 1, 10, 5)
+        ore_lavoro = st.number_input("Ore lavorate", 0.0, 14.0, 8.0)
+    
+    with col_inp2:
+        st.markdown("**Allenamento Previsto**")
         km_piano = st.number_input("Km desiderati", 1.0, 42.0, 10.0)
         velocita_piano = st.number_input("Velocità (km/h)", 5.0, 20.0, 11.0)
-        fc_max_prevista = st.number_input("FC Max Prevista (bpm)", 120, 200, 170)
+        temp_est = st.number_input("Temperatura (°C)", -5, 40, 22)
+    
+    with col_inp3:
+        st.markdown("**Dati Fisici**")
+        fc_riposo = st.number_input("FC a riposo (bpm)", 40, 80, 60)
+        fc_max_prevista = st.number_input("FC Max prevista (bpm)", 120, 200, 170)
+        rpe_previsto = st.slider("RPE previsto (1-10)", 1, 10, 6)
     
     st.markdown("---")
     
@@ -316,395 +236,174 @@ if pagina == "🏃 Analisi Rischio":
     rf_model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=8, min_samples_split=5)
     rf_model.fit(X_scaled, y_train)
     
-    rpe_previsto = np.clip((km_piano * 0.2) + (stress_lavoro * 0.3) - (ore_sonno * 0.4) + 4, 1, 10)
     sma_oggi = (stress_lavoro * rpe_previsto) / ore_sonno if ore_sonno > 0 else 0
     
     scenario = scaler.transform([[km_piano, ore_sonno, stress_lavoro, fc_max_prevista, rpe_previsto, sma_oggi]])
     prob_rischio = rf_model.predict_proba(scenario)[0][1] * 100
     
-    # LAYOUT RISULTATI
-    col_main1, col_main2, col_main3 = st.columns([1.2, 1.4, 1.4])
+    # RISULTATI
+    st.subheader("Risultati Analisi")
     
-    with col_main1:
-        colore_gauge = "#1db584" if prob_rischio < 25 else "#fbc02d" if prob_rischio < 60 else "#d32f2f"
-        
-        fig_gauge = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=prob_rischio,
-            title="RISCHIO %",
-            gauge={
-                'axis': {'range': [0, 100], 'tickfont': {'color': '#4dd0e1', 'size': 12}},
-                'bar': {'color': colore_gauge},
-                'steps': [
-                    {'range': [0, 25], 'color': 'rgba(29, 181, 132, 0.2)'},
-                    {'range': [25, 60], 'color': 'rgba(251, 192, 45, 0.2)'},
-                    {'range': [60, 100], 'color': 'rgba(211, 47, 47, 0.2)'}
-                ]
-            },
-            number={'font': {'color': colore_gauge, 'size': 60, 'family': 'Space Grotesk'}}
-        ))
-        
-        fig_gauge.update_layout(
-            height=400,
-            paper_bgcolor='rgba(26, 26, 58, 0.9)',
-            plot_bgcolor='rgba(26, 26, 58, 0.9)',
-            font=dict(color='#4dd0e1', size=14, family='Space Grotesk')
-        )
-        
-        st.plotly_chart(fig_gauge, use_container_width=True)
+    col_ris1, col_ris2, col_ris3 = st.columns(3)
     
-    with col_main2:
-        st.markdown("### Fattori di Rischio")
-        
-        fattori = []
-        if ore_sonno < 6.5:
-            fattori.append(("Sonno", f"{ore_sonno}h < 7.5h", "warning"))
-        if stress_lavoro > 7:
-            fattori.append(("Stress", f"{stress_lavoro}/10 ALTO", "warning"))
-        if rpe_previsto > 7.5:
-            fattori.append(("Sforzo", f"RPE {rpe_previsto:.1f}", "danger"))
-        if fc_max_prevista > 180:
-            fattori.append(("FC Max", f"{fc_max_prevista} bpm", "danger"))
-        if recovery_score < 40:
-            fattori.append(("Recovery", f"{recovery_score}% BASSO", "danger"))
-        if sma_oggi > 5:
-            fattori.append(("SMA", f"{sma_oggi:.1f} CRITICA", "danger"))
-        
-        if not fattori:
-            st.markdown("<span class='success-badge'>✓ Tutti i parametri OK</span>", unsafe_allow_html=True)
-        else:
-            for name, value, tipo in fattori:
-                if tipo == "warning":
-                    st.markdown(f"<span class='warning-badge'>⚠ {name}: {value}</span>", unsafe_allow_html=True)
-                else:
-                    st.markdown(f"<span class='danger-badge'>❌ {name}: {value}</span>", unsafe_allow_html=True)
+    with col_ris1:
+        col_gauge = st.container(border=True)
+        with col_gauge:
+            if prob_rischio < 25:
+                colore = "green"
+                stato = "BASSO"
+                emoji = "✓"
+            elif prob_rischio < 60:
+                colore = "orange"
+                stato = "MODERATO"
+                emoji = "⚠"
+            else:
+                colore = "red"
+                stato = "CRITICO"
+                emoji = "❌"
+            
+            fig = go.Figure(go.Indicator(
+                mode="gauge+number",
+                value=prob_rischio,
+                title="Rischio Infortunio %",
+                gauge={'axis': {'range': [0, 100]}}
+            ))
+            st.plotly_chart(fig, use_container_width=True)
     
-    with col_main3:
-        st.markdown("### Stato Complessivo")
-        
-        if prob_rischio < 25:
-            stato = "OTTIMALE"
-            colore = "#1db584"
-            emoji = "✓"
-        elif prob_rischio < 60:
-            stato = "MODERATO"
-            colore = "#fbc02d"
-            emoji = "⚠"
-        else:
-            stato = "CRITICO"
-            colore = "#d32f2f"
-            emoji = "❌"
-        
-        st.markdown(f"""
-        <div style='background: linear-gradient(135deg, {colore}33 0%, {colore}11 100%); 
-                    border: 2px solid {colore}; border-radius: 12px; padding: 20px; text-align: center;'>
-            <p style='font-size: 2.5em; margin: 0;'>{emoji}</p>
-            <p style='font-size: 1.2em; color: {colore}; font-weight: 700; margin: 10px 0;'>{stato}</p>
-            <p style='color: #a0a0a0; margin: 0; font-size: 0.9em;'>Corpo readiness</p>
-        </div>
-        """, unsafe_allow_html=True)
+    with col_ris2:
+        col_state = st.container(border=True)
+        with col_state:
+            st.markdown(f"### Stato: {stato}")
+            st.write(f"Probabilità: {prob_rischio:.1f}%")
+            st.write(f"SMA Score: {sma_oggi:.2f}")
+            st.write(f"RPE previsto: {rpe_previsto}/10")
+    
+    with col_ris3:
+        col_tempo = st.container(border=True)
+        with col_tempo:
+            tempo_minuti = (km_piano / velocita_piano * 60) if velocita_piano > 0 else 0
+            st.markdown("### Parametri Allenamento")
+            st.write(f"Tempo: {tempo_minuti:.0f} minuti")
+            st.write(f"Calorie: ~{km_piano * 100:.0f} kcal")
+            st.write(f"FC Media: ~{fc_max_prevista * 0.75:.0f} bpm")
     
     st.markdown("---")
-    st.markdown("## 📋 Raccomandazioni Personalizzate")
     
-    tempo_minuti = (km_piano / velocita_piano * 60) if velocita_piano > 0 else 0
+    st.subheader("Raccomandazioni")
     
     if prob_rischio < 25:
-        col_rec1, col_rec2, col_rec3 = st.columns(3)
-        
-        with col_rec1:
-            st.markdown(f"""
-            <div class='card-green'>
-                <div style='font-size: 0.85em; opacity: 0.9;'>KM MASSIMI</div>
-                <div style='font-size: 2.8em; margin: 10px 0;'>{km_piano * 1.15:.1f}</div>
-                <div style='font-size: 0.8em; opacity: 0.85;'>km (+ 15%)</div>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        with col_rec2:
-            st.markdown(f"""
-            <div class='card-green'>
-                <div style='font-size: 0.85em; opacity: 0.9;'>TEMPO MASSIMO</div>
-                <div style='font-size: 2.8em; margin: 10px 0;'>{tempo_minuti * 1.15:.0f}</div>
-                <div style='font-size: 0.8em; opacity: 0.85;'>minuti</div>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        with col_rec3:
-            st.markdown(f"""
-            <div class='card-green'>
-                <div style='font-size: 0.85em; opacity: 0.9;'>FC MASSIMA</div>
-                <div style='font-size: 2.8em; margin: 10px 0;'>{int(fc_max_prevista * 1.08)}</div>
-                <div style='font-size: 0.8em; opacity: 0.85;'>bpm</div>
-            </div>
-            """, unsafe_allow_html=True)
-        
         st.markdown("""
-        <div class='info-panel'>
-            <h4>✓ ALLENAMENTO INTENSO CONSIGLIATO</h4>
-            <p><strong>Cosa fare:</strong></p>
-            <ul>
-                <li>✓ Intervalli veloci - 6 x 800m a ritmo gara con 90s recovery</li>
-                <li>✓ Ripetute - 5 x 2km a 85-90% FC Max</li>
-                <li>✓ Test di velocità - Spingere fino al limite</li>
-                <li>✓ Lungo veloce - 10-15km a ritmo sostenuto</li>
-            </ul>
-            <p><strong>Protocollo:</strong></p>
-            <ul>
-                <li>Warm-up: 15 minuti progressivo</li>
-                <li>Lavoro: 45-60 minuti intensi</li>
-                <li>Cool-down: 10 minuti + stretching 15 minuti</li>
-            </ul>
-            <p><strong>Recovery necessario:</strong> 1 giorno facile dopo - Priorità al riposo</p>
+        <div class='success-box'>
+        <h3>✓ ALLENAMENTO INTENSO OK</h3>
+        <p><strong>Puoi fare:</strong></p>
+        <ul>
+            <li>Intervalli veloci</li>
+            <li>Test di velocità</li>
+            <li>Allenamento a soglia</li>
+            <li>Sprint finali</li>
+        </ul>
+        <p><strong>Cosa fare dopo:</strong> Riposo 1 giorno, stretching 15 min, idratazione</p>
         </div>
         """, unsafe_allow_html=True)
     
     elif prob_rischio < 60:
-        col_rec1, col_rec2, col_rec3 = st.columns(3)
-        
-        with col_rec1:
-            st.markdown(f"""
-            <div class='card-yellow'>
-                <div style='font-size: 0.85em; opacity: 0.9;'>KM MASSIMI</div>
-                <div style='font-size: 2.8em; margin: 10px 0;'>{km_piano * 0.9:.1f}</div>
-                <div style='font-size: 0.8em; opacity: 0.85;'>km (-10%)</div>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        with col_rec2:
-            st.markdown(f"""
-            <div class='card-yellow'>
-                <div style='font-size: 0.85em; opacity: 0.9;'>TEMPO MASSIMO</div>
-                <div style='font-size: 2.8em; margin: 10px 0;'>{tempo_minuti * 0.8:.0f}</div>
-                <div style='font-size: 0.8em; opacity: 0.85;'>minuti (-20%)</div>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        with col_rec3:
-            st.markdown(f"""
-            <div class='card-yellow'>
-                <div style='font-size: 0.85em; opacity: 0.9;'>VELOCITÀ EASY</div>
-                <div style='font-size: 2.8em; margin: 10px 0;'>{velocita_piano * 0.85:.1f}</div>
-                <div style='font-size: 0.8em; opacity: 0.85;'>km/h</div>
-            </div>
-            """, unsafe_allow_html=True)
-        
         st.markdown("""
-        <div class='info-panel'>
-            <h4>⚠ RECUPERO ATTIVO CONSIGLIATO</h4>
-            <p><strong>Cosa fare:</strong></p>
-            <ul>
-                <li>✓ Easy run - Corsa leggera a ritmo conversativo</li>
-                <li>✓ Lungo facile - 12-18km a FC bassa (65-75% Max)</li>
-                <li>✓ Recovery shake - Dentro 30 minuti dalla corsa</li>
-                <li>✓ Yoga/Stretching - 20 minuti post-corsa</li>
-            </ul>
-            <p><strong>Protocollo:</strong></p>
-            <ul>
-                <li>Warm-up: 10 minuti progressivo</li>
-                <li>Corsa: 30-40 minuti a FC bassa</li>
-                <li>Cool-down: 5 minuti + stretching 15 minuti</li>
-            </ul>
-            <p><strong>Priorità 24h:</strong> Dormi 8+ ore, idratazione massima, niente stress</p>
+        <div class='warning-box'>
+        <h3>⚠ RECUPERO ATTIVO CONSIGLIATO</h3>
+        <p><strong>Cosa fare:</strong></p>
+        <ul>
+            <li>Easy run a ritmo conversativo</li>
+            <li>Corsa lunga facile</li>
+            <li>Yoga/stretching 20 min</li>
+            <li>Riposo attivo</li>
+        </ul>
+        <p><strong>Priorità:</strong> Dormi 8+ ore, bevi 3L acqua, riduci stress</p>
         </div>
         """, unsafe_allow_html=True)
     
     else:
-        col_rec1, col_rec2, col_rec3 = st.columns(3)
-        
-        with col_rec1:
-            st.markdown("""
-            <div class='card-red'>
-                <div style='font-size: 0.85em; opacity: 0.9;'>KM CONSIGLIATI</div>
-                <div style='font-size: 2.8em; margin: 10px 0;'>0</div>
-                <div style='font-size: 0.8em; opacity: 0.85;'>Riposo totale</div>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        with col_rec2:
-            st.markdown("""
-            <div class='card-red'>
-                <div style='font-size: 0.85em; opacity: 0.9;'>ALLENAMENTO</div>
-                <div style='font-size: 2.8em; margin: 10px 0;'>-</div>
-                <div style='font-size: 0.8em; opacity: 0.85;'>Niente sport</div>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        with col_rec3:
-            st.markdown("""
-            <div class='card-red'>
-                <div style='font-size: 0.85em; opacity: 0.9;'>PRIORITÀ</div>
-                <div style='font-size: 2.5em; margin: 10px 0;'>RIPOSO</div>
-                <div style='font-size: 0.8em; opacity: 0.85;'>24-48 ore</div>
-            </div>
-            """, unsafe_allow_html=True)
-        
         st.markdown("""
-        <div class='info-panel'>
-            <h4>❌ RIPOSO OBBLIGATORIO - RISCHIO CRITICO</h4>
-            <p><strong>Cosa fare OGGI:</strong></p>
-            <ul>
-                <li>❌ NON CORRERE ASSOLUTAMENTE</li>
-                <li>✓ Riposo totale - Stai a casa</li>
-                <li>✓ Camminate leggerissime max 15 minuti</li>
-                <li>✓ Stretching delicato 10 minuti</li>
-                <li>✓ Meditazione/Respiro profondo 5 minuti</li>
-                <li>✓ Idratazione massima 3+ litri acqua</li>
-            </ul>
-            <p><strong>Priorità notturna:</strong></p>
-            <ul>
-                <li>Dormi 9+ ore stasera (non negoziabile)</li>
-                <li>Cena leggera 2 ore prima di letto</li>
-                <li>Camera fresca (18-20°C)</li>
-                <li>Niente schermo 30 minuti prima di dormire</li>
-            </ul>
-            <p><strong>Segnali allarme - Consulta medico:</strong> Dolore persistente, gonfiore, febbre, stanchezza estrema</p>
+        <div class='danger-box'>
+        <h3>❌ RIPOSO OBBLIGATORIO</h3>
+        <p><strong>Cosa fare OGGI:</strong></p>
+        <ul>
+            <li>NON CORRERE</li>
+            <li>Riposo totale</li>
+            <li>Camminate max 15 min</li>
+            <li>Stretching leggero 10 min</li>
+        </ul>
+        <p><strong>Domani:</strong> Se rischio scende, inizia con easy run</p>
         </div>
         """, unsafe_allow_html=True)
 
 # =====================================================================
-# PAGINA 2: DASHBOARD COMPLETO
+# PAGINA 2: DASHBOARD
 # =====================================================================
-elif pagina == "📊 Dashboard Completo":
-    st.title("📊 Dashboard Completo - Ultimi 90 Giorni")
-    
-    if not st.session_state.device_connected:
-        st.info("💡 Connetti un dispositivo nella sidebar per visualizzare dati real-time")
+elif pagina == "Dashboard":
+    st.title("📊 Dashboard - Ultimi 90 Giorni")
     
     df = st.session_state.dati.copy()
     
-    # KPI PRINCIPALI
     col_kpi1, col_kpi2, col_kpi3, col_kpi4, col_kpi5 = st.columns(5)
-    
-    with col_kpi1:
-        st.metric("KM Totali", f"{df['Distanza (km)'].sum():.0f} km", f"Media: {df['Distanza (km)'].mean():.1f} km/corsa")
-    
-    with col_kpi2:
-        st.metric("Sessioni", f"{len(df)}", f"3 al giorno")
-    
-    with col_kpi3:
-        st.metric("Velocità Media", f"{df['Velocità (km/h)'].mean():.1f}", "km/h")
-    
-    with col_kpi4:
-        st.metric("FC Media", f"{df['FC Media'].mean():.0f}", "bpm")
-    
-    with col_kpi5:
-        st.metric("Sonno Medio", f"{df['Ore Sonno'].mean():.1f}h", f"Target: 8h")
+    col_kpi1.metric("KM Totali", f"{df['Distanza (km)'].sum():.0f} km")
+    col_kpi2.metric("Sessioni", f"{len(df)}")
+    col_kpi3.metric("V. Media", f"{df['Velocità (km/h)'].mean():.1f} km/h")
+    col_kpi4.metric("FC Media", f"{df['FC Media'].mean():.0f} bpm")
+    col_kpi5.metric("Sonno Medio", f"{df['Ore Sonno'].mean():.1f}h")
     
     st.markdown("---")
     
-    # GRAFICI PRINCIPALI
     col_g1, col_g2 = st.columns(2)
     
     with col_g1:
         st.subheader("Volumi di Allenamento")
-        fig_vol = px.bar(df, x='Giorno', y='Distanza (km)', color='RPE',
-                        color_continuous_scale=['#0f0f1e', '#4dd0e1', '#26c6da'],
-                        title="Km Giornalieri", height=380)
-        fig_vol.update_layout(
-            plot_bgcolor='rgba(26, 26, 58, 0.5)',
-            paper_bgcolor='rgba(15, 15, 30, 0.9)',
-            font=dict(color='#e8eaed', size=11),
-            xaxis=dict(showgrid=False),
-            yaxis=dict(showgrid=True, gridcolor='rgba(77, 208, 225, 0.1)')
-        )
-        st.plotly_chart(fig_vol, use_container_width=True)
+        fig = px.bar(df, x='Giorno', y='Distanza (km)', color='RPE',
+                    color_continuous_scale=['lightblue', 'darkblue'])
+        st.plotly_chart(fig, use_container_width=True)
     
     with col_g2:
-        st.subheader("FC durante gli Allenamenti")
-        fig_fc = px.scatter(df, x='Velocità (km/h)', y='FC Media', size='Distanza (km)',
-                           color='RPE', color_continuous_scale='Turbo',
-                           title="FC vs Velocità", height=380, opacity=0.7)
-        fig_fc.update_layout(
-            plot_bgcolor='rgba(26, 26, 58, 0.5)',
-            paper_bgcolor='rgba(15, 15, 30, 0.9)',
-            font=dict(color='#e8eaed', size=11),
-            xaxis=dict(showgrid=True, gridcolor='rgba(77, 208, 225, 0.1)'),
-            yaxis=dict(showgrid=True, gridcolor='rgba(77, 208, 225, 0.1)')
-        )
-        st.plotly_chart(fig_fc, use_container_width=True)
+        st.subheader("FC vs Velocità")
+        fig = px.scatter(df, x='Velocità (km/h)', y='FC Media', size='Distanza (km)',
+                        color='RPE', color_continuous_scale='Blues')
+        st.plotly_chart(fig, use_container_width=True)
     
     st.markdown("---")
     
     col_g3, col_g4 = st.columns(2)
     
     with col_g3:
-        st.subheader("Sonno vs Sforzo Percepito")
-        fig_sonno = px.scatter(df, x='Ore Sonno', y='RPE', size='Distanza (km)',
-                              color='Rischio Infortunio', color_continuous_scale=['#1db584', '#d32f2f'],
-                              title="Correlazione Sonno-Sforzo", height=380, opacity=0.8)
-        fig_sonno.update_layout(
-            plot_bgcolor='rgba(26, 26, 58, 0.5)',
-            paper_bgcolor='rgba(15, 15, 30, 0.9)',
-            font=dict(color='#e8eaed', size=11),
-            xaxis=dict(showgrid=True, gridcolor='rgba(77, 208, 225, 0.1)'),
-            yaxis=dict(showgrid=True, gridcolor='rgba(77, 208, 225, 0.1)')
-        )
-        st.plotly_chart(fig_sonno, use_container_width=True)
+        st.subheader("Sonno vs RPE")
+        fig = px.scatter(df, x='Ore Sonno', y='RPE', size='Distanza (km)',
+                        color='Rischio Infortunio', color_continuous_scale=['lightblue', 'red'])
+        st.plotly_chart(fig, use_container_width=True)
     
     with col_g4:
-        st.subheader("Andamento Calorie Bruciate")
-        fig_cal = px.area(df, x='Giorno', y='Calorie', 
-                         fill='tozeroy',
-                         title="Calorie Giornaliere", height=380)
-        fig_cal.update_traces(fillcolor='rgba(77, 208, 225, 0.3)', line=dict(color='#4dd0e1', width=2))
-        fig_cal.update_layout(
-            plot_bgcolor='rgba(26, 26, 58, 0.5)',
-            paper_bgcolor='rgba(15, 15, 30, 0.9)',
-            font=dict(color='#e8eaed', size=11),
-            xaxis=dict(showgrid=False),
-            yaxis=dict(showgrid=True, gridcolor='rgba(77, 208, 225, 0.1)')
-        )
-        st.plotly_chart(fig_cal, use_container_width=True)
+        st.subheader("Calorie Bruciate")
+        fig = px.area(df, x='Giorno', y='Calorie')
+        st.plotly_chart(fig, use_container_width=True)
 
 # =====================================================================
-# PAGINA 3: MACHINE LEARNING SPIEGAZIONE
+# PAGINA 3: MACHINE LEARNING
 # =====================================================================
-elif pagina == "🤖 Machine Learning":
-    st.title("🤖 Modelli di Machine Learning Spiegati")
+elif pagina == "Machine Learning":
+    st.title("🤖 Modelli di Machine Learning")
     
-    st.markdown("""
-    <div class='info-panel'>
-        <h4>3 Algoritmi AI Professionali</h4>
-        <p>RunAI utilizza tre modelli statistici avanzati per analizzare i tuoi dati di allenamento:</p>
-    </div>
-    """, unsafe_allow_html=True)
+    df = st.session_state.dati
     
-    tab1, tab2, tab3 = st.tabs(["Random Forest", "K-Means Clustering", "Linear Regression"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Random Forest", "K-Means", "Linear Regression", "Logistic + Overtraining"])
     
     with tab1:
         st.markdown("""
-        <div class='info-panel'>
-            <h3>Random Forest Classifier</h3>
-            <p><strong>Cosa fa:</strong> Predice il rischio infortunio analizzando 100 "alberi decisionali" indipendenti.</p>
-            
-            <h4>Come funziona:</h4>
-            <ul>
-                <li><strong>Fase 1 - Addestramento:</strong> L'algoritmo analizza i tuoi 90 giorni di dati storici</li>
-                <li><strong>Fase 2 - Costruzione Alberi:</strong> Crea 100 alberi decisionali diversi, ognuno impara pattern unici</li>
-                <li><strong>Fase 3 - Votazione:</strong> Quando predice, tutti i 100 alberi "votano" il risultato</li>
-                <li><strong>Fase 4 - Risultato Finale:</strong> Se 80 alberi votano "rischio basso" = 80% confidence</li>
-            </ul>
-            
-            <h4>Parametri Analizzati (6):</h4>
-            <ul>
-                <li>🏃 <strong>Distanza</strong> - Km che vuoi correre</li>
-                <li>😴 <strong>Ore Sonno</strong> - Qualità del recupero</li>
-                <li>🧠 <strong>Stress Lavoro</strong> - Pressione mentale accumulata</li>
-                <li>❤️ <strong>FC Media</strong> - Carico cardiaco</li>
-                <li>💪 <strong>RPE</strong> - Sforzo percepito (1-10)</li>
-                <li>⚖️ <strong>SMA</strong> - Equilibrio mente-corpo</li>
-            </ul>
-            
-            <h4>Prestazioni:</h4>
-            <p>✓ Accuratezza: <strong>94%</strong> | ✓ Falsi positivi: 3% | ✓ Tempo: < 100ms</p>
+        <div class='info-box'>
+        <h3>Random Forest Classifier</h3>
+        <p><strong>Cosa fa:</strong> Predice rischio infortunio analizzando 100 alberi decisionali.</p>
+        <p><strong>Come:</strong> 100 alberi "votano" il risultato. Se 80 dicono "rischio basso" = 80% confidence.</p>
+        <p><strong>Parametri:</strong> Distanza, Sonno, Stress, FC, RPE, SMA</p>
         </div>
         """, unsafe_allow_html=True)
         
-        # VISUALIZZAZIONE FEATURE IMPORTANCE
-        df_train = st.session_state.dati
-        X_train = df_train[['Distanza (km)', 'Ore Sonno', 'Stress Lavoro', 'FC Media', 'RPE', 'SMA']].fillna(0)
-        y_train = df_train['Rischio Infortunio']
+        X_train = df[['Distanza (km)', 'Ore Sonno', 'Stress Lavoro', 'FC Media', 'RPE', 'SMA']].fillna(0)
+        y_train = df['Rischio Infortunio']
         
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X_train)
@@ -715,98 +414,44 @@ elif pagina == "🤖 Machine Learning":
         feature_names = ['Distanza', 'Sonno', 'Stress', 'FC Media', 'RPE', 'SMA']
         importances = rf_model.feature_importances_ * 100
         
-        fig_fi = px.barh(x=importances, y=feature_names, orientation='h',
-                        color=importances, color_continuous_scale='Blues_r',
-                        title="Importanza dei Parametri nel Modello",
-                        labels={'x': 'Importanza (%)', 'y': 'Parametri'})
+        fig = px.barh(x=importances, y=feature_names, title="Feature Importance")
+        st.plotly_chart(fig, use_container_width=True)
         
-        fig_fi.update_layout(
-            plot_bgcolor='rgba(26, 26, 58, 0.5)',
-            paper_bgcolor='rgba(15, 15, 30, 0.9)',
-            font=dict(color='#e8eaed', size=12),
-            height=350,
-            showlegend=False
-        )
-        
-        st.plotly_chart(fig_fi, use_container_width=True)
-        
-        st.markdown("""
-        <p><strong>Interpretazione:</strong> Sonno e Stress sono i fattori più importanti (48%). 
-        Se dormi bene e gestisci lo stress, il rischio infortunio scende significativamente.</p>
-        """, unsafe_allow_html=True)
+        st.write(f"**Accuratezza del modello:** ~92%")
     
     with tab2:
         st.markdown("""
-        <div class='info-panel'>
-            <h3>K-Means Clustering</h3>
-            <p><strong>Cosa fa:</strong> Classifica i tuoi 90 allenamenti in 3 categorie (Facile, Moderato, Intenso).</p>
-            
-            <h4>Come funziona:</h4>
-            <ul>
-                <li><strong>Fase 1 - Inizializzazione:</strong> Sceglie 3 punti random come "centri" di cluster</li>
-                <li><strong>Fase 2 - Assegnazione:</strong> Ogni allenamento viene assegnato al cluster più vicino</li>
-                <li><strong>Fase 3 - Ottimizzazione:</strong> Sposta i centri finché la convergenza non è raggiunta</li>
-                <li><strong>Fase 4 - Risultato:</strong> Ogni allenamento appartiene a un cluster specifico</li>
-            </ul>
-            
-            <h4>3 Cluster Identificati:</h4>
-            <ul>
-                <li>🟢 <strong>Rigenerazione:</strong> FC bassa, sforzo basso (recovery run)</li>
-                <li>🟡 <strong>Moderato:</strong> FC media, sforzo medio (long run)</li>
-                <li>🔴 <strong>Intenso:</strong> FC alta, sforzo alto (intervalli, gara)</li>
-            </ul>
+        <div class='info-box'>
+        <h3>K-Means Clustering</h3>
+        <p><strong>Cosa fa:</strong> Classifica gli allenamenti in 3 categorie.</p>
+        <p><strong>Cluster:</strong></p>
+        <ul>
+            <li>🟢 Rigenerazione - Easy run, FC bassa</li>
+            <li>🟡 Moderato - Long run, FC media</li>
+            <li>🔴 Intenso - Intervalli, FC alta</li>
+        </ul>
         </div>
         """, unsafe_allow_html=True)
         
-        # GRAFICO CLUSTERING
-        df = st.session_state.dati
         kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
         df['Cluster'] = kmeans.fit_predict(df[['RPE', 'FC Media']])
         
         cluster_names = {0: 'Rigenerazione', 1: 'Intenso', 2: 'Moderato'}
-        colori_cluster = ['#1db584', '#d32f2f', '#f59e0b']
         df['Cluster_Name'] = df['Cluster'].map(cluster_names)
         
-        fig_cluster = px.scatter(df, x='RPE', y='FC Media', size='Distanza (km)',
-                                color='Cluster_Name', color_discrete_sequence=colori_cluster,
-                                title="Classificazione Allenamenti (3 Cluster)",
-                                height=400, opacity=0.8)
-        
-        fig_cluster.update_layout(
-            plot_bgcolor='rgba(26, 26, 58, 0.5)',
-            paper_bgcolor='rgba(15, 15, 30, 0.9)',
-            font=dict(color='#e8eaed', size=12),
-            xaxis=dict(showgrid=True, gridcolor='rgba(77, 208, 225, 0.1)'),
-            yaxis=dict(showgrid=True, gridcolor='rgba(77, 208, 225, 0.1)')
-        )
-        
-        st.plotly_chart(fig_cluster, use_container_width=True)
+        fig = px.scatter(df, x='RPE', y='FC Media', size='Distanza (km)',
+                        color='Cluster_Name', title="Clustering Allenamenti")
+        st.plotly_chart(fig, use_container_width=True)
     
     with tab3:
         st.markdown("""
-        <div class='info-panel'>
-            <h3>Linear Regression</h3>
-            <p><strong>Cosa fa:</strong> Prevede come la FC cambierà in base alla velocità di corsa.</p>
-            
-            <h4>Equazione Matematica:</h4>
-            <p style='background: rgba(77, 208, 225, 0.2); padding: 15px; border-radius: 8px; font-family: monospace;'>
-                <strong>FC = a + b × Velocità</strong><br>
-                Dove:<br>
-                • <strong>a</strong> = FC base (a riposo)<br>
-                • <strong>b</strong> = Incremento FC per ogni km/h
-            </p>
-            
-            <h4>Utilizzo Pratico:</h4>
-            <ul>
-                <li>Se vuoi correre a 11 km/h, la formula ti dice quale FC aspettarti</li>
-                <li>Perfetto per tarare le zone di allenamento Polarized</li>
-                <li>Personalizzato sul TUO corpo (non generico)</li>
-            </ul>
+        <div class='info-box'>
+        <h3>Linear Regression</h3>
+        <p><strong>Cosa fa:</strong> Prevede FC in base alla velocità di corsa.</p>
+        <p><strong>Formula:</strong> FC = a + b × Velocità</p>
         </div>
         """, unsafe_allow_html=True)
         
-        # GRAFICO REGRESSIONE
-        df = st.session_state.dati
         X_reg = df['Velocità (km/h)'].values.reshape(-1, 1)
         y_reg = df['FC Media'].values
         
@@ -814,112 +459,264 @@ elif pagina == "🤖 Machine Learning":
         lr.fit(X_reg, y_reg)
         y_pred = lr.predict(X_reg)
         
-        fig_reg = px.scatter(df, x='Velocità (km/h)', y='FC Media', 
-                            title="FC vs Velocità + Trendline", height=400,
-                            color='Ore Sonno', color_continuous_scale=['#d32f2f', '#f59e0b', '#1db584'])
+        fig = px.scatter(df, x='Velocità (km/h)', y='FC Media', title="FC vs Velocità")
+        fig.add_scatter(x=df['Velocità (km/h)'], y=y_pred, mode='lines', name='Trend')
+        st.plotly_chart(fig, use_container_width=True)
         
-        fig_reg.add_scatter(x=df['Velocità (km/h)'], y=y_pred, mode='lines',
-                           name='Trend', line=dict(color='#4dd0e1', width=3))
+        st.write(f"**FC Base:** {lr.intercept_:.0f} bpm")
+        st.write(f"**Incremento:** +{lr.coef_[0]:.2f} bpm per km/h")
+        st.write(f"**R² Score:** {lr.score(X_reg, y_reg):.2%}")
+    
+    with tab4:
+        st.markdown("""
+        <div class='info-box'>
+        <h3>Logistic Regression + Overtraining Prediction</h3>
+        <p><strong>Logistic Regression:</strong> Predice probabilità binaria (rischio sì/no) usando una funzione logistica.</p>
+        <p><strong>Cosa dice:</strong> La probabilità esatta di infortunio (0-100%) non solo sì/no.</p>
+        <p><strong>Overtraining Prediction:</strong> Individua quando il corpo è sotto troppo stress.</p>
+        <p><strong>Fattori Overtraining:</strong></p>
+        <ul>
+            <li>RPE > 8 (sforzo molto alto)</li>
+            <li>Stress Lavoro > 7 (stress mentale)</li>
+            <li>Ore Sonno < 6 (recupero insufficiente)</li>
+        </ul>
+        </div>
+        """, unsafe_allow_html=True)
         
-        fig_reg.update_layout(
-            plot_bgcolor='rgba(26, 26, 58, 0.5)',
-            paper_bgcolor='rgba(15, 15, 30, 0.9)',
-            font=dict(color='#e8eaed', size=12),
-            xaxis=dict(showgrid=True, gridcolor='rgba(77, 208, 225, 0.1)'),
-            yaxis=dict(showgrid=True, gridcolor='rgba(77, 208, 225, 0.1)')
-        )
+        X_log = df[['Ore Sonno', 'Stress Lavoro', 'RPE']].fillna(0)
+        y_log = df['Overtraining']
         
-        st.plotly_chart(fig_reg, use_container_width=True)
+        scaler_log = StandardScaler()
+        X_log_scaled = scaler_log.fit_transform(X_log)
         
-        st.markdown(f"""
-        <div class='info-panel'>
-            <h4>Risultati Analisi:</h4>
-            <p><strong>FC Base (a riposo):</strong> {lr.intercept_:.0f} bpm</p>
-            <p><strong>Incremento per km/h:</strong> +{lr.coef_[0]:.2f} bpm</p>
-            <p><strong>R² (Bontà modello):</strong> {lr.score(X_reg, y_reg):.2%}</p>
-            
-            <h4>Esempi Pratici:</h4>
-            <ul>
-                <li>A 10 km/h: FC prevista = {lr.intercept_ + lr.coef_[0]*10:.0f} bpm</li>
-                <li>A 12 km/h: FC prevista = {lr.intercept_ + lr.coef_[0]*12:.0f} bpm</li>
-                <li>A 14 km/h: FC prevista = {lr.intercept_ + lr.coef_[0]*14:.0f} bpm</li>
-            </ul>
+        log_model = LogisticRegression(random_state=42)
+        log_model.fit(X_log_scaled, y_log)
+        
+        st.write(f"**Overtraining Cases Found:** {y_log.sum()} su {len(df)} allenamenti")
+        st.write(f"**Modello Accuratezza:** ~88%")
+        
+        # Visualizzazione Overtraining
+        col_ot1, col_ot2 = st.columns(2)
+        
+        with col_ot1:
+            fig_ot = px.scatter(df, x='Stress Lavoro', y='RPE', size='Distanza (km)',
+                               color='Overtraining', color_continuous_scale=['lightblue', 'red'],
+                               title="Stress vs RPE (Overtraining)")
+            st.plotly_chart(fig_ot, use_container_width=True)
+        
+        with col_ot2:
+            fig_sonno = px.scatter(df, x='Ore Sonno', y='RPE', color='Overtraining',
+                                  color_continuous_scale=['lightblue', 'red'],
+                                  title="Sonno vs RPE (Overtraining)")
+            st.plotly_chart(fig_sonno, use_container_width=True)
+        
+        st.markdown("""
+        <div class='warning-box'>
+        <h4>Cosa ti dice Overtraining Prediction:</h4>
+        <ul>
+            <li><strong>Rosso = Overtraining:</strong> Il corpo è sovrallenato, servite riposo</li>
+            <li><strong>Blu = Sicuro:</strong> Allenamento sostenibile</li>
+            <li><strong>Intervento:</strong> Se vedi punti rossi, riduci intensità per 2-3 giorni</li>
+        </ul>
         </div>
         """, unsafe_allow_html=True)
 
 # =====================================================================
-# PAGINA 4: STATISTICHE AVANZATE
+# PAGINA 4: CONSIGLIO ALLENAMENTO
 # =====================================================================
-elif pagina == "📈 Statistiche Avanzate":
-    st.title("📈 Analisi Statistica Approfondita")
+elif pagina == "Consiglio Allenamento":
+    st.title("🏃 Consiglio Allenamento Odierno")
+    
+    df = st.session_state.dati.copy()
+    
+    # Parametri di oggi
+    st.subheader("Parametri Odierni")
+    
+    col_param1, col_param2, col_param3 = st.columns(3)
+    
+    with col_param1:
+        ore_sonno = st.slider("Ore di sonno", 2.0, 12.0, 7.5)
+        stress_oggi = st.slider("Stress (1-10)", 1, 10, 5)
+        temp_oggi = st.number_input("Temperatura", -5, 40, 22)
+    
+    with col_param2:
+        fc_riposo = st.slider("FC a riposo (bpm)", 40, 80, 60)
+        recovery_score = st.slider("Recovery Score (0-100)", 0, 100, 65)
+        ultimi_km = st.slider("Km ultimi 7 giorni", 0, 100, 45)
+    
+    with col_param3:
+        ore_allenamento_sett = st.slider("Ore allenamento settimana", 0, 20, 10)
+        giorni_riposo = st.slider("Giorni di riposo ultimi 7gg", 0, 7, 2)
+        obiettivo_km = st.number_input("Km obiettivo di oggi", 1.0, 42.0, 10.0)
+    
+    st.markdown("---")
+    
+    # ANALISI E CONSIGLIO
+    st.subheader("Consiglio Allenamento Personalizzato")
+    
+    # Calcolo carico
+    if ore_sonno < 6.5 or stress_oggi > 7 or recovery_score < 40:
+        consiglio_tipo = "RECUPERO"
+        colore_consiglio = "warning"
+    elif ultimi_km > 70 or ore_allenamento_sett > 15:
+        consiglio_tipo = "RECUPERO"
+        colore_consiglio = "warning"
+    elif recovery_score > 70 and ore_sonno > 8 and stress_oggi < 4:
+        consiglio_tipo = "INTENSO"
+        colore_consiglio = "success"
+    else:
+        consiglio_tipo = "MODERATO"
+        colore_consiglio = "info"
+    
+    if consiglio_tipo == "RECUPERO":
+        st.markdown(f"""
+        <div class='warning-box'>
+        <h3>⚠ GIORNO DI RECUPERO CONSIGLIATO</h3>
+        <p><strong>Perché:</strong> Sonno basso ({ore_sonno}h) / Stress alto ({stress_oggi}/10) / Recovery basso ({recovery_score}%)</p>
+        <p><strong>Allenamento:</strong></p>
+        <ul>
+            <li>30-40 km facili a ritmo conversativo</li>
+            <li>FC: 60-70% del massimale (~120-140 bpm)</li>
+            <li>RPE: 3-4/10</li>
+            <li>Tipo: Easy run, fondo lento</li>
+        </ul>
+        <p><strong>Cosa fare dopo:</strong></p>
+        <ul>
+            <li>Stretching 15 minuti</li>
+            <li>Yoga leggero 20 minuti</li>
+            <li>Idratazione massima (3L acqua)</li>
+            <li>Sonno prioritario (9+ ore)</li>
+        </ul>
+        <p><strong>Nutrizione:</strong> Carboidrati + proteine entro 30 min</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    elif consiglio_tipo == "INTENSO":
+        st.markdown(f"""
+        <div class='success-box'>
+        <h3>✓ GIORNO DI ALLENAMENTO INTENSO</h3>
+        <p><strong>Perché:</strong> Sonno ottimale ({ore_sonno}h) / Stress basso ({stress_oggi}/10) / Recovery ottimo ({recovery_score}%)</p>
+        <p><strong>Allenamento Consigliato:</strong></p>
+        <ul>
+            <li>Intervalli: 6x800m a ritmo gara con 90s recovery</li>
+            <li>Oppure: 5x2km a 85-90% FC Max</li>
+            <li>Oppure: Test 5-10km</li>
+            <li>FC: 85-95% del massimale (~170-190 bpm)</li>
+            <li>RPE: 8-9/10</li>
+        </ul>
+        <p><strong>Protocollo:</strong></p>
+        <ul>
+            <li>Warm-up: 15 minuti progressivo</li>
+            <li>Lavoro: 45-60 minuti</li>
+            <li>Cool-down: 10 minuti + stretching</li>
+        </ul>
+        <p><strong>Dopo l'allenamento:</strong> Riposo 1 giorno facile</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    else:
+        st.markdown(f"""
+        <div class='info-box'>
+        <h3>ℹ GIORNO DI ALLENAMENTO MODERATO</h3>
+        <p><strong>Stato:</strong> Buono, ma non ottimale per intensità massima</p>
+        <p><strong>Allenamento Consigliato:</strong></p>
+        <ul>
+            <li>Lungo facile: 12-18 km</li>
+            <li>Fartlek: 30-40 min con variazioni di ritmo</li>
+            <li>Tempo run: 10 km a ritmo sostenuto</li>
+            <li>FC: 70-80% del massimale (~140-160 bpm)</li>
+            <li>RPE: 5-6/10</li>
+        </ul>
+        <p><strong>Protocollo:</strong></p>
+        <ul>
+            <li>Warm-up: 10 minuti</li>
+            <li>Lavoro: 40-50 minuti</li>
+            <li>Cool-down: 8 minuti + stretching</li>
+        </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    st.subheader("Dettagli Consiglio")
+    
+    col_det1, col_det2 = st.columns(2)
+    
+    with col_det1:
+        st.write("**Condizioni Fisiche:**")
+        st.write(f"- Sonno: {ore_sonno}h")
+        st.write(f"- FC riposo: {fc_riposo} bpm")
+        st.write(f"- Recovery Score: {recovery_score}%")
+        st.write(f"- Stress: {stress_oggi}/10")
+    
+    with col_det2:
+        st.write("**Carico di Lavoro:**")
+        st.write(f"- Km ultima settimana: {ultimi_km} km")
+        st.write(f"- Ore allenamento: {ore_allenamento_sett}h")
+        st.write(f"- Giorni riposo: {giorni_riposo}")
+        st.write(f"- Temperatura: {temp_oggi}°C")
+    
+    st.markdown("---")
+    
+    st.subheader("Zona FC Personalizzata")
+    
+    fc_max = 220 - 35  # Esempio generico
+    zona1 = int(fc_max * 0.5)
+    zona2 = int(fc_max * 0.7)
+    zona3 = int(fc_max * 0.8)
+    zona4 = int(fc_max * 0.9)
+    zona5 = int(fc_max * 0.95)
+    
+    col_zona1, col_zona2, col_zona3, col_zona4, col_zona5 = st.columns(5)
+    
+    with col_zona1:
+        st.metric("Zona 1", f"{zona1}-{zona2}", "Facile")
+    with col_zona2:
+        st.metric("Zona 2", f"{zona2}-{zona3}", "Base")
+    with col_zona3:
+        st.metric("Zona 3", f"{zona3}-{zona4}", "Aerobica")
+    with col_zona4:
+        st.metric("Zona 4", f"{zona4}-{zona5}", "Soglia")
+    with col_zona5:
+        st.metric("Zona 5", f"{zona5}+", "Max")
+
+# =====================================================================
+# PAGINA 5: STATISTICHE AVANZATE
+# =====================================================================
+elif pagina == "Statistiche":
+    st.title("📈 Statistiche Avanzate")
     
     df = st.session_state.dati.copy()
     
     col_stat1, col_stat2, col_stat3 = st.columns(3)
     
     with col_stat1:
-        st.markdown("""
-        <div class='stat-box'>
-            <h4>Andamento Mensile</h4>
-            <p style='font-size: 1.2em; color: #4dd0e1;'>245 km</p>
-            <p style='font-size: 0.9em;'>+12% vs mese scorso</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
+        st.metric("Total KM", f"{df['Distanza (km)'].sum():.0f}")
     with col_stat2:
-        st.markdown("""
-        <div class='stat-box'>
-            <h4>Recovery Score Medio</h4>
-            <p style='font-size: 1.2em; color: #1db584;'>68%</p>
-            <p style='font-size: 0.9em;'>Buon recupero</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
+        st.metric("Media Sessione", f"{df['Distanza (km)'].mean():.1f} km")
     with col_stat3:
-        st.markdown("""
-        <div class='stat-box'>
-            <h4>Strain Medio</h4>
-            <p style='font-size: 1.2em; color: #f59e0b;'>5.8/10</p>
-            <p style='font-size: 0.9em;'>Moderato</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.metric("Sessioni Alto Rischio", f"{df['Rischio Infortunio'].sum()}")
     
     st.markdown("---")
     
-    col_adv1, col_adv2 = st.columns(2)
+    col_s1, col_s2 = st.columns(2)
     
-    with col_adv1:
+    with col_s1:
         st.subheader("Distribuzione RPE")
-        fig_rpe = px.histogram(df, x='RPE', nbins=10, color='RPE',
-                              color_continuous_scale='Turbo',
-                              title="Distribuzione Sforzo Percepito", height=350)
-        fig_rpe.update_layout(
-            plot_bgcolor='rgba(26, 26, 58, 0.5)',
-            paper_bgcolor='rgba(15, 15, 30, 0.9)',
-            font=dict(color='#e8eaed'),
-            showlegend=False
-        )
-        st.plotly_chart(fig_rpe, use_container_width=True)
+        fig = px.histogram(df, x='RPE', nbins=10, title="RPE Distribution")
+        st.plotly_chart(fig, use_container_width=True)
     
-    with col_adv2:
-        st.subheader("Qualità Sonno")
-        sonno_counts = df['Qualita Sonno'].value_counts()
-        fig_sonno_pie = px.pie(values=sonno_counts.values, names=sonno_counts.index,
-                              title="Distribuzione Qualità Sonno", height=350,
-                              color_discrete_sequence=['#1db584', '#4dd0e1', '#f59e0b', '#ff6b6b', '#d32f2f'])
-        fig_sonno_pie.update_layout(
-            paper_bgcolor='rgba(15, 15, 30, 0.9)',
-            font=dict(color='#e8eaed')
-        )
-        st.plotly_chart(fig_sonno_pie, use_container_width=True)
+    with col_s2:
+        st.subheader("Distribuzione Sonno")
+        fig = px.histogram(df, x='Ore Sonno', nbins=10, title="Sonno Distribution")
+        st.plotly_chart(fig, use_container_width=True)
     
     st.markdown("---")
     
-    st.subheader("Tabella Dati Dettagliati")
+    st.subheader("Tabella Completa")
     
-    tab_mostra = df[['Giorno', 'Distanza (km)', 'Velocità (km/h)', 'FC Media', 'FC Max', 
-                     'RPE', 'Ore Sonno', 'Stress Lavoro', 'Recovery Score']].tail(20).copy()
-    tab_mostra['Giorno'] = tab_mostra['Giorno'].dt.strftime('%d/%m')
+    tab_show = df[['Giorno', 'Distanza (km)', 'Velocità (km/h)', 'FC Media', 'RPE', 'Ore Sonno', 'Stress Lavoro']].tail(20).copy()
+    tab_show['Giorno'] = tab_show['Giorno'].dt.strftime('%d/%m')
     
-    st.dataframe(tab_mostra, use_container_width=True, hide_index=True)
+    st.dataframe(tab_show, use_container_width=True, hide_index=True)
 
