@@ -4,299 +4,248 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.cluster import KMeans
 
 # =====================================================================
-# 1. SETUP PREMIUM (WHOOP-STYLE UI)
+# 1. SETUP PREMIUM & DARK MODE UI
 # =====================================================================
-st.set_page_config(page_title="AI Performance Coach", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="AI Sports Analytics", layout="wide", initial_sidebar_state="expanded")
 
-# CSS Personalizzato: Tema Scuro, Font Minimalista, UI a Schede (Cards)
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+    html, body, [class*="css"] { font-family: 'Inter', sans-serif; background-color: #000000 !important; color: #F3F4F6 !important; }
+    #MainMenu, footer, header {visibility: hidden;}
     
-    /* Reset generale e Sfondo Scuro */
-    html, body, [class*="css"] {
-        font-family: 'Inter', sans-serif;
-        background-color: #000000 !important;
-        color: #F3F4F6 !important;
-    }
-    
-    /* Nasconde header e footer di default di Streamlit per un look da vera App */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-
-    /* Stile delle metriche e delle schede (Cards) */
     div[data-testid="metric-container"] {
-        background-color: #111827 !important;
-        border-radius: 16px;
-        padding: 24px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        border: 1px solid #1F2937;
+        background-color: #111827 !important; border-radius: 12px; padding: 20px; 
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5); border: 1px solid #1F2937;
     }
     
-    /* Testi e Titoli */
-    h1, h2, h3 { color: #FFFFFF !important; font-weight: 700 !important; letter-spacing: -0.5px; }
-    p { color: #9CA3AF !important; }
+    h1, h2, h3 { color: #FFFFFF !important; font-weight: 600 !important; letter-spacing: -0.5px; }
     
-    /* Box delle spiegazioni dell'Intelligenza Artificiale */
     .ai-insight {
-        background: linear-gradient(145deg, #1e1e1e, #121212);
-        border-left: 4px solid #3B82F6;
-        padding: 20px;
-        border-radius: 8px;
-        margin-top: 15px;
-        margin-bottom: 30px;
-        box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+        background: linear-gradient(145deg, #1e1e1e, #121212); border-left: 4px solid #3B82F6;
+        padding: 20px; border-radius: 8px; margin-top: 15px; margin-bottom: 20px;
     }
-    .ai-insight h4 { color: #60A5FA !important; margin-top: 0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;}
-    .ai-insight p { color: #D1D5DB !important; font-size: 15px; margin-bottom: 0; line-height: 1.6;}
+    .ai-insight h4 { color: #60A5FA !important; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-top:0;}
+    .ai-insight p { color: #D1D5DB !important; font-size: 14px; line-height: 1.6; margin-bottom:0;}
     
-    /* Stile dei Tabs */
     .stTabs [data-baseweb="tab-list"] { background-color: transparent; }
-    .stTabs [data-baseweb="tab"] { color: #9CA3AF; }
     .stTabs [aria-selected="true"] { color: #FFFFFF !important; border-bottom-color: #3B82F6 !important;}
 </style>
 """, unsafe_allow_html=True)
 
 # =====================================================================
-# 2. MOTORE DATI SIMULATO (PERFETTO PER I MODELLI AI)
+# 2. MOTORE DATI (Include tutti i parametri richiesti)
 # =====================================================================
 @st.cache_data
 def inizializza_database():
     np.random.seed(42)
-    n = 150 # Dati storici
+    n = 200
     
-    tipi = np.random.choice(['Recovery', 'Strain', 'Overreach'], n, p=[0.5, 0.35, 0.15])
-    
-    distanza, velocita, fc_media, ore_sonno, stress, rpe = [], [], [], [], [], []
-    
-    for t in tipi:
-        if t == 'Recovery':
-            distanza.append(np.random.uniform(5, 8))
-            velocita.append(np.random.uniform(9, 10.5))
-            fc_media.append(np.random.uniform(115, 130))
-            ore_sonno.append(np.random.uniform(7.5, 9.5))
-            stress.append(np.random.uniform(1, 4))
-            rpe.append(np.random.uniform(2, 4))
-        elif t == 'Strain':
-            distanza.append(np.random.uniform(10, 18))
-            velocita.append(np.random.uniform(11, 14.5))
-            fc_media.append(np.random.uniform(145, 160))
-            ore_sonno.append(np.random.uniform(6.5, 8))
-            stress.append(np.random.uniform(3, 6))
-            rpe.append(np.random.uniform(5, 7))
-        else: # Overreach
-            distanza.append(np.random.uniform(15, 25))
-            velocita.append(np.random.uniform(10, 12.5))
-            fc_media.append(np.random.uniform(160, 185)) 
-            ore_sonno.append(np.random.uniform(4, 6)) 
-            stress.append(np.random.uniform(7, 10))
-            rpe.append(np.random.uniform(8, 10))
-
     df = pd.DataFrame({
-        'Distanza (km)': distanza, 'Velocità (km/h)': velocita, 'FC Media': fc_media,
-        'Temp (°C)': np.random.uniform(10, 25, n), 'Vento (km/h)': np.random.uniform(0, 10, n),
-        'RPE': rpe, 'Ore Sonno': ore_sonno, 'Stress Lavoro': stress, 'Ore Lavoro': np.random.uniform(6, 10, n)
+        'Distanza (km)': np.random.uniform(5, 25, n),
+        'Velocità (km/h)': np.random.uniform(9, 16, n),
+        'FC Media': np.random.uniform(120, 180, n),
+        'Temp (°C)': np.random.uniform(5, 35, n),
+        'Vento (km/h)': np.random.uniform(0, 20, n),
+        'Ore Sonno': np.random.uniform(4.5, 9.5, n),
+        'Ore Lavoro': np.random.uniform(0, 12, n),
+        'Stress Lavoro': np.random.uniform(1, 10, n),
+        'Feeling (1-5)': np.random.randint(1, 6, n),
+        'RPE': np.random.uniform(2, 10, n)
     })
     
-    # Formule matematiche sicure (.clip previene divisioni per zero)
+    # 4 KPI Proprietari
     df['SMA'] = (df['Stress Lavoro'] * df['RPE']) / df['Ore Sonno'].clip(lower=0.1)
     df['ISLR'] = (df['Ore Lavoro'] * df['Stress Lavoro']) / df['Distanza (km)'].clip(lower=0.1)
     df['IITR'] = (df['Temp (°C)'] * df['Vento (km/h)']) / df['Distanza (km)'].clip(lower=0.1)
     df['IDET'] = (df['FC Media'] * df['Temp (°C)']) / df['Velocità (km/h)'].clip(lower=0.1)
     
-    soglia = np.percentile(df['SMA'] + df['ISLR'], 75)
-    df['Overload'] = np.where((df['SMA'] + df['ISLR']) > soglia, 1, 0)
+    # Target per i modelli AI
+    soglia_critica = np.percentile(df['SMA'] + df['ISLR'] + (df['IDET']/100), 75)
+    df['Overload'] = np.where((df['SMA'] + df['ISLR'] + (df['IDET']/100)) > soglia_critica, 1, 0)
     
     return df
 
-if 'df' not in st.session_state:
-    st.session_state.df = inizializza_database()
-
-df = st.session_state.df
+df = inizializza_database()
 
 # =====================================================================
-# 3. SIDEBAR (CONTROLLI E INSERIMENTO)
+# 3. SIDEBAR: SINCRONIZZAZIONE E QUESTIONARI COMPLETI
 # =====================================================================
 with st.sidebar:
-    st.markdown("<h2 style='color: #FFFFFF; font-size: 24px;'>Analisi Biometrica</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='font-size: 14px; margin-bottom: 30px;'>Piattaforma di calcolo preventivo</p>", unsafe_allow_html=True)
+    st.markdown("## AI Performance Hub")
     
-    st.markdown("### SINCRONIZZAZIONE")
-    st.button("Sincronizza Dispositivo Wearable", use_container_width=True)
-    
+    st.markdown("### 1. SORGENTE DATI WEARABLE")
+    app_corsa = st.selectbox("Seleziona Provider API", ["Nike Run Club", "Strava", "Garmin Connect", "Coros"])
+    st.button(f"Sincronizza {app_corsa}", use_container_width=True)
     st.markdown("<hr style='border-color: #1F2937;'>", unsafe_allow_html=True)
     
-    st.markdown("### DIARIO FISIOLOGICO")
-    ore_sonno_input = st.number_input("Sonno Registrato (h)", 0.0, 12.0, 7.5, step=0.5)
-    stress_input = st.slider("Carico Mentale Lavorativo", 1, 10, 5)
+    st.markdown("### 2. QUESTIONARIO PRE-WORKOUT")
+    km_pianificati = st.number_input("Km programmati", 1.0, 50.0, 10.0, step=0.5)
+    feeling_input = st.select_slider("Come ti senti oggi?", options=["Pessimo", "Stanco", "Normale", "Bene", "In gran forma"], value="Normale")
+    feeling_val = {"Pessimo": 1, "Stanco": 2, "Normale": 3, "Bene": 4, "In gran forma": 5}[feeling_input]
+    ore_sonno_input = st.number_input("Ore dormite", 0.0, 12.0, 7.5, step=0.5)
+    ore_lavoro_input = st.number_input("Ore di lavoro oggi", 0.0, 16.0, 8.0, step=0.5)
+    stress_input = st.slider("Stress Lavoro/Mentale (1-10)", 1, 10, 5)
     
-    st.markdown("### DATI SESSIONE (CARICO ESTERNO)")
-    distanza_input = st.number_input("Distanza (km)", 1.0, 42.0, 12.0, step=0.5)
-    velocita_input = st.number_input("Velocità (km/h)", 5.0, 20.0, 11.5, step=0.5)
-    fc_input = st.number_input("FC Media (bpm)", 60, 200, 145)
-    rpe_input = st.slider("Fatica Percepita (RPE)", 1, 10, 6)
+    st.markdown("### 3. METRICHE POST-WORKOUT")
+    rpe_input = st.slider("RPE (Sforzo Percepito 1-10)", 1, 10, 6)
+    fc_input = st.number_input("FC Media (bpm)", 60, 220, 145)
+    velocita_input = st.number_input("Velocità Media (km/h)", 5.0, 25.0, 12.0, step=0.5)
+    temp_input = st.number_input("Temperatura (°C)", -10.0, 45.0, 25.0)
+    vento_input = st.number_input("Vento (km/h)", 0.0, 50.0, 10.0)
+
+# Calcolo KPI Odierni in tempo reale
+val_sma = (stress_input * rpe_input) / max(ore_sonno_input, 0.1)
+val_islr = (ore_lavoro_input * stress_input) / max(km_pianificati, 0.1)
+val_iitr = (temp_input * vento_input) / max(km_pianificati, 0.1)
+val_idet = (fc_input * temp_input) / max(velocita_input, 0.1)
 
 # =====================================================================
-# 4. ADDESTRAMENTO MODELLO AI
+# 4. ADDESTRAMENTO MODELLI DI MACHINE LEARNING
 # =====================================================================
-features_usate = ['Distanza (km)', 'Velocità (km/h)', 'Ore Sonno', 'Stress Lavoro', 'FC Media']
-X = df[features_usate]
+features = ['SMA', 'ISLR', 'IITR', 'IDET', 'Ore Sonno', 'FC Media']
+X = df[features]
 y = df['Overload']
 
+# Modello 1: Random Forest
 rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
 rf_model.fit(X, y)
+prob_rf = rf_model.predict_proba([[val_sma, val_islr, val_iitr, val_idet, ore_sonno_input, fc_input]])[0][1] * 100
 
-input_odierno = pd.DataFrame([[distanza_input, velocita_input, ore_sonno_input, stress_input, fc_input]], columns=features_usate)
-prob_overload = rf_model.predict_proba(input_odierno)[0][1] * 100
-
-# Metriche in stile WHOOP
-recovery_score = 100 - prob_overload
-strain_score = min(21.0, (distanza_input * 0.5) + (fc_input * 0.05) + (rpe_input * 0.5) + (stress_input * 0.2))
-
-# =====================================================================
-# 5. DASHBOARD PRINCIPALE
-# =====================================================================
-st.title("Cruscotto Predittivo")
-st.markdown("Monitoraggio in tempo reale del bilanciamento tra carico allostatico e capacità di recupero.")
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    colore_rec = "#10B981" if recovery_score > 66 else "#F59E0B" if recovery_score > 33 else "#EF4444"
-    fig_rec = go.Figure(go.Indicator(
-        mode = "gauge+number",
-        value = recovery_score,
-        number = {'suffix': "%", 'font': {'color': colore_rec, 'size': 50}},
-        title = {'text': "RECOVERY (RECUPERO)", 'font': {'color': '#9CA3AF', 'size': 14}},
-        gauge = {
-            'axis': {'range': [0, 100], 'visible': False},
-            'bar': {'color': colore_rec, 'thickness': 0.8},
-            'bgcolor': "#1F2937",
-            'bordercolor': "#000000"
-        }
-    ))
-    fig_rec.update_layout(height=250, margin=dict(l=10, r=10, t=30, b=10), paper_bgcolor='rgba(0,0,0,0)', font={'family': "Inter"})
-    st.plotly_chart(fig_rec, use_container_width=True)
-
-with col2:
-    fig_strain = go.Figure(go.Indicator(
-        mode = "gauge+number",
-        value = strain_score,
-        number = {'font': {'color': '#3B82F6', 'size': 50}},
-        title = {'text': "DAY STRAIN (SFORZO)", 'font': {'color': '#9CA3AF', 'size': 14}},
-        gauge = {
-            'axis': {'range': [0, 21], 'visible': False},
-            'bar': {'color': "#3B82F6", 'thickness': 0.8},
-            'bgcolor': "#1F2937"
-        }
-    ))
-    fig_strain.update_layout(height=250, margin=dict(l=10, r=10, t=30, b=10), paper_bgcolor='rgba(0,0,0,0)', font={'family': "Inter"})
-    st.plotly_chart(fig_strain, use_container_width=True)
-
-with col3:
-    sma_odierno = (stress_input * rpe_input) / max(ore_sonno_input, 0.1)
-    idet_odierno = (fc_input * 20) / max(velocita_input, 0.1) 
-    
-    st.markdown("<div style='padding-top: 20px;'></div>", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='color: #9CA3AF; font-size: 14px; text-align: center;'>KPI TESI</h3>", unsafe_allow_html=True)
-    st.markdown(f"<h1 style='color: #FFFFFF; font-size: 36px; text-align: center; margin-bottom: 0;'>{sma_odierno:.1f}</h1>", unsafe_allow_html=True)
-    st.markdown(f"<p style='color: #9CA3AF; font-size: 12px; text-align: center;'>Indice Stress Mentale (SMA)</p>", unsafe_allow_html=True)
-    st.markdown(f"<h1 style='color: #FFFFFF; font-size: 36px; text-align: center; margin-bottom: 0;'>{idet_odierno:.0f}</h1>", unsafe_allow_html=True)
-    st.markdown(f"<p style='color: #9CA3AF; font-size: 12px; text-align: center;'>Degrado Fisiologico (IDET)</p>", unsafe_allow_html=True)
-
-if recovery_score > 66:
-    testo_ai = "Il tuo sistema nervoso centrale ha assorbito perfettamente l'ultimo allenamento. Sei in piena fase di supercompensazione: i parametri sono ottimali per affrontare carichi elevati."
-elif recovery_score > 33:
-    testo_ai = "Il corpo sta accumulando fatica strutturale o lo stress mentale lavorativo sta inibendo il recupero completo. Si raccomanda un allenamento di mantenimento."
-else:
-    testo_ai = "Rischio critico di Overtraining. I modelli rilevano una discrepanza anomala tra le ore di sonno, l'alta frequenza cardiaca e lo stress percepito. Il modello prescrive riposo passivo o recupero attivo leggero."
-
-st.markdown(f"""
-<div class='ai-insight'>
-    <h4>Analisi AI (Random Forest)</h4>
-    <p>{testo_ai}</p>
-</div>
-""", unsafe_allow_html=True)
+# Modello 2: Logistic Regression
+log_reg = LogisticRegression(max_iter=1000)
+log_reg.fit(X, y)
+prob_log = log_reg.predict_proba([[val_sma, val_islr, val_iitr, val_idet, ore_sonno_input, fc_input]])[0][1] * 100
 
 # =====================================================================
-# 6. ANALISI DEI DATI PROFONDA (TABS)
+# 5. UI PRINCIPALE (A SCHEDE)
 # =====================================================================
-tab1, tab2, tab3 = st.tabs(["IDENTIFICAZIONE ZONE (CLUSTERING)", "TREND FISIOLOGICI (REGRESSIONE)", "PESO DELLE VARIABILI"])
+nav = st.radio("Menu", ["Dashboard & KPI", "Analisi AI (4 Modelli ML)"], horizontal=True, label_visibility="collapsed")
+st.markdown("<br>", unsafe_allow_html=True)
 
-with tab1:
-    st.markdown("### Segmentazione Profili Allenamento")
+if nav == "Dashboard & KPI":
+    st.markdown("## Analisi Fisiologica Odierna")
     
-    kmeans = KMeans(n_clusters=3, random_state=42)
-    df['Cluster'] = kmeans.fit_predict(df[['Ore Sonno', 'FC Media']])
-    
-    fig_cluster = px.scatter(
-        df, x="Ore Sonno", y="FC Media", color=df['Cluster'].astype(str), size="Distanza (km)",
-        color_discrete_sequence=["#10B981", "#3B82F6", "#EF4444"], template="plotly_dark",
-        labels={"Ore Sonno": "Qualità Riposo (Ore)", "FC Media": "Impatto Cardiaco (BPM)", "color": "Gruppo"}
-    )
-    fig_cluster.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', margin=dict(t=20, b=20))
-    st.plotly_chart(fig_cluster, use_container_width=True)
-    
-    st.markdown("""
-    <div class='ai-insight'>
-        <h4>Interpretazione del Cluster (K-Means)</h4>
-        <p>L'Intelligenza Artificiale ha letto il tuo intero storico e ha diviso gli allenamenti in 3 gruppi distinti. Analizzando le distanze matematiche tra i punti, il modello rivela come dormire meno (spostandosi a sinistra nel grafico) porti sistematicamente il cuore a battere più velocemente (spostamento in alto), segnalando un costo metabolico più elevato a parità di chilometri.</p>
-    </div>
-    """, unsafe_allow_html=True)
+    # SEZIONE 1: I 4 KPI DELLA TESI
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Stress Mentale (SMA)", f"{val_sma:.2f}")
+    c2.metric("Lavoro Residuo (ISLR)", f"{val_islr:.2f}")
+    c3.metric("Impatto Termico (IITR)", f"{val_iitr:.2f}")
+    c4.metric("Degrado Termico (IDET)", f"{val_idet:.0f}")
 
-with tab2:
-    st.markdown("### Decadimento dell'Efficienza Aerobica")
+    st.markdown("<br>", unsafe_allow_html=True)
     
-    # GRAFICO DI BASE
-    fig_reg = px.scatter(
-        df, x="Velocità (km/h)", y="FC Media",
-        color_discrete_sequence=['#9CA3AF'], template="plotly_dark",
-        labels={"Velocità (km/h)": "Velocità Espressa", "FC Media": "Costo Fisiologico (BPM)"}
-    )
+    # SEZIONE 2: METODO SEMAFORICO E RADAR
+    col_gauge, col_radar = st.columns([1, 1.2])
     
-    # LA SOLUZIONE AL CRASH: Calcolo manuale della retta di regressione usando Numpy
-    x_vals = df["Velocità (km/h)"]
-    y_vals = df["FC Media"]
-    m, b = np.polyfit(x_vals, y_vals, 1) # y = mx + b
-    
-    # Aggiungo la retta al grafico
-    fig_reg.add_trace(go.Scatter(
-        x=x_vals, 
-        y=m*x_vals + b, 
-        mode='lines', 
-        name='Trend OLS', 
-        line=dict(color='#EF4444', width=3)
-    ))
-    
-    fig_reg.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', margin=dict(t=20, b=20))
-    st.plotly_chart(fig_reg, use_container_width=True)
-    
-    st.markdown("""
-    <div class='ai-insight'>
-        <h4>Interpretazione del Trend (Regressione Lineare)</h4>
-        <p>La linea rossa rappresenta il tuo standard di efficienza. Se in una giornata il tuo puntino si posiziona molto al di sopra della retta rossa (battiti alti ma corsa lenta), significa che fattori esterni (stress lavorativo o calore termico) stanno boicottando la tua performance muscolare innescando il sovrallenamento.</p>
-    </div>
-    """, unsafe_allow_html=True)
+    with col_gauge:
+        colore_sem = "#10B981" if prob_rf < 35 else "#F59E0B" if prob_rf < 70 else "#EF4444"
+        testo_sem = "OTTIMALE" if prob_rf < 35 else "ATTENZIONE" if prob_rf < 70 else "SOVRALLENAMENTO"
+        
+        fig_gauge = go.Figure(go.Indicator(
+            mode = "gauge+number", value = prob_rf,
+            number = {'suffix': "%", 'font': {'color': colore_sem}},
+            title = {'text': f"RISCHIO (SEMAFORO: {testo_sem})", 'font': {'color': '#9CA3AF', 'size': 12}},
+            gauge = {
+                'axis': {'range': [0, 100], 'visible': False},
+                'bar': {'color': colore_sem, 'thickness': 0.8},
+                'bgcolor': "#1F2937", 'bordercolor': "#000000"
+            }
+        ))
+        fig_gauge.update_layout(height=300, paper_bgcolor='rgba(0,0,0,0)', font={'family': "Inter"})
+        st.plotly_chart(fig_gauge, use_container_width=True)
 
-with tab3:
-    st.markdown("### Che cosa causa il tuo Overtraining?")
+    with col_radar:
+        categorie = ['Stress Mentale', 'Fatica Lavoro', 'Fattore Clima', 'Affaticamento Cardiaco']
+        # Normalizziamo i dati rispetto alla media storica per visualizzarli nel radar
+        valori_storici = [df['SMA'].mean(), df['ISLR'].mean(), df['IITR'].mean(), df['IDET'].mean()/100]
+        valori_odierni = [val_sma, val_islr, val_iitr, val_idet/100]
+        
+        fig_radar = go.Figure()
+        fig_radar.add_trace(go.Scatterpolar(r=valori_storici, theta=categorie, fill='toself', name='Media Storica', line_color='#4B5563'))
+        fig_radar.add_trace(go.Scatterpolar(r=valori_odierni, theta=categorie, fill='toself', name='Oggi', line_color='#3B82F6'))
+        fig_radar.update_layout(
+            polar=dict(radialaxis=dict(visible=False, range=[0, max(valori_odierni)+2])),
+            paper_bgcolor='rgba(0,0,0,0)', font={'family': "Inter", 'color': "#9CA3AF"}, height=300,
+            legend=dict(orientation="h", y=-0.1)
+        )
+        st.plotly_chart(fig_radar, use_container_width=True)
+
+elif nav == "Analisi AI (4 Modelli ML)":
+    st.markdown("## Elaborazione Modelli Computazionali")
     
-    importanza = pd.DataFrame({'Metrica': features_usate, 'Impatto': rf_model.feature_importances_}).sort_values('Impatto', ascending=True)
+    t1, t2, t3, t4 = st.tabs(["1. Random Forest", "2. Logistic Regression", "3. K-Means Clustering", "4. Linear Regression"])
     
-    fig_bar = px.bar(
-        importanza, x='Impatto', y='Metrica', orientation='h', 
-        template="plotly_dark", color_discrete_sequence=['#3B82F6']
-    )
-    fig_bar.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', margin=dict(t=20, b=20), xaxis_visible=False)
-    st.plotly_chart(fig_bar, use_container_width=True)
-    
-    st.markdown("""
-    <div class='ai-insight'>
-        <h4>Interpretazione del Rischio (Random Forest)</h4>
-        <p>Questo grafico estrae la logica interna dell'algoritmo predittivo. Mostra in ordine di importanza quali variabili di carico interno o esterno influenzano negativamente la tua probabilità di entrare in sindrome da sovrallenamento. Permette al preparatore atletico di sapere esattamente su quale parametro intervenire.</p>
-    </div>
-    """, unsafe_allow_html=True)
+    # 1. RANDOM FOREST
+    with t1:
+        st.markdown("### Previsione Rischio Clinico e Pesi")
+        importanza = pd.DataFrame({'KPI': features, 'Impatto': rf_model.feature_importances_}).sort_values('Impatto')
+        fig_rf = px.bar(importanza, x='Impatto', y='KPI', orientation='h', template="plotly_dark", color_discrete_sequence=['#3B82F6'])
+        fig_rf.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', height=300, xaxis_visible=False)
+        st.plotly_chart(fig_rf, use_container_width=True)
+        st.markdown("""
+        <div class='ai-insight'>
+            <h4>Interpretazione: Random Forest</h4>
+            <p>Il Random Forest calcola il rischio di infortunio incrociando alberi decisionali multipli. Il grafico mostra la <b>Feature Importance</b>: identifica quali dei tuoi KPI (es. ISLR o SMA) contribuiscono maggiormente ad innalzare il rischio di overtraining.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # 2. LOGISTIC REGRESSION
+    with t2:
+        st.markdown("### Classificazione Binaria (Probabilità di Overload)")
+        col_log1, col_log2 = st.columns(2)
+        col_log1.metric("Probabilità Overload (Random Forest)", f"{prob_rf:.1f}%")
+        col_log2.metric("Probabilità Overload (Regressione Logistica)", f"{prob_log:.1f}%")
+        
+        st.markdown("""
+        <div class='ai-insight'>
+            <h4>Interpretazione: Logistic Regression</h4>
+            <p>A differenza del Random Forest, la Regressione Logistica mappa le probabilità usando una curva Sigmoidea (S-curve). È un modello lineare altamente interpretabile in ambito biomedico. Se la probabilità supera il 50%, il modello classifica matematicamente la sessione come 'Rischio Clinico'.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # 3. K-MEANS CLUSTERING
+    with t3:
+        st.markdown("### Segmentazione Profili tramite Distanza Euclidea")
+        kmeans = KMeans(n_clusters=3, random_state=42)
+        df['Cluster'] = kmeans.fit_predict(df[['ISLR', 'FC Media']])
+        
+        fig_km = px.scatter(
+            df, x="ISLR", y="FC Media", color=df['Cluster'].astype(str), size="Distanza (km)",
+            color_discrete_sequence=["#10B981", "#F59E0B", "#EF4444"], template="plotly_dark",
+            labels={"ISLR": "Sforzo Lavorativo Residuo (ISLR)", "FC Media": "Frequenza Cardiaca (BPM)"}
+        )
+        fig_km.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', height=400)
+        st.plotly_chart(fig_km, use_container_width=True)
+        st.markdown("""
+        <div class='ai-insight'>
+            <h4>Interpretazione: K-Means</h4>
+            <p>L'algoritmo raggruppa le corse in 3 cluster calcolando i centroidi geometrici e minimizzando la distanza euclidea. Mostra chiaramente come le sessioni con alto stress lavorativo (ISLR alto, asse X) si traducano quasi sempre in una risposta cardiaca alterata (asse Y alto).</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # 4. LINEAR REGRESSION (Anticrash: scritta senza statsmodels)
+    with t4:
+        st.markdown("### Analisi del Trend (Costo Fisiologico vs Volume Esterno)")
+        
+        fig_lin = px.scatter(df, x="Distanza (km)", y="FC Media", template="plotly_dark", color_discrete_sequence=['#4B5563'])
+        
+        # Calcolo matematico manuale per evitare l'errore di Plotly/Statsmodels
+        x_vals = df["Distanza (km)"]
+        y_vals = df["FC Media"]
+        m, b = np.polyfit(x_vals, y_vals, 1) # Equazione retta y = mx + q
+        
+        fig_lin.add_trace(go.Scatter(x=x_vals, y=m*x_vals + b, mode='lines', name='Trend Predittivo', line=dict(color='#3B82F6', width=3)))
+        fig_lin.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', height=400)
+        st.plotly_chart(fig_lin, use_container_width=True)
+        
+        st.markdown("""
+        <div class='ai-insight'>
+            <h4>Interpretazione: Linear Regression</h4>
+            <p>La linea blu rappresenta la retta di regressione calcolata con il metodo dei minimi quadrati. Mostra il normale decadimento dell'efficienza aerobica all'aumentare dei chilometri. I punti nettamente al di sopra della linea identificano sessioni in cui l'atleta ha mostrato una deriva cardiaca anomala.</p>
+        </div>
+        """, unsafe_allow_html=True)
