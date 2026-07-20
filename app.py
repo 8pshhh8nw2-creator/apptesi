@@ -219,7 +219,6 @@ pio.templates.default = "plotly_dark"
 PLOTLY_FONT = dict(family="Inter, sans-serif", color="#B8C2D0")
 
 def style_fig(fig, height=None):
-    # VERSIONE CORRETTA: Nessun aggiornamento globale di hoverlabel che causa errori su Indicator
     fig.update_layout(
         paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
         font=PLOTLY_FONT, title_font=dict(family="Space Grotesk, sans-serif", color="#E8ECF2", size=16),
@@ -903,6 +902,21 @@ elif pagina == "ANALISI PREDITTIVA ML":
             sim_input = np.array([[sim_dist, sim_sonno, sim_stress, sim_fc, sim_rpe]])
             sim_prob = rf_model.predict_proba(scaler.transform(sim_input))[0][1] * 100
             sim_color = "#FF6A3D" if sim_prob >= 60 else "#FFB020" if sim_prob >= 25 else "#00F5A0"
+            
+            # CONSIGLIO ML DINAMICO
+            if sim_prob >= 60:
+                safe_dist = max(0, sim_dist * 0.4)
+                advice_msg = f"🔴 <strong>RISCHIO ELEVATO ({sim_prob:.1f}%)</strong>: Con questi alti valori di stress e fatica, i {sim_dist} km impostati sono molto pericolosi. Il modello consiglia di <strong>ridurre drasticamente la distanza a {safe_dist:.1f} km</strong> (o riposo completo) per evitare infortuni acuti."
+                adv_col = "#FF6A3D"
+            elif sim_prob >= 25:
+                safe_dist = max(0, sim_dist * 0.7)
+                advice_msg = f"🟡 <strong>RISCHIO MODERATO ({sim_prob:.1f}%)</strong>: C'è un sovraccarico latente. Considera di <strong>scalare il volume da {sim_dist} km a circa {safe_dist:.1f} km</strong> per rientrare nella fascia di totale sicurezza."
+                adv_col = "#FFB020"
+            else:
+                advice_msg = f"🟢 <strong>RISCHIO BASSO ({sim_prob:.1f}%)</strong>: I tuoi parametri supportano perfettamente i {sim_dist} km simulati. Nessuna restrizione raccomandata, puoi procedere al 100%."
+                adv_col = "#00F5A0"
+
+            st.markdown(f"<div class='info-box' style='border-left-color: {adv_col};'>{advice_msg}</div>", unsafe_allow_html=True)
 
             col_simg1, col_simg2 = st.columns(2)
             with col_simg1:
@@ -922,13 +936,13 @@ elif pagina == "ANALISI PREDITTIVA ML":
         st.error(f"Errore caricamento modelli ML: {str(e)}")
 
 # ---------------------------------------------------------
-# PAGINA 5: CONSIGLIO FINALE (CON REPORT TESTUALE COMPLETO)
+# PAGINA 5: CONSIGLIO FINALE (SEMAFORO & KINEMATICS)
 # ---------------------------------------------------------
 elif pagina == "CONSIGLIO FINALE":
     header_block(
         "Modulo 05 — Action Plan",
         "CONSIGLIO FINALE",
-        "Protocollo operativo, proiezioni fisiologiche e export report completo dell'intera analisi.",
+        "Protocollo operativo, sistema semaforico e report completo per la sessione odierna.",
         IMG_HERO_PLAN, "Coach Protocol"
     )
 
@@ -950,19 +964,27 @@ elif pagina == "CONSIGLIO FINALE":
         distanza_target = r.get('distanza_oggi', 10.0)
         distanza_consigliata = distanza_target if risk_score < 40 else distanza_target * 0.6 if risk_score < 70 else 0.0
 
-        if risk_score < 25: tit, col = "ALLENAMENTO INTENSO AUTORIZZATO", "#00F5A0"
-        elif risk_score < 60: tit, col = "RECUPERO ATTIVO CONSIGLIATO", "#FFB020"
-        else: tit, col = "RIPOSO OBBLIGATORIO", "#FF6A3D"
+        # SISTEMA SEMAFORICO
+        if risk_score < 25: 
+            tit, col = "🟢 LUCE VERDE — ALLENAMENTO AUTORIZZATO", "#00F5A0"
+            azione_testo = "Nessuna restrizione. Le tue metriche indicano che puoi procedere con il carico pianificato al 100%."
+        elif risk_score < 60: 
+            tit, col = "🟡 LUCE GIALLA — MODERARE IL CARICO", "#FFB020"
+            azione_testo = "Il sistema rileva fatica accumulata. Procedi con cautela: riduci la distanza o mantieni i battiti rigorosamente in Z2 (Fondo Lento)."
+        else: 
+            tit, col = "🔴 LUCE ROSSA — RIPOSO OBBLIGATORIO", "#FF6A3D"
+            azione_testo = "Rischio critico di infortunio. Il corpo non ha recuperato lo stress sistemico. FERMATI e sostituisci la sessione con riposo completo o stretching leggero."
 
         st.markdown(f"""
-        <div class='kpi-card' style='border: 1px solid {col}; background-color: rgba(0,0,0,0.35);'>
-            <h2 style='color: {col}; margin: 0; border: none; font-size:1.6em;'>{tit}</h2>
+        <div class='kpi-card' style='border: 2px solid {col}; background-color: rgba(0,0,0,0.35); text-align: left; padding: 30px;'>
+            <h2 style='color: {col}; margin: 0; border: none; font-size:1.8em;'>SISTEMA DI ALLERTA: {tit}</h2>
+            <p style='color: #E8ECF2; font-size: 1.1em; margin-top: 15px;'>{azione_testo}</p>
         </div>
         """, unsafe_allow_html=True)
 
-        # Generazione Report Testuale Completo, Chiaro e Professionale
+        # Generazione Report Testuale (NON-Dietetico, focalizzato su Biomeccanica/Preparazione)
         report_testo = f"""=========================================================
-RUN AI — REPORT DI PERFORMANCE E PIANIFICAZIONE
+RUN AI — REPORT DI PERFORMANCE E PREPARAZIONE FISICA
 Data Analisi: {r.get('data_nota', 'N/D')}
 =========================================================
 
@@ -984,35 +1006,35 @@ Data Analisi: {r.get('data_nota', 'N/D')}
 
 3. RISULTATI DELL'ANALISI PREDITTIVA ML
 ---------------------------------------------------------
-• RECOVERY SCORE: {recovery_score:.0f}% (Stima della capacità di rigenerazione fisica)
+• RECOVERY SCORE: {recovery_score:.0f}% (Stima della capacità di rigenerazione)
 • INDICE DI STRESS ACUTO (SMA): {sma:.1f}
 • RISCHIO INFORTUNIO/SOVRACCARICO: {risk_score:.0f}%
-  STATUS ASSEGNATO: {tit}
+  STATUS SEMAFORO: {tit}
 
-4. DIRETTIVE E PROTOCOLLO COACHING
+4. PROTOCOLLO COACHING & CHINEMATICA (Distanza autorizzata: {distanza_consigliata:.1f} km)
 ---------------------------------------------------------
-• Distanza ricalcolata e autorizzata dal sistema: {distanza_consigliata:.1f} km
+- FASE PRE-ALLENAMENTO (Attivazione):
+  Eseguire 10-15 minuti di riscaldamento neuromuscolare (andature, skip, calciata).
+  Focalizzarsi sulla mobilità dinamica delle anche e della caviglia per preparare l'articolazione all'impatto. Non fare stretching statico a freddo.
 
-PROTOCOLLO CONSIGLIATO PER LA SESSIONE:
-- PRE-ALLENAMENTO (90'-15' prima): 
-  Assumere circa {round(distanza_target * 3)}g di carboidrati e idratarsi con {round(distanza_target * 20)}ml di liquidi. 
-  Consigliati 10' di mobilità dinamica focalizzata su anche e caviglie.
-- DURANTE L'ALLENAMENTO: 
-  Cercare di mantenere una cadenza costante tra 170 e 180 SPM.
-  Assumere piccoli sorsi d'acqua ogni 20 minuti, specialmente se lo sforzo supera un'ora.
-- POST-ALLENAMENTO (Entro 30'): 
-  Ripristinare le riserve assumendo ~{round(distanza_target * 1.2) + 15}g di proteine e ~{round(distanza_target * 4) + 20}g di carboidrati.
-  Raccomandati 8-10 minuti di stretching statico dolce.
-- SERALE E RECUPERO: 
-  Il sistema raccomanda vivamente di puntare a un riposo notturno di almeno {max(r.get('ore_sonno', 7.5), 7.5):.1f} ore per assicurare una corretta supercompensazione muscolare in base ai livelli attuali di stress.
+- FASE DI ALLENAMENTO (Biomeccanica & Pacing):
+  Mantenere una cadenza ottimale di passo (170-180 SPM) per ridurre il tempo di volo e minimizzare la forza di frenata al suolo (overstride).
+  Mantenere un respiro ritmico (es. 2 passi per inspirare, 2 passi per espirare) per abbassare la frequenza cardiaca a parità di sforzo.
+
+- FASE POST-ALLENAMENTO (Recupero):
+  Eseguire 5-10 minuti di defaticamento camminando o a corsa leggerissima (jogging).
+  Procedere con 10 minuti di stretching statico dolce (focalizzato su polpacci, bicipiti femorali e quadricipiti).
+  Utilizzare il rullo miofasciale (foam roller) sulle fasce laterali e sui polpacci per sciogliere le contratture superficiali.
+  Riposare adeguatamente la notte seguente per ottimizzare la risposta ormonale al carico.
 
 =========================================================
 Report generato automaticamente dal motore Machine Learning
 di RUN AI Performance Intelligence System.
 ========================================================="""
 
+        st.markdown("<br>", unsafe_allow_html=True)
         st.subheader("Esportazione Report Completo")
-        st.text_area("Revisiona il Report per il Preparatore Atletico / Atleta", value=report_testo, height=450)
+        st.text_area("Revisiona il Report Tecnico (Preparazione, Biomeccanica, Semaforo)", value=report_testo, height=450)
         st.download_button("SCARICA REPORT COMPLETO (.TXT)", data=report_testo, file_name="runai_report_allenamento_completo.txt", mime="text/plain", use_container_width=True)
 
         st.markdown("<br><hr><br>", unsafe_allow_html=True)
@@ -1063,6 +1085,8 @@ elif pagina == "COMPUTER VISION":
     st.markdown("""
     <div class='info-box'>
     <strong>Pipeline di Computer Vision Reale:</strong> Il sistema legge il video fotogramma per fotogramma, mappa i landmark anatomici tramite MediaPipe Pose e calcola via trigonometria vettoriale l'angolo di flessione del ginocchio e l'overstride effettivo.
+    <br><br>
+    <em>Nota Tecnica: Se l'elaborazione fallisce per la mancanza di librerie, assicurati di aver lanciato nel terminale: <code>pip install opencv-python-headless mediapipe</code></em>
     </div>
     """, unsafe_allow_html=True)
 
@@ -1149,8 +1173,11 @@ elif pagina == "COMPUTER VISION":
                     st.success(f"Analisi completata su {frame_count} fotogrammi con MediaPipe Pose!")
                     st.rerun()
 
+                except ImportError:
+                    st.error("ERRORE: Librerie di Computer Vision non trovate. Per abilitare questa funzione reale devi installarle nel tuo ambiente.")
+                    st.code("pip install opencv-python-headless mediapipe", language="bash")
                 except Exception as e:
-                    st.error(f"Errore durante l'elaborazione con MediaPipe/OpenCV: {str(e)}")
+                    st.error(f"Errore inaspettato durante l'elaborazione del video: {str(e)}")
 
         if st.session_state.get('cv_analizzato', False):
             st.markdown("---")
