@@ -964,7 +964,7 @@ elif pagina == "CONSIGLIO FINALE":
             st.warning("ATTENZIONE MODERATA: Si rileva un lieve accumulo di fatica o uno stress lavorativo superiore alla media. Ti consigliamo di eseguire l'allenamento riducendo del 15% il volume complessivo ed evitando variazioni di ritmo troppo violente.")
         else:
             st.error("STOP E RECUPERO NECESSARIO: I parametri indicano un profilo di rischio critico e un forte debito di sonno/stress. Sostituisci la corsa con una sessione di sola mobilità articolare o riposo totale per evitare infortuni muscolari imminenti.")
-            # ---------------------------------------------------------
+           # ---------------------------------------------------------
 # PAGINA 6: COMPUTER VISION & BIOMECHANIC AI
 # ---------------------------------------------------------
 elif pagina == "COMPUTER VISION":
@@ -1014,43 +1014,86 @@ elif pagina == "COMPUTER VISION":
                     }
                 st.success("Analisi video e predizione ML completate con successo.")
 
-            # Sezione visiva dello spazio riempito con metriche e scheletro biometrico
+            # Sezione visiva dello scheletro high-tech professionale (stile laboratorio clinico di biomeccanica)
             if st.session_state.get('cv_analizzato', False):
-                st.markdown("<p style='font-size:0.85em; color:#00E5FF; font-family:\"JetBrains Mono\",monospace; margin-bottom:4px;'>STATUS: 240 FPS // SKELETON LOCKED</p>", unsafe_allow_html=True)
+                st.markdown("<p style='font-size:0.82em; color:#00E5FF; font-family:\"JetBrains Mono\",monospace; margin-bottom:4px; letter-spacing:0.1em;'>KINEMATIC WIREFRAME // GAIT ANALYSIS FRAME</p>", unsafe_allow_html=True)
                 
                 mc1, mc2, mc3 = st.columns(3)
-                mc1.metric("Frame Analizzati", "450 f", "15 sec")
-                mc2.metric("Confidenza IA", "98.4%", "Media")
-                mc3.metric("Vettore Frenante", "Alto", "Critico")
+                mc1.metric("Frame Rate", "240 FPS", "High-Speed")
+                mc2.metric("Confidence", "99.2%", "OpenPose v3")
+                mc3.metric("Fase", "Strike", "0ms Impatto")
 
-                st.markdown("<p style='font-size:0.88em; color:#8792A3; margin-top:10px;'>Wireframe cinematico estratto dal fotogramma di impatto (Strike):</p>", unsafe_allow_html=True)
+                st.markdown("<p style='font-size:0.85em; color:#8792A3; margin-top:8px;'>Tracciamento articolare e vettori cinematici di frenata:</p>", unsafe_allow_html=True)
                 
+                # Scheletro Biometrico Clinico in stile Laboratorio di Biomeccanica Avanzata
                 skeleton_widget_svg = """
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" style="background: #0E1420; border-radius: 10px; border: 1px solid #1c2333; width: 100%;">
-                    <g stroke="#1c2333" stroke-width="1" opacity="0.4">
-                        <line x1="0" y1="60" x2="400" y2="60" stroke-dasharray="2,2"/>
-                        <line x1="0" y1="120" x2="400" y2="120" stroke-dasharray="2,2"/>
-                        <line x1="0" y1="180" x2="400" y2="180" stroke-dasharray="2,2"/>
-                        <line x1="200" y1="0" x2="200" y2="240" stroke="#00E5FF" stroke-width="1" opacity="0.2"/>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 260" style="background: linear-gradient(135deg, #090E17 0%, #0E1420 100%); border-radius: 12px; border: 1px solid #1c2333; width: 100%; box-shadow: 0 8px 24px rgba(0,0,0,0.5);">
+                    <!-- Griglia Clinica di Riferimento -->
+                    <g stroke="#1c2333" stroke-width="0.8" opacity="0.6">
+                        <line x1="0" y1="52" x2="450" y2="52" stroke-dasharray="3,3"/>
+                        <line x1="0" y1="104" x2="450" y2="104" stroke-dasharray="3,3"/>
+                        <line x1="0" y1="156" x2="450" y2="156" stroke-dasharray="3,3"/>
+                        <line x1="0" y1="208" x2="450" y2="208" stroke-dasharray="3,3"/>
+                        <line x1="225" y1="0" x2="225" y2="260" stroke="#00E5FF" stroke-width="1" opacity="0.25"/>
                     </g>
-                    <line x1="30" y1="200" x2="370" y2="200" stroke="#8792A3" stroke-width="2"/>
-                    <circle cx="180" cy="55" r="12" fill="none" stroke="#00E5FF" stroke-width="2"/>
-                    <line x1="180" y1="67" x2="195" y2="130" stroke="#00F5A0" stroke-width="3"/>
-                    <line x1="185" y1="75" x2="150" y2="100" stroke="#B8C2D0" stroke-width="2"/>
-                    <line x1="150" y1="100" x2="130" y2="130" stroke="#B8C2D0" stroke-width="2"/>
-                    <line x1="185" y1="75" x2="220" y2="95" stroke="#B8C2D0" stroke-width="2"/>
-                    <line x1="220" y1="95" x2="240" y2="125" stroke="#B8C2D0" stroke-width="2"/>
-                    <circle cx="195" cy="130" r="4" fill="#FFB020"/>
-                    <line x1="195" y1="130" x2="250" y2="170" stroke="#FF6A3D" stroke-width="3"/>
-                    <circle cx="250" cy="170" r="4" fill="#FF6A3D"/>
-                    <line x1="250" y1="170" x2="300" y2="200" stroke="#FF6A3D" stroke-width="3"/>
-                    <polygon points="290,200 315,200 310,192 295,192" fill="#FF6A3D"/>
-                    <line x1="195" y1="130" x2="140" y2="175" stroke="#00F5A0" stroke-width="2.5"/>
-                    <line x1="140" y1="175" x2="115" y2="200" stroke="#00F5A0" stroke-width="2.5"/>
-                    <path d="M 235 162 A 18 18 0 0 1 255 152" fill="none" stroke="#FFB020" stroke-width="2"/>
-                    <text x="260" y="150" fill="#FFB020" font-family="monospace" font-size="10" font-weight="bold">141.5°</text>
-                    <line x1="200" y1="205" x2="300" y2="205" stroke="#FF6A3D" stroke-width="1.5" stroke-dasharray="2,2"/>
-                    <text x="210" y="222" fill="#FF6A3D" font-family="monospace" font-size="9" font-weight="bold">OVERSTRIDE RILEVATO</text>
+                    <text x="232" y="16" fill="#00E5FF" font-family="monospace" font-size="9" letter-spacing="0.05em">VERTICAL COM AXIS</text>
+
+                    <!-- Linea del Terreno con Sensori di Forza -->
+                    <line x1="40" y1="215" x2="410" y2="215" stroke="#566178" stroke-width="2"/>
+                    <rect x="315" y="213" width="70" height="4" fill="#FF6A3D" opacity="0.8"/>
+                    <text x="315" y="232" fill="#FF6A3D" font-family="monospace" font-size="8">FORCE PLATE ACTIVE</text>
+
+                    <!-- 3D-Like Marker Points & Joint Wireframe -->
+                    <!-- Tronco & Baricentro -->
+                    <line x1="195" y1="58" x2="215" y2="135" stroke="#00F5A0" stroke-width="3" stroke-linecap="round"/>
+                    
+                    <!-- Cingolo Scapolare & Arti Superiori -->
+                    <circle cx="195" cy="58" r="4" fill="#00E5FF"/>
+                    <line x1="195" y1="65" x2="160" y2="95" stroke="#8792A3" stroke-width="2"/>
+                    <circle cx="160" cy="95" r="3" fill="#8792A3"/>
+                    <line x1="160" y1="95" x2="135" y2="130" stroke="#8792A3" stroke-width="2"/>
+                    <circle cx="135" cy="130" r="3" fill="#8792A3"/>
+
+                    <line x1="195" y1="65" x2="235" y2="85" stroke="#8792A3" stroke-width="2"/>
+                    <circle cx="235" cy="85" r="3" fill="#8792A3"/>
+                    <line x1="235" y1="85" x2="260" y2="115" stroke="#8792A3" stroke-width="2"/>
+                    <circle cx="260" cy="115" r="3" fill="#8792A3"/>
+
+                    <!-- Anca / Pelvi -->
+                    <circle cx="215" cy="135" r="5" fill="#FFB020"/>
+
+                    <!-- Arto Inferiore Anteriore (Fase di Impatto / Overstride) -->
+                    <!-- Coscia (Femore) -->
+                    <line x1="215" y1="135" x2="275" y2="175" stroke="#FF6A3D" stroke-width="4" stroke-linecap="round"/>
+                    <!-- Ginocchio (Marker Patellare) -->
+                    <circle cx="275" cy="175" r="6" fill="#FF6A3D" stroke="#fff" stroke-width="1.5"/>
+                    <!-- Tibia -->
+                    <line x1="275" y1="175" x2="335" y2="212" stroke="#FF6A3D" stroke-width="4" stroke-linecap="round"/>
+                    <!-- Caviglia & Piede (Heel Strike) -->
+                    <circle cx="335" cy="212" r="4" fill="#FF6A3D"/>
+                    <polygon points="325,212 360,212 355,202 332,202" fill="#FF6A3D"/>
+
+                    <!-- Arto Inferiore Posteriore (Toe-Off) -->
+                    <line x1="215" y1="135" x2="165" y2="185" stroke="#00F5A0" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="165" cy="185" r="4" fill="#00F5A0"/>
+                    <line x1="165" y1="185" x2="130" y2="212" stroke="#00F5A0" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="130" cy="212" r="3" fill="#00F5A0"/>
+
+                    <!-- Testa (Modello Biometrico) -->
+                    <circle cx="190" cy="35" r="14" fill="none" stroke="#00E5FF" stroke-width="2"/>
+                    <line x1="190" y1="49" x2="195" y2="58" stroke="#00E5FF" stroke-width="2"/>
+
+                    <!-- Annotazioni Cliniche e Angolari ad Alta Precisione -->
+                    <!-- Arco Angolo Ginocchio -->
+                    <path d="M 260 162 A 22 22 0 0 1 292 165" fill="none" stroke="#FFB020" stroke-width="2"/>
+                    <rect x="298" y="152" width="52" height="18" rx="4" fill="#0E1420" stroke="#FFB020" stroke-width="1"/>
+                    <text x="303" y="165" fill="#FFB020" font-family="monospace" font-size="11" font-weight="bold">141.5°</text>
+
+                    <!-- Vettore Overstride (Distanza frenante) -->
+                    <line x1="225" y1="238" x2="335" y2="238" stroke="#FF6A3D" stroke-width="1.5" stroke-dasharray="2,2"/>
+                    <path d="M 225 235 L 225 241 M 335 235 L 335 241" stroke="#FF6A3D" stroke-width="1.5"/>
+                    <rect x="238" y="228" width="84" height="20" rx="4" fill="#0E1420" stroke="#FF6A3D" stroke-width="1"/>
+                    <text x="243" y="242" fill="#FF6A3D" font-family="monospace" font-size="9" font-weight="bold">OVERSTRIDE: 14.2cm</text>
                 </svg>
                 """
                 st.markdown(skeleton_widget_svg, unsafe_allow_html=True)
@@ -1128,4 +1171,3 @@ elif pagina == "COMPUTER VISION":
             st.info("PROTOCOLLO DI CORREZIONE BIOMECCANICA CONSIGLIATO:\n1. Riduzione dell'ampiezza della falcata per eliminare l'over-stride anteriore al baricentro.\n2. Incremento della frequenza di passo a 176-180 falcate al minuto (SPM) per facilitare l'atterraggio sul mesopiede.\n3. Integrazione di esercizi di forza eccentrica per il quadricipite e protocollo di rinforzo progressivo per il tendine d'Achille.")
     else:
         st.info("Suggerimento: Carica un video registrato lateralmente per attivare l'estrazione dello scheletro, i grafici di analisi biomeccanica e la predizione clinica basata su Machine Learning.")
-
