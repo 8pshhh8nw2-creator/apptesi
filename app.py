@@ -964,7 +964,6 @@ elif pagina == "CONSIGLIO FINALE":
             st.warning("ATTENZIONE MODERATA: Si rileva un lieve accumulo di fatica o uno stress lavorativo superiore alla media. Ti consigliamo di eseguire l'allenamento riducendo del 15% il volume complessivo ed evitando variazioni di ritmo troppo violente.")
         else:
             st.error("STOP E RECUPERO NECESSARIO: I parametri indicano un profilo di rischio critico e un forte debito di sonno/stress. Sostituisci la corsa con una sessione di sola mobilità articolare o riposo totale per evitare infortuni muscolari imminenti.")
-   # ---------------------------------------------------------
 # ---------------------------------------------------------
 # PAGINA 6: COMPUTER VISION & BIOMECHANIC AI
 # ---------------------------------------------------------
