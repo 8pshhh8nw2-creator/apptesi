@@ -10,7 +10,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix
 import warnings
 import base64
-import cv2
 import tempfile
 import os
 
