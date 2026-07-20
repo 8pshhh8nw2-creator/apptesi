@@ -116,7 +116,6 @@ st.markdown("""
         font-family: 'Inter', sans-serif !important;
     }
     
-    /* Sfondi dropdown e selettori scuri */
     .stSelectbox div[data-baseweb="select"] > div, 
     .stMultiSelect div[data-baseweb="select"] > div,
     div[data-baseweb="select"] > div {
@@ -138,32 +137,38 @@ st.markdown("""
         color: #ffffff !important; 
     }
 
-    /* CUSTOM STYLING PER LE TABS (SOSTITUZIONE BIANCO CON TEMA SCURO / CYAN) */
+    /* FORZATURA TOTALE COLORE TABS (ELIMINAZIONE BIANCO DI STREAMLIT) */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background-color: var(--bg);
+        gap: 6px;
+        background-color: transparent !important;
         border-bottom: 1px solid var(--line);
-        padding-bottom: 4px;
+        padding-bottom: 0px;
     }
+    
     .stTabs [data-baseweb="tab"] {
-        height: 42px;
-        background-color: var(--panel) !important;
-        border-radius: 8px 8px 0px 0px !important;
+        background-color: #0E1420 !important;
         border: 1px solid var(--line) !important;
-        color: var(--text-dim) !important;
+        border-bottom: none !important;
+        border-radius: 8px 8px 0px 0px !important;
+        color: #8792A3 !important;
         font-family: 'Space Grotesk', sans-serif !important;
         font-weight: 600 !important;
-        padding: 0 16px !important;
+        padding: 10px 18px !important;
+        height: auto !important;
     }
+    
     .stTabs [data-baseweb="tab"]:hover {
-        background-color: #162032 !important;
-        color: var(--cyan) !important;
+        background-color: #131a29 !important;
+        color: #00E5FF !important;
+        border-color: #00E5FF !important;
     }
+    
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(0, 245, 160, 0.05)) !important;
-        border-color: var(--cyan) !important;
-        color: var(--cyan) !important;
-        box-shadow: 0 -2px 10px rgba(0, 229, 255, 0.15);
+        background: linear-gradient(130deg, #00E5FF 0%, #00B8D4 100%) !important;
+        color: #04121a !important;
+        border-color: #00E5FF !important;
+        font-weight: 700 !important;
+        box-shadow: 0 -4px 15px rgba(0, 229, 255, 0.3) !important;
     }
 
     /* FILE UPLOADER SCURO */
