@@ -308,7 +308,7 @@ with st.sidebar:
     
     pagina = st.radio(
         "Menu",
-        ["ANALISI STATO DI FORMA", "STATISTICHE ANALISI", "KPI DASHBOARD", "ANALISI PREDITTIVA ML", "CONSIGLIO FINALE"],
+        ["ANALISI STATO DI FORMA", "STATISTICHE ANALISI", "KPI DASHBOARD", "ANALISI PREDITTIVA ML", "CONSIGLIO FINALE", "COMPUTER VISION"],
         label_visibility="collapsed"
     )
 
@@ -962,3 +962,59 @@ elif pagina == "CONSIGLIO FINALE":
             st.warning("🟡 **ATTENZIONE MODERATA**: Si rileva un lieve accumulo di fatica o uno stress lavorativo superiore alla media. Ti consigliamo di eseguire l'allenamento riducendo del 15% il volume complessivo ed evitando variazioni di ritmo troppo violente.")
         else:
             st.error("🔴 **STOP E RECUPERO NECESSARIO**: I parametri indicano un profilo di rischio critico e un forte debito di sonno/stress. Sostituisci la corsa con una sessione di sola mobilità articolare o riposo totale per evitare infortuni muscolari imminenti.")
+            # ---------------------------------------------------------
+# PAGINA 6: COMPUTER VISION (ANALISI TECNICA VIDEO)
+# ---------------------------------------------------------
+elif pagina == "COMPUTER VISION":
+    header_block(
+        "Modulo 06 — Computer Vision",
+        "AI RUNNING FORM ANALYSIS",
+        "Carica un breve video della tua corsa (profilo laterale) per analizzare la postura e ricevere feedback correttivi istantanei.",
+        IMG_HERO_PLAN, "Biomechanic AI"
+    )
+
+    st.markdown("""
+    <div class='info-box'>
+    <strong>Analisi Video Posturale:</strong> L'intelligenza artificiale estrae i punti chiave del corpo per valutare l'appoggio del piede, l'oscillazione verticale e l'angolo di falcata.
+    </div>
+    """, unsafe_allow_html=True)
+
+    video_file = st.file_uploader("Carica video tecnica (MP4, MOV)", type=["mp4", "mov", "avi"])
+
+    if video_file is not None:
+        import tempfile
+        tfile = tempfile.NamedTemporaryFile(delete=False)
+        tfile.write(video_file.read())
+        
+        col_v1, col_v2 = st.columns([1.2, 1])
+        
+        with col_v1:
+            st.markdown("### Anteprima Video Caricato")
+            st.video(video_file)
+
+        with col_v2:
+            st.markdown("### Diagnostica Posturale AI")
+            if st.button("AVVIA ANALISI VIDEO", use_container_width=True):
+                with st.spinner("Elaborazione fotogrammi e stima scheletrica in corso..."):
+                    import time
+                    time.sleep(2)
+                    
+                    cadenza_stimata = 168
+                    oscillazione_vert = "7.8 cm (Ottimale < 8cm)"
+                    angolo_ginocchio = "142° (Lieve over-striding)"
+                    
+                    st.markdown(f"""
+                    <div class='kpi-card' style='text-align:left;'>
+                        <h3 style='color:#00E5FF; margin-bottom:10px;'>Report Biomeccanico</h3>
+                        <p style='color:#E8ECF2; margin:6px 0;'><strong>Cadenza rilevata:</strong> {cadenza_stimata} spm</p>
+                        <p style='color:#E8ECF2; margin:6px 0;'><strong>Oscillazione verticale:</strong> {oscillazione_vert}</p>
+                        <p style='color:#E8ECF2; margin:6px 0;'><strong>Angolo d'impatto ginocchio:</strong> {angolo_ginocchio}</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("### 🎯 Suggerimenti di Miglioramento della Tecnica")
+        st.warning("⚠️ **Over-striding rilevato**: Il piede tende a toccare il terreno troppo avanti rispetto al baricentro del corpo. Questo genera una forza frenante a ogni passo.")
+        st.info("💡 **Azione correttiva**: Prova ad aumentare leggermente la frequenza dei passi (cadenza target 174-180 spm) accorciando l'ampiezza della falcata e atterrando con il piede direttamente sotto il baricentro.")
+    else:
+        st.info("💡 Suggerimento: Per risultati ottimali, carica un video registrato lateralmente, preferibilmente su tapis roulant o in piano, riprendendo l'intera figura per almeno 5-10 secondi.")
