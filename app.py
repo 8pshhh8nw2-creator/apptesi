@@ -7,7 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix
+from sklearn.metrics import confusion_matrix
 import warnings
 import base64
 import tempfile
@@ -219,13 +219,12 @@ pio.templates.default = "plotly_dark"
 PLOTLY_FONT = dict(family="Inter, sans-serif", color="#B8C2D0")
 
 def style_fig(fig, height=None):
+    # VERSIONE CORRETTA: Nessun aggiornamento globale di hoverlabel che causa errori su Indicator
     fig.update_layout(
         paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
         font=PLOTLY_FONT, title_font=dict(family="Space Grotesk, sans-serif", color="#E8ECF2", size=16),
         margin=dict(t=50, l=10, r=10, b=10),
     )
-    # Rimuove fastidiosi tooltip 'undefined' pulendo le info extra se non specificate
-    fig.update_traces(hoverlabel=dict(bgcolor="#0E1420", font_size=13, font_family="Inter"))
     if height: fig.update_layout(height=height)
     return fig
 
@@ -559,22 +558,27 @@ elif pagina == "STATISTICHE ANALISI":
             df_weekly = df.groupby(df['Giorno'].dt.to_period('W')).agg({'Distanza (km)': 'sum'}).reset_index()
             df_weekly['Giorno'] = df_weekly['Giorno'].astype(str)
             fig1 = px.bar(df_weekly, x='Giorno', y='Distanza (km)', height=300, color='Distanza (km)', color_continuous_scale=[[0,'#0E4A57'],[1,'#00E5FF']], labels={'Distanza (km)':'Distanza'})
+            fig1.update_traces(hovertemplate="Giorno: %{x}<br>Distanza: %{y} km<extra></extra>")
             st.plotly_chart(style_fig(fig1), use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Analisi Volume:</strong> Verifica che le barre non presentino sbalzi improvvisi superiori al 10% da una settimana all'altra per prevenire sovraccarichi tendinei.</div>", unsafe_allow_html=True)
 
             st.markdown("**Carico per Giorno della Settimana**")
             df_copy = df.copy()
             df_copy['Giorno_Settimana'] = df_copy['Giorno'].dt.day_name()
             df_day = df_copy.groupby('Giorno_Settimana')['Distanza (km)'].mean().reindex(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']).reset_index()
             fig_day = px.bar(df_day, x='Giorno_Settimana', y='Distanza (km)', height=300, color_discrete_sequence=['#00E5FF'], labels={'Distanza (km)':'Distanza (km)'})
+            fig_day.update_traces(hovertemplate="Giorno: %{x}<br>Distanza Media: %{y:.1f} km<extra></extra>")
             st.plotly_chart(style_fig(fig_day), use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Distribuzione:</strong> Evidenzia la distribuzione settimanale dei chilometri. Assicurati di alternare giorni di carico a giorni di recupero attivo.</div>", unsafe_allow_html=True)
 
         with col2:
             st.markdown("**Distanza Cumulativa**")
             df_copy = df.copy()
             df_copy['Cumulativa'] = df_copy['Distanza (km)'].cumsum()
             fig_cum = px.line(df_copy, x='Giorno', y='Cumulativa', height=300, markers=True, labels={'Cumulativa':'Distanza Accumulata'})
-            fig_cum.update_traces(line_color="#00E5FF", name="Cumulativa")
+            fig_cum.update_traces(line_color="#00E5FF", hovertemplate="Giorno: %{x}<br>Distanza Cumulata: %{y:.1f} km<extra></extra>")
             st.plotly_chart(style_fig(fig_cum), use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Progressione:</strong> Traccia la progressione lineare dei chilometri accumulati nel periodo di riferimento.</div>", unsafe_allow_html=True)
 
             record_km = df.loc[df['Distanza (km)'].idxmax()]
             record_vel = df.loc[df['Velocità (km/h)'].idxmax()]
@@ -596,7 +600,9 @@ elif pagina == "STATISTICHE ANALISI":
         with col1:
             st.markdown("**FC Media vs Velocità**")
             fig2 = px.scatter(df, x='Velocità (km/h)', y='FC Media', size='Distanza (km)', color='RPE', color_continuous_scale=[[0,'#0E4A57'],[0.5,'#00E5FF'],[1,'#FF6A3D']], height=300, labels={'FC Media':'Frequenza Cardiaca'})
+            fig2.update_traces(hovertemplate="Velocità: %{x} km/h<br>FC: %{y} bpm<extra></extra>")
             st.plotly_chart(style_fig(fig2), use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Efficienza:</strong> Relazione tra velocità e frequenza cardiaca. Una maggiore efficienza sposta i punti verso destra mantenendo i battiti bassi.</div>", unsafe_allow_html=True)
 
             st.markdown("**Ripartizione Zone Cardiache**")
             bins = [0, 120, 140, 160, 180, 200]
@@ -605,37 +611,46 @@ elif pagina == "STATISTICHE ANALISI":
             df_copy['Zone'] = pd.cut(df_copy['FC Media'], bins=bins, labels=labels)
             zone_counts = df_copy['Zone'].value_counts().reset_index()
             fig_zones = px.pie(zone_counts, values='count', names='Zone', hole=0.6, height=300, color_discrete_sequence=['#00E5FF','#00B8D4','#0E4A57','#FFB020','#FF6A3D'])
+            fig_zones.update_traces(hovertemplate="Zona: %{label}<br>Sessioni: %{value}<extra></extra>")
             st.plotly_chart(style_fig(fig_zones), use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Polarizzazione:</strong> Distribuzione percentuale del tempo trascorso nelle diverse zone cardiache di allenamento.</div>", unsafe_allow_html=True)
 
         with col2:
             st.markdown("**Distribuzione RPE**")
             fig3 = px.histogram(df, x='RPE', nbins=9, height=300, color_discrete_sequence=['#00E5FF'], labels={'RPE':'Valore RPE'})
+            fig3.update_traces(hovertemplate="Sforzo (RPE): %{x}<br>Conteggio: %{y}<extra></extra>")
             fig3.add_vline(x=3.5, line_dash="dash", line_color="#00F5A0")
             fig3.add_vline(x=6.5, line_dash="dash", line_color="#FF6A3D")
             st.plotly_chart(style_fig(fig3), use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Percezione Sforzo:</strong> Frequenza dei livelli di sforzo percepito registrati al termine delle sessioni. Evita accumuli continui oltre il livello 7.</div>", unsafe_allow_html=True)
 
     with tab3:
         col1, col2 = st.columns(2)
         with col1:
             st.markdown("**Ore di Sonno**")
             fig_sleep = px.line(df, x='Giorno', y='Ore Sonno', height=300, markers=True, labels={'Ore Sonno': 'Ore dormite'})
-            fig_sleep.update_traces(line_color="#00E5FF", name="Ore Sonno")
+            fig_sleep.update_traces(line_color="#00E5FF", hovertemplate="Data: %{x}<br>Sonno: %{y} ore<extra></extra>")
             fig_sleep.add_hline(y=7.5, line_dash="dash", line_color="#00F5A0")
             fig_sleep.add_hline(y=6.5, line_dash="dash", line_color="#FF6A3D")
             st.plotly_chart(style_fig(fig_sleep), use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Monitoraggio Sonno:</strong> Linea verde (ideale), linea rossa (soglia rischio infortunio).</div>", unsafe_allow_html=True)
 
             st.markdown("**Debito di Sonno (Rolling 7gg)**")
             df_copy = df.copy()
             df_copy['Debito'] = df_copy['Ore Sonno'].apply(lambda x: max(0, 7.5 - x)).rolling(7).sum()
             fig_debt = px.area(df_copy, x='Giorno', y='Debito', height=300, color_discrete_sequence=['#FF6A3D'], labels={'Debito': 'Debito in ore'})
+            fig_debt.update_traces(hovertemplate="Data: %{x}<br>Debito Accumulato: %{y:.1f} ore<extra></extra>")
             st.plotly_chart(style_fig(fig_debt), use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Debito Sistemico:</strong> Accumulo settimanale del deficit di sonno rispetto allo standard ottimale di 7.5 ore.</div>", unsafe_allow_html=True)
 
         with col2:
             st.markdown("**Sonno vs Sforzo**")
             fig4 = px.scatter(df, x='Ore Sonno', y='RPE', size='Distanza (km)', color='Rischio Infortunio', color_continuous_scale=[[0,'#00E5FF'],[1,'#FF6A3D']], height=300, labels={'Ore Sonno':'Sonno', 'RPE':'Sforzo Percepito'})
+            fig4.update_traces(hovertemplate="Ore Sonno: %{x}<br>RPE: %{y}<extra></extra>")
             fig4.add_hline(y=7, line_dash="dash", line_color="#FFB020")
             fig4.add_vline(x=6.5, line_dash="dash", line_color="#FFB020")
             st.plotly_chart(style_fig(fig4), use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Correlazione Bivariata:</strong> Relazione tra sonno e intensità dello sforzo. I punti in alto a sinistra (poco sonno, alto sforzo) sono a forte rischio infortuni.</div>", unsafe_allow_html=True)
 
     with tab4:
         st.markdown("**Storico Allenamenti Selezionati**")
@@ -671,6 +686,7 @@ elif pagina == "KPI DASHBOARD":
         fig_balance = go.Figure()
         fig_balance.add_trace(go.Scatter(x=df_14['Giorno'], y=df_14['RPE']*10, name="Carico Sforzo (Strain)", fill='tozeroy', fillcolor='rgba(255, 106, 61, 0.18)', line=dict(color='#FF6A3D', width=3)))
         fig_balance.add_trace(go.Scatter(x=df_14['Giorno'], y=(df_14['Ore Sonno']/8)*100, name="Capacità di Recupero", line=dict(color='#00F5A0', width=4)))
+        fig_balance.update_traces(hovertemplate="Data: %{x}<br>Valore: %{y:.1f}<extra></extra>")
         fig_balance.update_layout(height=400, legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(color="#E8ECF2", size=13), bgcolor="rgba(14,20,32,0.85)", bordercolor="#1c2333", borderwidth=1))
         st.plotly_chart(style_fig(fig_balance), use_container_width=True)
         st.markdown("<div class='explain-text'><strong>Spiegazione Grafico:</strong> Confronta visivamente la curva dello stress fisico (area arancione) con la capacità di recupero biologico (linea verde). Quando la linea verde sovrasta i picchi di carico, il corpo si trova in fase di supercompensazione ottimale.</div>", unsafe_allow_html=True)
@@ -715,6 +731,7 @@ elif pagina == "KPI DASHBOARD":
             ))
             fig_gauge.update_layout(height=360)
             st.plotly_chart(style_fig(fig_gauge), use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Tachimetro Rischio:</strong> Quantifica il livello di pericolo sistemico attuale, associando fasce di colore in base ai dati immessi.</div>", unsafe_allow_html=True)
         
         with col_g2:
             fig_radar = go.Figure()
@@ -724,8 +741,10 @@ elif pagina == "KPI DASHBOARD":
                 theta=['Sonno (h)', 'Stress (1-10)', 'RPE (1-10)', 'Recupero (1-10)'], fill='toself', name='Parametri Odierni',
                 marker=dict(color=status_color), line=dict(color=status_color)
             ))
+            fig_radar.update_traces(hovertemplate="%{theta}: %{r:.1f}<extra></extra>")
             fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 10], gridcolor='#1c2333'), angularaxis=dict(gridcolor='#1c2333')), height=360)
             st.plotly_chart(style_fig(fig_radar), use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Diagramma Radar:</strong> Mappa l'equilibrio tra i fattori di stress (RPE, Lavoro) e le risorse di recupero (Sonno, Recovery Score) attuali dell'atleta.</div>", unsafe_allow_html=True)
 
         st.markdown("---")
         st.markdown("### Il Tuo Profilo Atletico AI")
@@ -771,6 +790,13 @@ elif pagina == "ANALISI PREDITTIVA ML":
     )
 
     df_base = st.session_state.dati.copy()
+    
+    st.markdown("""
+    <div class='info-box'>
+    <h3>Come opera il Machine Learning in RUN AI?</h3>
+    <p style='color: #B8C2D0; font-family:"Inter",sans-serif;'>Il sistema analizza i tuoi dati storici mediante algoritmi di classificazione, regressione e clustering non supervisionato per individuare pattern invisibili e stimare con precisione la tua risposta biologica agli stimoli.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
     try:
         X_train_class = df_base[['Distanza (km)', 'Ore Sonno', 'Stress Lavoro', 'FC Media', 'RPE']].values
@@ -794,14 +820,18 @@ elif pagina == "ANALISI PREDITTIVA ML":
                 importances = rf_model.feature_importances_
                 imp_data = sorted(list(zip(feature_names, importances)), key=lambda x: x[1], reverse=True)
                 fig_imp = go.Figure(go.Bar(y=[x[0] for x in imp_data], x=[x[1]*100 for x in imp_data], orientation='h', marker_color='#00E5FF', text=[f'{x[1]*100:.1f}%' for x in imp_data], textposition='auto', name="Importanza Feature"))
+                fig_imp.update_traces(hovertemplate="Feature: %{y}<br>Peso: %{x:.1f}%<extra></extra>")
                 fig_imp.update_layout(height=350, yaxis=dict(autorange="reversed"), title="Importanza delle Variabili")
                 st.plotly_chart(style_fig(fig_imp), use_container_width=True)
             with c2:
                 y_pred_rf = rf_model.predict(X_scaled_class)
                 cm = confusion_matrix(y_train_class, y_pred_rf)
                 fig_cm = go.Figure(data=go.Heatmap(z=cm, x=['Pred: Sicuro', 'Pred: Rischio'], y=['Reale: Sicuro', 'Reale: Rischio'], text=cm, texttemplate='%{text}', textfont={"size": 20, "color": "#04121a"}, colorscale=[[0,'#0E1420'],[1,'#00E5FF']], showscale=False, name="Matrice"))
+                fig_cm.update_traces(hovertemplate="Reale: %{y}<br>Predetto: %{x}<br>Casi: %{z}<extra></extra>")
                 fig_cm.update_layout(height=350, title="Matrice di Confusione")
                 st.plotly_chart(style_fig(fig_cm), use_container_width=True)
+                
+            st.markdown("<div class='explain-text'><strong>Analisi Random Forest:</strong> Il grafico a barre mostra il peso relativo di ogni metrica nel processo decisionale. La matrice di confusione evidenzia l'accuratezza predittiva rispetto agli eventi storici reali.</div>", unsafe_allow_html=True)
 
         with t_ml2:
             st.markdown("### Logistic Regression (Probabilità Lineare)")
@@ -811,9 +841,11 @@ elif pagina == "ANALISI PREDITTIVA ML":
             
             colors = ['#FF6A3D' if c > 0 else '#00F5A0' for c in coefs]
             fig_log = go.Figure(go.Bar(x=feature_names, y=coefs, marker_color=colors, name="Coefficiente"))
+            fig_log.update_traces(hovertemplate="Feature: %{x}<br>Impatto Lineare: %{y:.2f}<extra></extra>")
             fig_log.update_layout(height=400, title="Coefficienti di Impatto (Logistic Regression)", yaxis_title="Peso Coefficiente")
             fig_log.add_hline(y=0, line_color="#E8ECF2", line_width=1)
             st.plotly_chart(style_fig(fig_log), use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Regressione Logistica:</strong> I coefficienti verdi agiscono come fattori protettivi (riducono il rischio), quelli arancioni aumentano esponenzialmente le probabilità di sovraccarico.</div>", unsafe_allow_html=True)
 
         with t_ml3:
             st.markdown("### Linear Regression (Previsione FC Media)")
@@ -823,10 +855,12 @@ elif pagina == "ANALISI PREDITTIVA ML":
             lr_model.fit(X_lr, y_lr)
             df_base['FC_Predetta'] = lr_model.predict(X_lr)
             
-            fig_lr = px.scatter(df_base, x='FC Media', y='FC_Predetta', color='RPE', color_continuous_scale=[[0,'#00E5FF'],[1,'#FF6A3D']], labels={'FC_Predetta':'FC Predetta Modello'})
+            fig_lr = px.scatter(df_base, x='FC Media', y='FC_Predetta', color='RPE', color_continuous_scale=[[0,'#00E5FF'],[1,'#FF6A3D']], labels={'FC_Predetta':'FC Predetta Modello', 'FC Media':'FC Reale'})
+            fig_lr.update_traces(hovertemplate="FC Reale: %{x} bpm<br>FC Predetta: %{y:.1f} bpm<extra></extra>")
             fig_lr.add_shape(type="line", x0=df_base['FC Media'].min(), y0=df_base['FC Media'].min(), x1=df_base['FC Media'].max(), y1=df_base['FC Media'].max(), line=dict(color="#00F5A0", dash="dash"))
             fig_lr.update_layout(height=400, title="FC Reale vs FC Predetta")
             st.plotly_chart(style_fig(fig_lr), use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Previsione Lineare:</strong> La linea verde rappresenta la previsione perfetta. Deviazioni eccessive segnalano un affaticamento latente non spiegato dal passo o dal clima.</div>", unsafe_allow_html=True)
 
         with t_ml4:
             st.markdown("### Cluster Analysis (K-Means)")
@@ -836,8 +870,10 @@ elif pagina == "ANALISI PREDITTIVA ML":
             df_base['Cluster_Type'] = df_base['Cluster_ID'].apply(lambda x: f"Cluster {x+1}")
             
             fig_km = px.scatter(df_base, x='Distanza (km)', y='FC Media', color='Cluster_Type', color_discrete_sequence=['#00E5FF', '#FFB020', '#00F5A0'], size='RPE')
+            fig_km.update_traces(hovertemplate="Distanza: %{x} km<br>FC: %{y} bpm<extra></extra>")
             fig_km.update_layout(height=400, title="Segmentazione Cluster Allenamenti")
             st.plotly_chart(style_fig(fig_km), use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Analisi Cluster:</strong> Algoritmo non supervisionato che raggruppa autonomamente le tue sessioni per verificare l'efficacia della polarizzazione del carico.</div>", unsafe_allow_html=True)
 
         with t_ml5:
             st.markdown("### Stress / Overload Prediction (Time Series)")
@@ -845,9 +881,11 @@ elif pagina == "ANALISI PREDITTIVA ML":
             df_stress['SMA_Rolling'] = df_stress['SMA'].rolling(7, min_periods=1).mean()
             
             fig_sp = px.area(df_stress, x='Giorno', y='SMA_Rolling', color_discrete_sequence=['#FF6A3D'], labels={'SMA_Rolling': 'Media Mobile Stress'})
+            fig_sp.update_traces(hovertemplate="Data: %{x}<br>SMA Rolling: %{y:.1f}<extra></extra>")
             fig_sp.add_hline(y=15, line_dash="dash", line_color="#FFB020", annotation_text="Soglia Critica")
             fig_sp.update_layout(height=400, title="Media Mobile Stress Sistemico (7 Giorni)")
             st.plotly_chart(style_fig(fig_sp), use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Analisi Serie Temporali:</strong> Calcola la media mobile dell'accumulo di fatica cronica. Superare la soglia critica indica alto rischio di sovrallenamento.</div>", unsafe_allow_html=True)
 
         with t_ml6:
             st.markdown("### Simulatore What-If (Random Forest Live)")
@@ -875,7 +913,7 @@ elif pagina == "ANALISI PREDITTIVA ML":
                 sonno_range = np.linspace(4, 10, 20)
                 probs_range = [rf_model.predict_proba(scaler.transform(np.array([[sim_dist, s, sim_stress, sim_fc, sim_rpe]])))[0][1] * 100 for s in sonno_range]
                 fig_sens = px.line(x=sonno_range, y=probs_range, labels={'x': 'Ore di Sonno', 'y': 'Rischio %'}, title="Sensibilità: Rischio vs Ore di Sonno")
-                fig_sens.update_traces(line_color="#00E5FF", line_width=3, name="Sensibilità")
+                fig_sens.update_traces(line_color="#00E5FF", line_width=3, name="Sensibilità", hovertemplate="Sonno: %{x:.1f}h<br>Rischio: %{y:.1f}%<extra></extra>")
                 fig_sens.add_vline(x=sim_sonno, line_dash="dash", line_color="#FF6A3D")
                 fig_sens.update_layout(height=320)
                 st.plotly_chart(style_fig(fig_sens), use_container_width=True)
