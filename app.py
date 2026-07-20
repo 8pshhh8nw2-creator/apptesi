@@ -964,7 +964,7 @@ elif pagina == "CONSIGLIO FINALE":
             st.warning("ATTENZIONE MODERATA: Si rileva un lieve accumulo di fatica o uno stress lavorativo superiore alla media. Ti consigliamo di eseguire l'allenamento riducendo del 15% il volume complessivo ed evitando variazioni di ritmo troppo violente.")
         else:
             st.error("STOP E RECUPERO NECESSARIO: I parametri indicano un profilo di rischio critico e un forte debito di sonno/stress. Sostituisci la corsa con una sessione di sola mobilità articolare o riposo totale per evitare infortuni muscolari imminenti.")
-      # ---------------------------------------------------------
+   # ---------------------------------------------------------
 # PAGINA 6: COMPUTER VISION & BIOMECHANIC AI
 # ---------------------------------------------------------
 elif pagina == "COMPUTER VISION":
@@ -1020,9 +1020,9 @@ elif pagina == "COMPUTER VISION":
             mc2.metric("Confidence", "99.2%", "OpenPose v3")
             mc3.metric("Fase", "Strike", "0ms Impatto")
 
-            st.markdown("<p style='font-size:0.85em; color:#8792A3; margin-top:8px; margin-bottom:16px;'>Tracciamento articolare e analisi impatto a terra:</p>", unsafe_allow_html=True)
+            st.markdown("<p style='font-size:0.85em; color:#8792A3; margin-top:8px; margin-bottom:16px;'>Tracciamento articolare e analisi vettoriale avanzata:</p>", unsafe_allow_html=True)
             
-            # Due colonne bilanciate: Video elaborato a sinistra, Stress Mapping ultra-realistico a destra
+            # Due colonne bilanciate: Video elaborato a sinistra, Digital Twin + GRF a destra
             col_out1, col_out2 = st.columns([1, 1.1])
             
             with col_out1:
@@ -1031,12 +1031,11 @@ elif pagina == "COMPUTER VISION":
                 st.markdown("<p style='font-size:0.75em; color:#00F5A0; text-align:center; font-family:\"JetBrains Mono\",monospace; margin-top:10px;'>OUTPUT: AI TRACKING COMPLETATO</p>", unsafe_allow_html=True)
 
             with col_out2:
-                # SCRITTA SOPRA L'IMMAGINE COME RICHIESTO
+                # 1. DIGITAL TWIN // KINEMATIC STRESS MAP (Sopra)
                 st.markdown("<p style='font-size:0.82em; color:#00E5FF; font-family:\"JetBrains Mono\",monospace; margin-bottom:6px; letter-spacing:0.1em;'>DIGITAL TWIN // KINEMATIC STRESS MAP</p>", unsafe_allow_html=True)
 
-                # PANNELLO DX: Digital Twin Biomeccanico Ultra-Realistico e Professionale
                 digital_twin_pro_svg = """
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" style="background: radial-gradient(circle at center, #0B111A 0%, #04070B 100%); border-radius: 12px; border: 1px solid #1c2333; width: 100%; box-shadow: 0 8px 30px rgba(0,229,255,0.08);">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320" style="background: radial-gradient(circle at center, #0B111A 0%, #04070B 100%); border-radius: 12px; border: 1px solid #1c2333; width: 100%; box-shadow: 0 8px 30px rgba(0,229,255,0.08);">
                   <defs>
                     <filter id="glow-red-pro" x="-50%" y="-50%" width="200%" height="200%">
                       <feGaussianBlur stdDeviation="6" result="blur" />
@@ -1053,55 +1052,76 @@ elif pagina == "COMPUTER VISION":
 
                   <rect width="100%" height="100%" fill="url(#grid-pro)" />
 
-                  <!-- GRUPPO ANATOMICO 3D (Modello Gamba Clinico) -->
-                  <g transform="translate(40, -10)">
-                      <!-- Quadricipite / Muscolatura Coscia -->
+                  <g transform="translate(40, -15)">
                       <path d="M 180 60 C 190 100, 205 140, 215 180 C 200 190, 185 160, 175 110 Z" fill="#00E5FF" opacity="0.25"/>
                       <path d="M 180 60 C 190 100, 205 140, 215 180" fill="none" stroke="#00E5FF" stroke-width="3" filter="url(#glow-cyan-pro)"/>
-
-                      <!-- Tibia / Struttura Ossea -->
                       <path d="M 215 195 Q 205 260, 220 310" fill="none" stroke="#00E5FF" stroke-width="10" opacity="0.2" stroke-linecap="round"/>
                       <path d="M 215 195 Q 205 260, 220 310" fill="none" stroke="#00E5FF" stroke-width="2" stroke-dasharray="3,3"/>
-
-                      <!-- Complesso Articolare del Ginocchio (Rotula 3D) -->
                       <circle cx="215" cy="188" r="14" fill="#0E1420" stroke="#00E5FF" stroke-width="2"/>
                       <path d="M 205 188 A 10 10 0 0 1 225 188" fill="none" stroke="#00F5A0" stroke-width="3" filter="url(#glow-cyan-pro)"/>
-
-                      <!-- Tendine d'Achille e Tallone -->
                       <path d="M 200 240 Q 190 280, 205 310" fill="none" stroke="#FFB020" stroke-width="6" opacity="0.7"/>
                       <polygon points="210,310 230,325 260,325 250,305" fill="#0E1420" stroke="#00E5FF" stroke-width="1.5" opacity="0.8"/>
                   </g>
 
-                  <!-- Anelli di Scansione Clinica Laser -->
-                  <ellipse cx="255" cy="178" rx="35" ry="12" fill="none" stroke="#00E5FF" stroke-width="1" opacity="0.4" transform="rotate(-10 255 178)"/>
-                  <ellipse cx="260" cy="300" rx="22" ry="8" fill="none" stroke="#FFB020" stroke-width="1" opacity="0.4"/>
+                  <ellipse cx="255" cy="173" rx="35" ry="12" fill="none" stroke="#00E5FF" stroke-width="1" opacity="0.4" transform="rotate(-10 255 173)"/>
+                  <ellipse cx="260" cy="295" rx="22" ry="8" fill="none" stroke="#FFB020" stroke-width="1" opacity="0.4"/>
 
-                  <!-- HOTSPOT 1: SOVRACCARICO ROTULEO (Rosso Intenso) -->
-                  <circle cx="255" cy="178" r="16" fill="#FF6A3D" opacity="0.5" filter="url(#glow-red-pro)"/>
-                  <circle cx="255" cy="178" r="5" fill="#FFFFFF"/>
-                  <!-- Linea Callout Ginocchio -->
-                  <polyline points="255,178 320,120 560,120" fill="none" stroke="#FF6A3D" stroke-width="1.5"/>
-                  <rect x="330" y="98" width="235" height="42" fill="#0A0F17" stroke="#FF6A3D" stroke-width="1" rx="4"/>
-                  <text x="342" y="114" fill="#FF6A3D" font-family="monospace" font-size="10" font-weight="bold">SOVRACCARICO ROTULEO (38%)</text>
-                  <text x="342" y="128" fill="#8792A3" font-family="monospace" font-size="8">Pressione patello-femorale da over-stride</text>
+                  <circle cx="255" cy="173" r="16" fill="#FF6A3D" opacity="0.5" filter="url(#glow-red-pro)"/>
+                  <circle cx="255" cy="173" r="5" fill="#FFFFFF"/>
+                  <polyline points="255,173 320,115 560,115" fill="none" stroke="#FF6A3D" stroke-width="1.5"/>
+                  <rect x="330" y="93" width="235" height="42" fill="#0A0F17" stroke="#FF6A3D" stroke-width="1" rx="4"/>
+                  <text x="342" y="109" fill="#FF6A3D" font-family="monospace" font-size="10" font-weight="bold">SOVRACCARICO ROTULEO (38%)</text>
+                  <text x="342" y="123" fill="#8792A3" font-family="monospace" font-size="8">Pressione patello-femorale da over-stride</text>
 
-                  <!-- HOTSPOT 2: TENSIONE ACHILLEA (Ambra) -->
-                  <circle cx="240" cy="290" r="12" fill="#FFB020" opacity="0.6" filter="url(#glow-red-pro)"/>
-                  <circle cx="240" cy="290" r="4" fill="#FFFFFF"/>
-                  <!-- Linea Callout Achille -->
-                  <polyline points="240,290 320,230 560,230" fill="none" stroke="#FFB020" stroke-width="1.5"/>
-                  <rect x="330" y="208" width="235" height="42" fill="#0A0F17" stroke="#FFB020" stroke-width="1" rx="4"/>
-                  <text x="342" y="224" fill="#FFB020" font-family="monospace" font-size="10" font-weight="bold">TENSIONE ACHILLEA (31%)</text>
-                  <text x="342" y="238" fill="#8792A3" font-family="monospace" font-size="8">Stress eccentrico in fase d'impatto</text>
+                  <circle cx="240" cy="285" r="12" fill="#FFB020" opacity="0.6" filter="url(#glow-red-pro)"/>
+                  <circle cx="240" cy="285" r="4" fill="#FFFFFF"/>
+                  <polyline points="240,285 320,225 560,225" fill="none" stroke="#FFB020" stroke-width="1.5"/>
+                  <rect x="330" y="203" width="235" height="42" fill="#0A0F17" stroke="#FFB020" stroke-width="1" rx="4"/>
+                  <text x="342" y="219" fill="#FFB020" font-family="monospace" font-size="10" font-weight="bold">TENSIONE ACHILLEA (31%)</text>
+                  <text x="342" y="233" fill="#8792A3" font-family="monospace" font-size="8">Stress eccentrico in fase d'impatto</text>
 
-                  <!-- Box Statistiche ML Integrato in basso a sinistra -->
-                  <rect x="20" y="250" width="160" height="75" fill="#0E1420" stroke="#1c2333" stroke-width="1" rx="6"/>
-                  <text x="30" y="268" fill="#8792A3" font-family="monospace" font-size="8">RISCHIO ML PREVISTO</text>
-                  <text x="30" y="295" fill="#FF6A3D" font-family="monospace" font-size="22" font-weight="bold">84.5%</text>
-                  <text x="30" y="312" fill="#FF6A3D" font-family="monospace" font-size="8">STATUS: CRITICO</text>
+                  <rect x="20" y="240" width="150" height="70" fill="#0E1420" stroke="#1c2333" stroke-width="1" rx="6"/>
+                  <text x="28" y="256" fill="#8792A3" font-family="monospace" font-size="7">RISCHIO ML PREVISTO</text>
+                  <text x="28" y="282" fill="#FF6A3D" font-family="monospace" font-size="20" font-weight="bold">84.5%</text>
+                  <text x="28" y="298" fill="#FF6A3D" font-family="monospace" font-size="7">STATUS: CRITICO</text>
                 </svg>
                 """
-                st.components.v1.html(digital_twin_pro_svg, height=350, scrolling=False)
+                st.components.v1.html(digital_twin_pro_svg, height=330, scrolling=False)
+
+                st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
+
+                # 2. PANNELLO SOTTO: GROUND REACTION FORCE (Analisi dell'impatto a terra)
+                st.markdown("<p style='font-size:0.82em; color:#00F5A0; font-family:\"JetBrains Mono\",monospace; margin-top:10px; margin-bottom:6px; letter-spacing:0.1em;'>GROUND REACTION FORCE // IMPACT TRANSIENT</p>", unsafe_allow_html=True)
+
+                grf_pro_svg = """
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" style="background: #080B12; border-radius: 12px; border: 1px solid #1c2333; width: 100%; box-shadow: 0 5px 20px rgba(0,245,160,0.05);">
+                    <defs>
+                        <linearGradient id="grfGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#FF6A3D" stop-opacity="0.5"/>
+                            <stop offset="100%" stop-color="#FF6A3D" stop-opacity="0.0"/>
+                        </linearGradient>
+                    </defs>
+                    
+                    <line x1="50" y1="150" x2="570" y2="150" stroke="#566178" stroke-width="1.5"/>
+                    <line x1="50" y1="40" x2="570" y2="40" stroke="#1c2333" stroke-width="1" stroke-dasharray="3,3"/>
+                    <text x="15" y="44" fill="#8792A3" font-family="monospace" font-size="8">3.0 BW</text>
+                    <text x="15" y="154" fill="#8792A3" font-family="monospace" font-size="8">0.0 BW</text>
+
+                    <path d="M 50 150 C 150 150, 200 65, 310 65 C 420 65, 470 150, 550 150" fill="none" stroke="#00E5FF" stroke-width="2" stroke-dasharray="4,4" opacity="0.6"/>
+                    <text x="430" y="55" fill="#00E5FF" font-family="monospace" font-size="8">Standard Ideale</text>
+
+                    <path d="M 50 150 L 90 150 L 130 20 L 170 90 C 240 90, 360 55, 470 150 L 550 150" fill="url(#grfGrad)" />
+                    <path d="M 50 150 L 90 150 L 130 20 L 170 90 C 240 90, 360 55, 470 150 L 550 150" fill="none" stroke="#FF6A3D" stroke-width="2.5" stroke-linejoin="round"/>
+                    
+                    <circle cx="130" cy="20" r="5" fill="#FFFFFF" stroke="#FF6A3D" stroke-width="2"/>
+                    <line x1="130" y1="20" x2="190" y2="20" stroke="#FF6A3D" stroke-width="1"/>
+                    <rect x="195" y="10" width="180" height="20" fill="#0A0F17" stroke="#FF6A3D" stroke-width="1" rx="3"/>
+                    <text x="202" y="24" fill="#FF6A3D" font-family="monospace" font-size="9" font-weight="bold">PUNTO DI IMPATTO (OVERSTRIDE)</text>
+                    
+                    <text x="270" y="185" fill="#566178" font-family="monospace" font-size="8">TEMPO DI CONTATTO (ms)</text>
+                </svg>
+                """
+                st.components.v1.html(grf_pro_svg, height=195, scrolling=False)
 
             # --- REPORT, GRAFICI E CONSIGLI INTATTI ---
             dati_cv = st.session_state.cv_dati
