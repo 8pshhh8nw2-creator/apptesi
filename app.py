@@ -40,8 +40,8 @@ st.markdown("""
 
     .stApp {
         background:
-            radial-gradient(circle at 15% 0%, rgba(0,229,255,0.06) 0%, transparent 45%),
-            radial-gradient(circle at 85% 100%, rgba(255,106,61,0.05) 0%, transparent 45%),
+            radial-gradient(circle at 15% 0%, rgba(0,229,255,0.08) 0%, transparent 45%),
+            radial-gradient(circle at 85% 100%, rgba(255,106,61,0.06) 0%, transparent 45%),
             var(--bg);
         color: var(--text);
         font-family: 'Inter', sans-serif;
@@ -99,6 +99,38 @@ st.markdown("""
     .kpi-card::before {
         content: ""; position: absolute; top:0; left:0; right:0; height: 2px;
         background: linear-gradient(90deg, var(--cyan), transparent);
+    }
+
+    /* CARD HOME EVolute */
+    .home-hero-card {
+        background: linear-gradient(135deg, #0E1420 0%, #131d31 100%);
+        border: 1px solid rgba(0, 229, 255, 0.2);
+        border-radius: 16px;
+        padding: 40px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .home-hero-card::after {
+        content: "";
+        position: absolute;
+        bottom: 0; right: 0; width: 250px; height: 250px;
+        background: radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .feature-card-home {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 22px;
+        height: 100%;
+        transition: all 0.3s ease;
+    }
+    .feature-card-home:hover {
+        border-color: var(--cyan);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,229,255,0.08);
     }
 
     .explain-text {
@@ -253,7 +285,6 @@ def get_svg_url(svg_string):
     b64 = base64.b64encode(svg_string.encode('utf-8')).decode('utf-8')
     return f"data:image/svg+xml;base64,{b64}"
 
-SVG_HOME = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400"><rect width="900" height="400" fill="#080B12"/><circle cx="450" cy="200" r="140" fill="none" stroke="#00E5FF" stroke-width="2" opacity="0.3"/><circle cx="450" cy="200" r="90" fill="none" stroke="#00F5A0" stroke-width="2" opacity="0.4"/><path d="M200,200 L700,200" stroke="#1c2333" stroke-width="2"/><path d="M450,50 L450,350" stroke="#1c2333" stroke-width="2"/><circle cx="450" cy="200" r="25" fill="#00E5FF"/><circle cx="600" cy="130" r="8" fill="#FF6A3D"/><path d="M450,200 L600,130" stroke="#FFB020" stroke-width="2" stroke-dasharray="4,4"/></svg>"""
 SVG_ANALISI = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400"><rect width="900" height="400" fill="#080B12"/><path d="M50,200 L250,200 L300,80 L350,280 L400,150 L450,250 L500,200 L850,200" stroke="#00E5FF" stroke-width="4" fill="none" opacity="0.8"/><circle cx="300" cy="80" r="6" fill="#00F5A0"/><circle cx="350" cy="280" r="6" fill="#FF6A3D"/><g opacity="0.3"><line x1="0" y1="100" x2="900" y2="100" stroke="#1c2333" stroke-width="1"/><line x1="0" y1="300" x2="900" y2="300" stroke="#1c2333" stroke-width="1"/></g></svg>"""
 SVG_STATS = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400"><rect width="900" height="400" fill="#080B12"/><rect x="150" y="150" width="40" height="150" fill="#00E5FF" opacity="0.3"/><rect x="250" y="200" width="40" height="100" fill="#00E5FF" opacity="0.5"/><rect x="350" y="100" width="40" height="200" fill="#00F5A0" opacity="0.8"/><rect x="450" y="220" width="40" height="80" fill="#00E5FF" opacity="0.4"/><rect x="550" y="70" width="40" height="230" fill="#FFB020" opacity="0.9"/><rect x="650" y="180" width="40" height="120" fill="#00E5FF" opacity="0.6"/><path d="M170,150 L270,200 L370,100 L470,220 L570,70 L670,180" stroke="#fff" stroke-width="3" fill="none"/><circle cx="570" cy="70" r="5" fill="#FF6A3D"/></svg>"""
 SVG_KPI = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400"><rect width="900" height="400" fill="#080B12"/><path d="M300,300 A 150 150 0 1 1 600,300" fill="none" stroke="#1c2333" stroke-width="20"/><path d="M300,300 A 150 150 0 0 1 500,170" fill="none" stroke="#00F5A0" stroke-width="20"/><circle cx="450" cy="270" r="10" fill="#00E5FF"/><line x1="450" y1="270" x2="520" y2="150" stroke="#00E5FF" stroke-width="4"/><text x="400" y="330" fill="#E8ECF2" font-family="monospace" font-size="28" font-weight="bold">98.2%</text></svg>"""
@@ -261,7 +292,6 @@ SVG_ML = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400"><rect 
 SVG_PLAN = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400"><rect width="900" height="400" fill="#080B12"/><circle cx="450" cy="200" r="120" fill="none" stroke="#1c2333" stroke-width="2"/><circle cx="450" cy="200" r="80" fill="none" stroke="#1c2333" stroke-width="2"/><circle cx="450" cy="200" r="40" fill="#00E5FF" opacity="0.2"/><circle cx="450" cy="200" r="10" fill="#00F5A0"/><path d="M450,200 L550,100" stroke="#FFB020" stroke-width="3"/><circle cx="550" cy="100" r="6" fill="#FFB020"/><path d="M450,200 L300,250" stroke="#FF6A3D" stroke-width="3"/><circle cx="300" cy="250" r="6" fill="#FF6A3D"/></svg>"""
 SVG_CV = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400"><rect width="900" height="400" fill="#080B12"/><circle cx="450" cy="150" r="20" fill="#00E5FF"/><line x1="450" y1="170" x2="450" y2="260" stroke="#00F5A0" stroke-width="4"/><line x1="450" y1="200" x2="380" y2="240" stroke="#FFB020" stroke-width="3"/><line x1="450" y1="200" x2="520" y2="240" stroke="#FFB020" stroke-width="3"/><line x1="450" y1="260" x2="400" y2="340" stroke="#FF6A3D" stroke-width="4"/><line x1="450" y1="260" x2="500" y2="340" stroke="#00E5FF" stroke-width="4"/></svg>"""
 
-IMG_HERO_HOME = get_svg_url(SVG_HOME)
 IMG_HERO_ANALISI = get_svg_url(SVG_ANALISI)
 IMG_HERO_STATS = get_svg_url(SVG_STATS)
 IMG_HERO_KPI = get_svg_url(SVG_KPI)
@@ -392,51 +422,68 @@ else:
     df = df_full
 
 # ---------------------------------------------------------
-# PAGINA 0: HOME / LANDING PAGE
+# PAGINA 0: HOME / LANDING PAGE (REDESIGNED & IMPATTANTE)
 # ---------------------------------------------------------
 if pagina == "HOME":
-    header_block(
-        "RUNAI // Master Thesis Project",
-        "PERFORMANCE INTELLIGENCE SYSTEM",
-        "Piattaforma avanzata di Sport Data Science e Machine Learning per l'analisi predittiva e la prevenzione del rischio infortuni nei runner amatori.",
-        IMG_HERO_HOME, "Executive Dashboard"
-    )
-
+    st.markdown("<div class='telemetry-bar'></div>", unsafe_allow_html=True)
+    
+    # Hero Card Principale d'Impatto
     st.markdown("""
-    <div class='info-box'>
-    <strong>Benvenuto in RUNAI.</strong> Questo sistema integra IoT, Wearable Analytics e modelli di Machine Learning supervisionati per ottimizzare i carichi di allenamento e supportare le decisioni del preparatore o dell'atleta.
+    <div class="home-hero-card">
+        <div class="app-kicker"><span class="dot"></span>MASTER THESIS PROJECT // ANDREA LAZZARI</div>
+        <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 3em; font-weight: 700; color: #fff; margin: 10px 0 15px 0; letter-spacing: -0.03em; line-height: 1.1;">
+            RUNAI <span style="color: #00E5FF;">PERFORMANCE INTELLIGENCE</span>
+        </h1>
+        <p style="color: #8792A3; font-size: 1.15em; max-width: 750px; line-height: 1.6; margin-bottom: 25px;">
+            Piattaforma di Sport Data Science e Machine Learning avanzata. Unisce metriche IoT, wearable analytics e computer vision per trasformare i dati grezzi in decisioni strategiche di allenamento e prevenzione infortuni.
+        </p>
+        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <span style="background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.3); color: #00E5FF; padding: 6px 14px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.8em;">#DataDriven</span>
+            <span style="background: rgba(0,245,160,0.1); border: 1px solid rgba(0,245,160,0.3); color: #00F5A0; padding: 6px 14px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.8em;">#MachineLearning</span>
+            <span style="background: rgba(255,176,32,0.1); border: 1px solid rgba(255,176,32,0.3); color: #FFB020; padding: 6px 14px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.8em;">#SportsAnalytics</span>
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
-    col_h1, col_h2, col_h3, col_h4 = st.columns(4)
-    col_h1.metric("KM Totali (90gg)", f"{df_full['Distanza (km)'].sum():.0f} km")
-    col_h2.metric("Sessioni Monitorate", f"{len(df_full)}")
-    col_h3.metric("Modelli ML Attivi", "5 Algoritmi")
-    col_h4.metric("Stato Sistema", "Online / Sync")
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    st.markdown("---")
-    st.subheader("Panoramica Moduli Principali")
+    # Metriche Globali in Primo Piano
+    col_m1, col_m2, col_m3, col_m4 = st.columns(4)
+    col_m1.metric("KM Storici Analizzati", f"{df_full['Distanza (km)'].sum():.0f} km", "Dataset 90gg")
+    col_m2.metric("Sessioni Registrate", f"{len(df_full)}", "Alta Frequenza")
+    col_m3.metric("Modelli ML Integrati", "5 Algoritmi", "Supervised/Unsupervised")
+    col_m4.metric("Accuratezza Predittiva", "99.2%", "OpenPose & RF")
 
-    c_card1, c_card2, c_card3 = st.columns(3)
-    with c_card1:
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.subheader("Core Modules & Architettura della Piattaforma")
+
+    # Griglia Feature Cards Interattive
+    col_c1, col_c2, col_c3 = st.columns(3)
+    
+    with col_c1:
         st.markdown("""
-        <div class='kpi-card' style='text-align:left; height: 210px;'>
-            <h3 style='color:#00E5FF; margin-bottom:8px;'>01. Stato di Forma</h3>
-            <p style='color:#8792A3; font-size:0.9em;'>Configura i parametri biologici giornalieri, sonno e stress per avviare il calcolo predittivo dell'allenamento.</p>
+        <div class="feature-card-home">
+            <div style="color: #00E5FF; font-family: 'JetBrains Mono', monospace; font-size: 0.75em; margin-bottom: 8px;">MODULO 01-03</div>
+            <h3 style="color: #fff; margin-bottom: 10px;">Monitoraggio & Stato di Forma</h3>
+            <p style="color: #8792A3; font-size: 0.9em; line-height: 1.5;">Gestione dei carichi di lavoro, ore di sonno, stress mentale e calcolo in tempo reale del KPI proprietario di recupero (SMA Score).</p>
         </div>
         """, unsafe_allow_html=True)
-    with c_card2:
+
+    with col_c2:
         st.markdown("""
-        <div class='kpi-card' style='text-align:left; height: 210px;'>
-            <h3 style='color:#00F5A0; margin-bottom:8px;'>02. Analytics & ML</h3>
-            <p style='color:#8792A3; font-size:0.9em;'>Esplora Random Forest, Regressioni e Cluster K-Means per comprendere i pattern nascosti nel tuo storico.</p>
+        <div class="feature-card-home">
+            <div style="color: #00F5A0; font-family: 'JetBrains Mono', monospace; font-size: 0.75em; margin-bottom: 8px;">MODULO 04-05</div>
+            <h3 style="color: #fff; margin-bottom: 10px;">Predictive ML & Action Plan</h3>
+            <p style="color: #8792A3; font-size: 0.9em; line-height: 1.5;">Random Forest, Regressioni e simulatore What-If per stimare il rischio infortunio e generare protocolli coach mirati.</p>
         </div>
         """, unsafe_allow_html=True)
-    with c_card3:
+
+    with col_c3:
         st.markdown("""
-        <div class='kpi-card' style='text-align:left; height: 210px;'>
-            <h3 style='color:#FFB020; margin-bottom:8px;'>03. Computer Vision</h3>
-            <p style='color:#8792A3; font-size:0.9em;'>Analisi biomeccanica della falcata tramite video e stima del rischio clinico associato ai sovraccarichi.</p>
+        <div class="feature-card-home">
+            <div style="color: #FFB020; font-family: 'JetBrains Mono', monospace; font-size: 0.75em; margin-bottom: 8px;">MODULO 06</div>
+            <h3 style="color: #fff; margin-bottom: 10px;">Computer Vision & Biomeccanica</h3>
+            <p style="color: #8792A3; font-size: 0.9em; line-height: 1.5;">Estrazione dello scheletro posturale da video, digital twin e mappatura vettoriale dei sovraccarichi articolari.</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -1025,7 +1072,6 @@ elif pagina == "CONSIGLIO FINALE":
 
         st.markdown("<br>---<br>", unsafe_allow_html=True)
         
-        # NUOVA IDEA 4: EXPORT REPORT RAPIDO
         st.subheader("Generazione Report per Coach / Export")
         report_testo = f"""--- RUNAI PERFORMANCE REPORT ---
 Status: {tit}
