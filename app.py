@@ -988,7 +988,7 @@ elif pagina == "COMPUTER VISION":
         tfile.write(video_file.read())
         video_path = tfile.name
 
-        # Pulsante di avvio immediato (nessun video originale mostrato)
+        # Pulsante di avvio immediato
         if not st.session_state.get('cv_analizzato', False):
             if st.button("ELABORA SCHELETRO E PREDICI INFORTUNIO", use_container_width=True):
                 with st.spinner("Estrazione fotogrammi, rendering scheletro in sovraimpressione e calcolo predittivo ML in corso..."):
@@ -1008,12 +1008,11 @@ elif pagina == "COMPUTER VISION":
                     }
                 st.rerun()
 
-        # Mostra il risultato solo dopo l'analisi
+        # Visualizzazione post-analisi
         if st.session_state.get('cv_analizzato', False):
-            st.success("Analisi video completata. Video elaborato e Digital Twin generati con successo.")
+            st.success("Analisi video completata. Video elaborato e Modelli Generativi caricati con successo.")
             st.markdown("---")
             
-            # Scritte superiori mantenute come richiesto
             st.markdown("<p style='font-size:0.82em; color:#00E5FF; font-family:\"JetBrains Mono\",monospace; margin-bottom:4px; letter-spacing:0.1em;'>KINEMATIC WIREFRAME // GAIT ANALYSIS FRAME</p>", unsafe_allow_html=True)
             
             mc1, mc2, mc3 = st.columns(3)
@@ -1021,98 +1020,118 @@ elif pagina == "COMPUTER VISION":
             mc2.metric("Confidence", "99.2%", "OpenPose v3")
             mc3.metric("Fase", "Strike", "0ms Impatto")
 
-            st.markdown("<p style='font-size:0.85em; color:#8792A3; margin-top:8px; margin-bottom:16px;'>Tracciamento articolare e vettori cinematici di frenata:</p>", unsafe_allow_html=True)
+            st.markdown("<p style='font-size:0.85em; color:#8792A3; margin-top:8px; margin-bottom:16px;'>Tracciamento articolare e mappa termica dei sovraccarichi:</p>", unsafe_allow_html=True)
             
-            # Due colonne: Video elaborato a sinistra, Digital Twin a destra
             col_out1, col_out2 = st.columns(2)
             
             with col_out1:
-                # Video in output (simula il video con lo scheletro già integrato)
+                # Output Video
                 st.video(video_file)
                 st.markdown("<p style='font-size:0.75em; color:#00F5A0; text-align:center; font-family:\"JetBrains Mono\",monospace;'>OUTPUT: AI TRACKING COMPLETATO</p>", unsafe_allow_html=True)
 
             with col_out2:
-                # Pannello per riempire lo spazio vuoto: Digital Twin Heatmap
+                # Digital Twin - Stress Mapping 2.0 (Design Iper-Professionale Scanner 3D)
                 digital_twin_svg = """
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" style="background: #04070B; border-radius: 12px; border: 1px solid #1c2333; width: 100%; box-shadow: 0 10px 40px rgba(0,229,255,0.05);">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" style="background: radial-gradient(circle at center, #0B111A 0%, #04070B 100%); border-radius: 12px; border: 1px solid #1c2333; width: 100%; box-shadow: 0 10px 40px rgba(0,229,255,0.05);">
                   <defs>
                     <filter id="glow-red" x="-50%" y="-50%" width="200%" height="200%">
                       <feGaussianBlur stdDeviation="5" result="blur" />
                       <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
                     </filter>
-                    <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
-                      <feGaussianBlur stdDeviation="3" result="blur" />
-                      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                    </filter>
-                    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
-                      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#1c2333" stroke-width="0.5" opacity="0.4"/>
+                    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1c2333" stroke-width="0.5" opacity="0.4"/>
                     </pattern>
                   </defs>
 
-                  <!-- Sfondo -->
                   <rect width="100%" height="100%" fill="url(#grid)" />
-                  <text x="20" y="30" fill="#566178" font-family="monospace" font-size="10" letter-spacing="0.1em">DIGITAL TWIN // STRESS MAPPING</text>
+                  
+                  <rect x="20" y="20" width="230" height="26" fill="#0E1420" stroke="#1c2333" stroke-width="1" rx="4"/>
+                  <text x="32" y="37" fill="#00E5FF" font-family="monospace" font-size="10" letter-spacing="0.1em">DIGITAL TWIN // KINEMATICS</text>
 
-                  <!-- Anatomia Stilizzata (Gamba in appoggio) -->
-                  <g transform="translate(140, 40) scale(1.1)" opacity="0.8">
-                      <!-- Coscia / Femore -->
-                      <path d="M 120 20 Q 150 100 180 160" fill="none" stroke="#00E5FF" stroke-width="18" stroke-linecap="round" opacity="0.3"/>
-                      <path d="M 120 20 Q 150 100 180 160" fill="none" stroke="#00E5FF" stroke-width="4" stroke-linecap="round" filter="url(#glow-cyan)"/>
-                      
-                      <!-- Ginocchio -->
-                      <circle cx="180" cy="160" r="14" fill="#04070B" stroke="#00E5FF" stroke-width="2"/>
-                      
-                      <!-- Tibia / Polpaccio -->
-                      <path d="M 180 160 Q 170 210 200 280" fill="none" stroke="#00E5FF" stroke-width="14" stroke-linecap="round" opacity="0.3"/>
-                      <path d="M 180 160 Q 170 210 200 280" fill="none" stroke="#00E5FF" stroke-width="4" stroke-linecap="round" filter="url(#glow-cyan)"/>
-                      
+                  <!-- Modello Anatomico (Gamba) con stile Wireframe Avanzato -->
+                  <g opacity="0.85">
+                      <!-- Femore -->
+                      <path d="M 220 80 Q 240 160 260 220" fill="none" stroke="#00E5FF" stroke-width="14" opacity="0.15" stroke-linecap="round"/>
+                      <path d="M 220 80 Q 240 160 260 220" fill="none" stroke="#00E5FF" stroke-width="2" stroke-dasharray="4,4"/>
+                      <!-- Tibia -->
+                      <path d="M 260 220 Q 250 290 270 350" fill="none" stroke="#00E5FF" stroke-width="14" opacity="0.15" stroke-linecap="round"/>
+                      <path d="M 260 220 Q 250 290 270 350" fill="none" stroke="#00E5FF" stroke-width="2" stroke-dasharray="4,4"/>
                       <!-- Piede -->
-                      <path d="M 200 280 L 210 295 L 240 295 L 250 280 Z" fill="#00E5FF" opacity="0.4"/>
+                      <polygon points="265,350 280,370 320,370 310,345" fill="none" stroke="#00E5FF" stroke-width="2" opacity="0.8"/>
+                      <polygon points="265,350 280,370 320,370 310,345" fill="#00E5FF" opacity="0.1"/>
                   </g>
+                  
+                  <!-- Anelli di Scansione 3D (Effetto profondità) -->
+                  <ellipse cx="260" cy="220" rx="35" ry="12" fill="none" stroke="#00E5FF" stroke-width="1" opacity="0.5" transform="rotate(-15 260 220)"/>
+                  <ellipse cx="260" cy="220" rx="45" ry="18" fill="none" stroke="#00F5A0" stroke-width="0.5" opacity="0.3" transform="rotate(25 260 220)"/>
+                  <ellipse cx="270" cy="350" rx="25" ry="8" fill="none" stroke="#00E5FF" stroke-width="1" opacity="0.5"/>
 
-                  <!-- ============================================== -->
-                  <!-- HIGHLIGHT DEI SOVRACCARICHI (Mappa di Calore)  -->
-                  <!-- ============================================== -->
-                  
-                  <!-- Hotspot Ginocchio (Patello-Femorale) -->
-                  <circle cx="338" cy="216" r="12" fill="#FF6A3D" opacity="0.7" filter="url(#glow-red)"/>
-                  <circle cx="338" cy="216" r="4" fill="#FFFFFF"/>
-                  
-                  <!-- Linea Callout Ginocchio -->
-                  <polyline points="338,216 420,160 580,160" fill="none" stroke="#FF6A3D" stroke-width="1.5" opacity="0.8"/>
-                  <rect x="430" y="145" width="135" height="15" fill="#04070B" stroke="#FF6A3D" stroke-width="1"/>
-                  <text x="435" y="156" fill="#FF6A3D" font-family="monospace" font-size="9" font-weight="bold">SOVRACCARICO ROTULEO (38%)</text>
-                  <text x="435" y="172" fill="#8792A3" font-family="monospace" font-size="8">Impatto ad alto momento flettente</text>
+                  <!-- HOTSPOT 1: GINOCCHIO -->
+                  <circle cx="260" cy="220" r="14" fill="#FF6A3D" opacity="0.6" filter="url(#glow-red)"/>
+                  <circle cx="260" cy="220" r="4" fill="#FFFFFF"/>
+                  <polyline points="260,220 340,160 560,160" fill="none" stroke="#FF6A3D" stroke-width="1.5"/>
+                  <rect x="350" y="135" width="220" height="42" fill="#0A0F17" stroke="#FF6A3D" stroke-width="1" rx="4"/>
+                  <text x="362" y="152" fill="#FF6A3D" font-family="monospace" font-size="11" font-weight="bold">SOVRACCARICO ROTULEO (38%)</text>
+                  <text x="362" y="167" fill="#8792A3" font-family="monospace" font-size="9">Pressione patello-femorale anomala</text>
 
-                  <!-- Hotspot Tendine d'Achille -->
-                  <circle cx="340" cy="335" r="10" fill="#FFB020" opacity="0.8" filter="url(#glow-red)"/>
-                  <circle cx="340" cy="335" r="3" fill="#FFFFFF"/>
+                  <!-- HOTSPOT 2: TENDINE D'ACHILLE -->
+                  <circle cx="255" cy="335" r="10" fill="#FFB020" opacity="0.7" filter="url(#glow-red)"/>
+                  <circle cx="255" cy="335" r="3" fill="#FFFFFF"/>
+                  <polyline points="255,335 340,280 560,280" fill="none" stroke="#FFB020" stroke-width="1.5"/>
+                  <rect x="350" y="255" width="220" height="42" fill="#0A0F17" stroke="#FFB020" stroke-width="1" rx="4"/>
+                  <text x="362" y="272" fill="#FFB020" font-family="monospace" font-size="11" font-weight="bold">TENSIONE ACHILLEA (31%)</text>
+                  <text x="362" y="287" fill="#8792A3" font-family="monospace" font-size="9">Deficit in fase eccentrica frenante</text>
                   
-                  <!-- Linea Callout Achille -->
-                  <polyline points="340,335 420,280 580,280" fill="none" stroke="#FFB020" stroke-width="1.5" opacity="0.8"/>
-                  <rect x="430" y="265" width="145" height="15" fill="#04070B" stroke="#FFB020" stroke-width="1"/>
-                  <text x="435" y="276" fill="#FFB020" font-family="monospace" font-size="9" font-weight="bold">TENSIONE ACHILLEA (31%)</text>
-                  <text x="435" y="292" fill="#8792A3" font-family="monospace" font-size="8">Fase eccentrica compromessa</text>
-
-                  <!-- Pannello Diagnostico Integrato -->
-                  <rect x="20" y="180" width="160" height="150" rx="8" fill="#0E1420" stroke="#1c2333" stroke-width="1.5"/>
-                  <text x="32" y="200" fill="#E8ECF2" font-family="monospace" font-size="10" font-weight="bold">AI DIAGNOSTICS</text>
-                  <line x1="20" y1="210" x2="180" y2="210" stroke="#1c2333" stroke-width="1"/>
-                  
-                  <text x="32" y="230" fill="#8792A3" font-family="monospace" font-size="8">RISCHIO ML PREVISTO</text>
-                  <text x="32" y="245" fill="#FF6A3D" font-family="monospace" font-size="14" font-weight="bold">84.5%</text>
-                  
-                  <text x="32" y="270" fill="#8792A3" font-family="monospace" font-size="8">STATO STRUTTURALE</text>
-                  <text x="32" y="285" fill="#FFB020" font-family="monospace" font-size="10" font-weight="bold">CRITICAL STRESS</text>
-
-                  <text x="32" y="310" fill="#8792A3" font-family="monospace" font-size="8">CORREZIONE PRIORITARIA</text>
-                  <text x="32" y="322" fill="#00F5A0" font-family="monospace" font-size="9">Aumento SPM (176+)</text>
+                  <!-- Pannello Diagnosi ML laterale -->
+                  <rect x="20" y="70" width="160" height="100" fill="#0E1420" stroke="#1c2333" stroke-width="1" rx="6"/>
+                  <text x="32" y="90" fill="#E8ECF2" font-family="monospace" font-size="9" font-weight="bold">RISCHIO ML COMPLESSIVO</text>
+                  <text x="32" y="130" fill="#FF6A3D" font-family="monospace" font-size="34" font-weight="bold">84.5%</text>
+                  <text x="32" y="152" fill="#FF6A3D" font-family="monospace" font-size="9">STATUS: CRITICO</text>
                 </svg>
                 """
-                st.components.v1.html(digital_twin_svg, height=360, scrolling=False)
+                st.components.v1.html(digital_twin_svg, height=415, scrolling=False)
                 st.markdown("<p style='font-size:0.75em; color:#566178; text-align:center; font-family:\"JetBrains Mono\",monospace;'>DIGITAL TWIN // KINEMATIC STRESS MAP</p>", unsafe_allow_html=True)
 
-            # Il resto dei grafici e dei consigli (intatto)
+            # NUOVA SEZIONE: TIMELINE CICLO DEL PASSO (Sotto ai video per riempire lo spazio)
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown("<h3 style='color:#00F5A0; font-size:1.05em; letter-spacing:0.05em;'>TIMELINE // GAIT CYCLE DYNAMICS</h3>", unsafe_allow_html=True)
+            
+            gait_svg = """
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 120" style="background: #0E1420; border-radius: 12px; border: 1px solid #1c2333; width: 100%;">
+                <!-- Linea base temporale -->
+                <line x1="50" y1="60" x2="950" y2="60" stroke="#1c2333" stroke-width="4" stroke-linecap="round"/>
+                
+                <!-- Zone colorate delle 4 Fasi -->
+                <rect x="50" y="54" width="200" height="16" rx="8" fill="#FF6A3D" opacity="0.85"/> <!-- Strike (Errore/Rosso) -->
+                <rect x="250" y="58" width="300" height="8" rx="4" fill="#00E5FF" opacity="0.4"/> <!-- Mid-stance (Azzurro) -->
+                <rect x="550" y="58" width="200" height="8" rx="4" fill="#00F5A0" opacity="0.4"/> <!-- Toe-off (Verde) -->
+                <rect x="750" y="58" width="200" height="8" rx="4" fill="#8792A3" opacity="0.2"/> <!-- Swing (Grigio) -->
+                
+                <!-- Nodo 1: Strike -->
+                <circle cx="150" cy="62" r="10" fill="#04070B" stroke="#FF6A3D" stroke-width="3"/>
+                <text x="150" y="35" fill="#FF6A3D" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">1. INITIAL STRIKE</text>
+                <text x="150" y="95" fill="#E8ECF2" font-family="monospace" font-size="10" text-anchor="middle">Impatto: 0 ms</text>
+                <text x="150" y="110" fill="#FF6A3D" font-family="monospace" font-size="9" text-anchor="middle">! OVERSTRIDE RILEVATO</text>
+
+                <!-- Nodo 2: Mid-Stance -->
+                <circle cx="400" cy="62" r="6" fill="#04070B" stroke="#00E5FF" stroke-width="2"/>
+                <text x="400" y="35" fill="#00E5FF" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">2. MID-STANCE</text>
+                <text x="400" y="95" fill="#E8ECF2" font-family="monospace" font-size="10" text-anchor="middle">Carico max: ~100 ms</text>
+                
+                <!-- Nodo 3: Toe-Off -->
+                <circle cx="650" cy="62" r="6" fill="#04070B" stroke="#00F5A0" stroke-width="2"/>
+                <text x="650" y="35" fill="#00F5A0" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">3. TOE-OFF</text>
+                <text x="650" y="95" fill="#E8ECF2" font-family="monospace" font-size="10" text-anchor="middle">Spinta: ~212 ms</text>
+                
+                <!-- Nodo 4: Swing -->
+                <circle cx="850" cy="62" r="6" fill="#04070B" stroke="#8792A3" stroke-width="2"/>
+                <text x="850" y="35" fill="#8792A3" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">4. SWING</text>
+                <text x="850" y="95" fill="#E8ECF2" font-family="monospace" font-size="10" text-anchor="middle">Volo: 136 ms</text>
+            </svg>
+            """
+            st.components.v1.html(gait_svg, height=140, scrolling=False)
+
+            # --- REPORT, GRAFICI E CONSIGLI INTATTI ---
             dati_cv = st.session_state.cv_dati
             st.markdown("---")
             st.markdown("<h2>Report Biomeccanico e Scheletrico Dettagliato</h2>", unsafe_allow_html=True)
@@ -1181,3 +1200,5 @@ elif pagina == "COMPUTER VISION":
             """, unsafe_allow_html=True)
             
             st.info("PROTOCOLLO DI CORREZIONE BIOMECCANICA CONSIGLIATO:\n1. Riduzione dell'ampiezza della falcata per eliminare l'over-stride anteriore al baricentro.\n2. Incremento della frequenza di passo a 176-180 falcate al minuto (SPM) per facilitare l'atterraggio sul mesopiede.\n3. Integrazione di esercizi di forza eccentrica per il quadricipite e protocollo di rinforzo progressivo per il tendine d'Achille.")
+    else:
+        st.info("Suggerimento: Carica un video registrato lateralmente per attivare l'estrazione dello scheletro, i grafici di analisi biomeccanica e la predizione clinica basata su Machine Learning.")
