@@ -963,6 +963,9 @@ elif pagina == "CONSIGLIO FINALE":
         else:
             st.error("🔴 **STOP E RECUPERO NECESSARIO**: I parametri indicano un profilo di rischio critico e un forte debito di sonno/stress. Sostituisci la corsa con una sessione di sola mobilità articolare o riposo totale per evitare infortuni muscolari imminenti.")
             # ---------------------------------------------------------
+# Definizione grafica mancante per la Computer Vision
+SVG_CV = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400"><rect width="900" height="400" fill="#080B12"/><circle cx="450" cy="150" r="20" fill="#00E5FF"/><line x1="450" y1="170" x2="450" y2="260" stroke="#00F5A0" stroke-width="4"/><line x1="450" y1="200" x2="380" y2="240" stroke="#FFB020" stroke-width="3"/><line x1="450" y1="200" x2="520" y2="240" stroke="#FFB020" stroke-width="3"/><line x1="450" y1="260" x2="400" y2="340" stroke="#FF6A3D" stroke-width="4"/><line x1="450" y1="260" x2="500" y2="340" stroke="#00E5FF" stroke-width="4"/><text x="70" y="360" fill="#566178" font-family="monospace" font-size="18">COMPUTER VISION // POSE ESTIMATION</text></svg>"""
+IMG_HERO_CV = get_svg_url(SVG_CV)
 # ---------------------------------------------------------
 # PAGINA 6: COMPUTER VISION & BIOMECHANIC AI
 # ---------------------------------------------------------
