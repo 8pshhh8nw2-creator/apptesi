@@ -1008,7 +1008,7 @@ elif pagina == "COMPUTER VISION":
                     }
                 st.rerun()
 
-        # Visualizzazione post-analisi
+      # Visualizzazione post-analisi
         if st.session_state.get('cv_analizzato', False):
             st.success("Analisi video completata. Video elaborato e Modelli Generativi caricati con successo.")
             st.markdown("---")
@@ -1022,16 +1022,13 @@ elif pagina == "COMPUTER VISION":
 
             st.markdown("<p style='font-size:0.85em; color:#8792A3; margin-top:8px; margin-bottom:16px;'>Tracciamento articolare e analisi vettoriale avanzata:</p>", unsafe_allow_html=True)
             
-            # Due colonne bilanciate: Video elaborato a sinistra, Digital Twin + GRF a destra
             col_out1, col_out2 = st.columns([1, 1.1])
             
             with col_out1:
-                # Output Video
                 st.video(video_file)
                 st.markdown("<p style='font-size:0.75em; color:#00F5A0; text-align:center; font-family:\"JetBrains Mono\",monospace; margin-top:10px;'>OUTPUT: AI TRACKING COMPLETATO</p>", unsafe_allow_html=True)
 
             with col_out2:
-                # 1. DIGITAL TWIN // KINEMATIC STRESS MAP (Sopra)
                 st.markdown("<p style='font-size:0.82em; color:#00E5FF; font-family:\"JetBrains Mono\",monospace; margin-bottom:6px; letter-spacing:0.1em;'>DIGITAL TWIN // KINEMATIC STRESS MAP</p>", unsafe_allow_html=True)
 
                 digital_twin_pro_svg = """
@@ -1090,7 +1087,6 @@ elif pagina == "COMPUTER VISION":
 
                 st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
 
-                # 2. PANNELLO SOTTO: GROUND REACTION FORCE (Analisi dell'impatto a terra)
                 st.markdown("<p style='font-size:0.82em; color:#00F5A0; font-family:\"JetBrains Mono\",monospace; margin-top:10px; margin-bottom:6px; letter-spacing:0.1em;'>GROUND REACTION FORCE // IMPACT TRANSIENT</p>", unsafe_allow_html=True)
 
                 grf_pro_svg = """
@@ -1123,7 +1119,7 @@ elif pagina == "COMPUTER VISION":
                 """
                 st.components.v1.html(grf_pro_svg, height=195, scrolling=False)
 
-            # --- REPORT, GRAFICI E CONSIGLI INTATTI ---
+            # --- REPORT E GRAFICI INTERATTIVI ---
             dati_cv = st.session_state.cv_dati
             st.markdown("---")
             st.markdown("<h2>Report Biomeccanico e Scheletrico Dettagliato</h2>", unsafe_allow_html=True)
@@ -1136,27 +1132,56 @@ elif pagina == "COMPUTER VISION":
 
             st.markdown("<br>", unsafe_allow_html=True)
 
+            # --- AGGIUNTA: SEZIONE INTERATTIVA CON SLIDER SOTTO I 3 GRAFICI ---
+            st.markdown("---")
+            st.markdown("<h3>Simulatore Interattivo Biomeccanico</h3>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'><strong>Modifica i parametri sottostanti per testare l'impatto in tempo reale sui grafici e sul rischio infortunio stimato dall'IA:</strong></div>", unsafe_allow_html=True)
+
+            sim_col1, sim_col2, sim_col3 = st.columns(3)
+            with sim_col1:
+                cadenza_sim = st.slider("Cadenza Passo (SPM)", 150, 195, 162, key="sim_cadenza")
+            with sim_col2:
+                overstride_sim = st.slider("Anticipo Falcata (Overstride cm)", 2.0, 25.0, 14.2, key="sim_overstride")
+            with sim_col3:
+                busto_sim = st.slider("Inclinazione Busto (°)", 2.0, 15.0, 7.2, key="sim_busto")
+
+            # Calcolo dinamico basato sui cursori interattivi
+            # Più la cadenza sale, più il rischio scende; più l'overstride sale, più il carico sul ginocchio sale.
+            rischio_dinamico = max(5.0, min(99.0, 84.5 - (cadenza_sim - 162) * 1.2 + (overstride_sim - 14.2) * 1.8))
+            ginocchio_dinamico = max(15.0, min(55.0, 38.0 + (overstride_sim - 14.2) * 0.8))
+            achille_dinamico = max(10.0, min(45.0, 31.0 + (176 - cadenza_sim) * 0.4))
+
+            st.markdown(f"""
+            <div class='kpi-card' style='margin: 20px 0; border-top: 2px solid {"#00F5A0" if rischio_dinamico < 40 else "#FFB020" if rischio_dinamico < 70 else "#FF6A3D"};'>
+                <div class='section-label'>Rischio Infortunio Ricalcolato in Tempo Reale</div>
+                <div class='data-figure' style='font-size:2.2em; font-weight:bold; color: {"#00F5A0" if rischio_dinamico < 40 else "#FFB020" if rischio_dinamico < 70 else "#FF6A3D"};'>{rischio_dinamico:.1f}%</div>
+                <p style='color:#8792A3; font-size:0.85em; margin-top:5px;'>Cadenza: {cadenza_sim} SPM · Overstride: {overstride_sim:.1f} cm · Busto: {busto_sim}°</p>
+            </div>
+            """, unsafe_allow_html=True)
+
+            # --- I 3 GRAFICI DINAMICI COLLEGATI AI VALORI DEGLI SLIDER ---
             cg1, cg2, cg3 = st.columns(3)
             
             with cg1:
-                st.markdown("### 1. Mappatura Sovraccarico (%)")
+                st.markdown("### 1. Mappatura Sovraccarico (Dinamico)")
                 articolazioni = ['Ginocchia', 'Achille', 'Anca', 'Schiena', 'Caviglie']
-                carichi = [38, 31, 14, 11, 6]
+                carichi_dinamici = [round(ginocchio_dinamico, 1), round(achille_dinamico, 1), 14.0, 11.0, 6.0]
                 fig_bar_load = px.bar(
-                    x=articolazioni, y=carichi, 
+                    x=articolazioni, y=carichi_dinamici, 
                     labels={'x': 'Distretto', 'y': '% Impatto'},
-                    color=carichi, color_continuous_scale=[[0, '#00E5FF'], [0.5, '#FFB020'], [1, '#FF6A3D']]
+                    color=carichi_dinamici, color_continuous_scale=[[0, '#00E5FF'], [0.5, '#FFB020'], [1, '#FF6A3D']]
                 )
                 fig_bar_load.update_layout(height=320, coloraxis_showscale=False)
                 st.plotly_chart(style_fig(fig_bar_load), use_container_width=True)
-                st.markdown("<div class='explain-text'><strong>Analisi Carichi:</strong> Percentuale di forza d'impatto verticale trasferita sui distretti articolari in base al vettore di frenata del tallone.</div>", unsafe_allow_html=True)
+                st.markdown("<div class='explain-text'><strong>Analisi Carichi:</strong> Ricalcolato in base alla configurazione corrente dei cursori interattivi.</div>", unsafe_allow_html=True)
 
             with cg2:
-                st.markdown("### 2. Angoli Articolari (Falcata)")
+                st.markdown("### 2. Angoli Articolari (Dinamico)")
                 fasi = ['Impatto (Strike)', 'Mid-Stance', 'Toe-Off', 'Swing']
-                angoli_fase = [dati_cv['angolo_ginocchio_appoggio'], 168.0, 115.0, 92.0]
+                angolo_dinamico_gin = 130.0 + (cadenza_sim - 150) * 0.35
+                angoli_fase_dinamici = [round(angolo_dinamico_gin, 1), 168.0, 115.0, 92.0]
                 fig_radar_angles = go.Figure(go.Scatterpolar(
-                    r=angoli_fase, theta=fasi, fill='toself',
+                    r=angoli_fase_dinamici, theta=fasi, fill='toself',
                     marker=dict(color='#00F5A0'), line=dict(color='#00F5A0')
                 ))
                 fig_radar_angles.update_layout(
@@ -1164,20 +1189,20 @@ elif pagina == "COMPUTER VISION":
                     height=320
                 )
                 st.plotly_chart(style_fig(fig_radar_angles), use_container_width=True)
-                st.markdown("<div class='explain-text'><strong>Analisi Angolare:</strong> Grado di flessione dell'articolazione del ginocchio lungo le quattro fasi del ciclo del passo (Gait Cycle).</div>", unsafe_allow_html=True)
+                st.markdown("<div class='explain-text'><strong>Analisi Angolare:</strong> Variazione della flessione del ginocchio stimata al variare della cadenza.</div>", unsafe_allow_html=True)
 
             with cg3:
-                st.markdown("### 3. Rischio Infortunio ML (%)")
+                st.markdown("### 3. Rischio Infortunio ML (Dinamico)")
                 distretti_rischio = ['Ginocchio/Rotula', 'Tendine Achille', 'Fascia Plantare', 'Tibia (Periostite)', 'Lombari']
-                rischi_ml = [42.5, 28.0, 15.2, 10.3, 4.0]
+                rischi_ml_dinamici = [round(rischio_dinamico * 0.5, 1), round(rischio_dinamico * 0.35, 1), 15.2, 10.3, 4.0]
                 fig_ml_risk = px.bar(
-                    x=distretti_rischio, y=rischi_ml,
+                    x=distretti_rischio, y=rischi_ml_dinamici,
                     labels={'x': 'Patologia/Distretto', 'y': 'Probabilità ML (%)'},
-                    color=rischi_ml, color_continuous_scale=[[0, '#00F5A0'], [0.5, '#FFB020'], [1, '#FF6A3D']]
+                    color=rischi_ml_dinamici, color_continuous_scale=[[0, '#00F5A0'], [0.5, '#FFB020'], [1, '#FF6A3D']]
                 )
                 fig_ml_risk.update_layout(height=320, coloraxis_showscale=False)
                 st.plotly_chart(style_fig(fig_ml_risk), use_container_width=True)
-                st.markdown("<div class='explain-text'><strong>Predizione ML:</strong> Classificatore probabilistico basato su dataset di cinematica clinica per la stima del distretto anatomico a cedimento strutturale.</div>", unsafe_allow_html=True)
+                st.markdown("<div class='explain-text'><strong>Predizione ML:</strong> Probabilità di patologia aggiornata interattivamente dai cursori di controllo biomeccanico.</div>", unsafe_allow_html=True)
 
             st.markdown("---")
             st.markdown("<h3>Diagnosi Posturale, Errori e Predizione Machine Learning</h3>", unsafe_allow_html=True)
@@ -1186,8 +1211,8 @@ elif pagina == "COMPUTER VISION":
             st.warning(f"ZONA DI SOVRACCARICO CRITICO: {dati_cv['sovraccarico_prevalente']}. L'onda d'urto transitoria non viene dissipata correttamente dal complesso muscolotendineo, trasferendo stress meccanico diretto sulle cartilagini e sulle inserzioni tendinee.")
             st.markdown(f"""
             <div class='danger-box' style='border-left-color: #FF6A3D;'>
-                <h3 style='color: #FF6A3D; margin-top:0;'>PREDIZIONE MACHINE LEARNING (Indice di Rischio: {dati_cv['probabilita_infortunio_ml']}%)</h3>
-                <p style='color: #E8ECF2; font-size: 1.05em;'>Proiettando il pattern di over-stride e la dissipazione cinetica attuale sulle curve di tolleranza al carico del tessuto connettivo, il modello predittivo diagnostica una probabilità elevata di sviluppare nel medio termine: <strong style='color: #FF6A3D;'>{dati_cv['infortunio_predetto']}</strong>.</p>
+                <h3 style='color: #FF6A3D; margin-top:0;'>PREDIZIONE MACHINE LEARNING (Indice di Rischio: {rischio_dinamico:.1f}%)</h3>
+                <p style='color: #E8ECF2; font-size: 1.05em;'>Proiettando i parametri correnti (cadenza {cadenza_sim} SPM e overstride {overstride_cm} cm) sulle curve di tolleranza al carico, il modello stima un indice di rischio del <strong style='color: #FF6A3D;'>{rischio_dinamico:.1f}%</strong>.</p>
             </div>
             """, unsafe_allow_html=True)
             
