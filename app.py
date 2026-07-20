@@ -110,16 +110,35 @@ st.markdown("""
 
     .stForm { background-color: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 26px; }
     
-    /* Input Styling coerenti scuri */
+    /* INPUTS, SELECTBOX, MULTISELECT, DATEINPUT GLOBALI SCURI */
     .stTextInput input, .stNumberInput input, .stTextArea textarea, .stDateInput input {
         background-color: #131a29 !important; color: var(--text) !important; border: 1px solid var(--line) !important;
         font-family: 'Inter', sans-serif !important;
     }
-    .stSelectbox div[data-baseweb="select"] > div, .stMultiSelect div[data-baseweb="select"] > div {
-        background-color: #131a29 !important; color: var(--text) !important; border: 1px solid var(--line) !important;
+    
+    /* Rimuove qualsiasi sfondo bianco dai selectbox e dropdown */
+    .stSelectbox div[data-baseweb="select"] > div, 
+    .stMultiSelect div[data-baseweb="select"] > div,
+    div[data-baseweb="select"] > div {
+        background-color: #131a29 !important; 
+        color: var(--text) !important; 
+        border: 1px solid var(--line) !important;
     }
     
-    /* File Uploader correttore sfondo bianco */
+    div[data-baseweb="popover"], div[data-baseweb="menu"], ul[role="listbox"] { 
+        background-color: #131a29 !important; 
+        border: 1px solid var(--line) !important;
+    }
+    div[data-baseweb="popover"] li, div[data-baseweb="menu"] li, ul[role="listbox"] li {
+        background-color: #131a29 !important; 
+        color: var(--text) !important; 
+    }
+    div[data-baseweb="popover"] li:hover, ul[role="listbox"] li:hover { 
+        background-color: #1c2740 !important; 
+        color: #ffffff !important; 
+    }
+
+    /* FILE UPLOADER SCURO */
     div[data-testid="stFileUploader"] {
         background-color: var(--panel) !important;
         border: 1px solid var(--line) !important;
@@ -140,12 +159,6 @@ st.markdown("""
         border: none !important;
     }
 
-    div[data-baseweb="popover"] { background-color: #131a29 !important; }
-    div[data-baseweb="popover"] ul, div[data-baseweb="menu"], ul[role="listbox"] { background-color: #131a29 !important; }
-    div[data-baseweb="popover"] li, div[data-baseweb="menu"] li, ul[role="listbox"] li {
-        background-color: #131a29 !important; color: var(--text) !important;
-    }
-    div[data-baseweb="popover"] li:hover, ul[role="listbox"] li:hover { background-color: #1c2740 !important; color: #ffffff !important; }
     .stSlider label, .stSelectSlider label, .stTextInput label, .stNumberInput label, .stSelectbox label, .stDateInput label {
         color: var(--text-dim) !important; font-weight: 600 !important; font-family: 'Inter', sans-serif !important;
     }
@@ -1047,7 +1060,6 @@ elif pagina == "COMPUTER VISION":
 
             st.markdown("<p style='font-size:0.85em; color:#8792A3; margin-top:8px; margin-bottom:16px;'>Tracciamento articolare e analisi vettoriale basata sui dati reali del video:</p>", unsafe_allow_html=True)
             
-            # Due colonne bilanciate: Video a sinistra, Mappe interattive basate sui dati reali a destra
             col_out1, col_out2 = st.columns([1, 1.1])
             
             with col_out1:
@@ -1057,7 +1069,7 @@ elif pagina == "COMPUTER VISION":
             with col_out2:
                 dati_REALI = st.session_state.cv_dati
                 
-                # 1. MAPPA INTERATTIVA 1: DIGITAL TWIN (Aggiornata con i dati reali del video - senza undefined)
+                # 1. MAPPA INTERATTIVA 1: DIGITAL TWIN
                 st.markdown("<p style='font-size:0.82em; color:#00E5FF; font-family:\"JetBrains Mono\",monospace; margin-bottom:6px; letter-spacing:0.1em;'>DIGITAL TWIN // KINEMATIC STRESS MAP (REALE)</p>", unsafe_allow_html=True)
 
                 digital_twin_real_svg = f"""
@@ -1083,7 +1095,6 @@ elif pagina == "COMPUTER VISION":
                       <polygon points="210,310 230,325 260,325 250,305" fill="#0E1420" stroke="#00E5FF" stroke-width="1.5" opacity="0.8"/>
                   </g>
 
-                  <!-- HOTSPOT 1 -->
                   <circle cx="255" cy="173" r="16" fill="#FF6A3D" opacity="0.5" filter="url(#glow-red-real)"/>
                   <circle cx="255" cy="173" r="5" fill="#FFFFFF"/>
                   <polyline points="255,173 320,115 560,115" fill="none" stroke="#FF6A3D" stroke-width="1.5"/>
@@ -1091,7 +1102,6 @@ elif pagina == "COMPUTER VISION":
                   <text x="342" y="109" fill="#FF6A3D" font-family="monospace" font-size="10" font-weight="bold">GINOCCHIO: {dati_REALI['angolo_ginocchio_appoggio']}°</text>
                   <text x="342" y="123" fill="#8792A3" font-family="monospace" font-size="8">Angolo critico estratto dal video</text>
 
-                  <!-- HOTSPOT 2 -->
                   <circle cx="240" cy="285" r="12" fill="#FFB020" opacity="0.6" filter="url(#glow-red-real)"/>
                   <circle cx="240" cy="285" r="4" fill="#FFFFFF"/>
                   <polyline points="240,285 320,225 560,225" fill="none" stroke="#FFB020" stroke-width="1.5"/>
@@ -1099,7 +1109,6 @@ elif pagina == "COMPUTER VISION":
                   <text x="342" y="219" fill="#FFB020" font-family="monospace" font-size="10" font-weight="bold">OVERSTRIDE: {dati_REALI['overstride_cm']} CM</text>
                   <text x="342" y="233" fill="#8792A3" font-family="monospace" font-size="8">Anticipo falcata rilevato dal tracking</text>
 
-                  <!-- Box ML Reale -->
                   <rect x="20" y="240" width="150" height="70" fill="#0E1420" stroke="#1c2333" stroke-width="1" rx="6"/>
                   <text x="28" y="256" fill="#8792A3" font-family="monospace" font-size="7">RISCHIO ML VIDEO</text>
                   <text x="28" y="282" fill="#FF6A3D" font-family="monospace" font-size="20" font-weight="bold">{dati_REALI['probabilita_infortunio_ml']}%</text>
@@ -1111,7 +1120,7 @@ elif pagina == "COMPUTER VISION":
 
                 st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
 
-                # 2. MAPPA INTERATTIVA 2: GRF (Senza undefined)
+                # 2. MAPPA INTERATTIVA 2: GRF
                 st.markdown("<p style='font-size:0.82em; color:#00F5A0; font-family:\"JetBrains Mono\",monospace; margin-top:10px; margin-bottom:6px; letter-spacing:0.1em;'>GROUND REACTION FORCE // IMPACT TRANSIENT</p>", unsafe_allow_html=True)
 
                 grf_real_svg = f"""
