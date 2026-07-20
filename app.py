@@ -196,15 +196,16 @@ st.markdown("""
     div[data-testid="stMetricValue"] { font-family: 'JetBrains Mono', monospace !important; color: #fff !important; }
     div[data-testid="stMetricLabel"] { font-family: 'Inter', sans-serif !important; color: var(--text-faint) !important; }
 
+    /* CONTENITORE IMMAGINE TOTALMENTE PRIVO DI BORDI/CORNICI */
     .hero-media {
-        border-radius: 16px; overflow: hidden; position: relative; margin-bottom: 6px; border: 1px solid var(--line);
-        background: var(--panel);
+        border-radius: 0px; overflow: visible; position: relative; margin-bottom: 6px; border: none;
+        background: transparent; box-shadow: none;
     }
-    .hero-media img { display:block; width: 100%; height: 220px; object-fit: cover; }
+    .hero-media img { display:block; width: 100%; height: 230px; object-fit: contain; background: transparent; }
     .hero-media .tag {
-        position:absolute; bottom:14px; left:14px; font-family:'JetBrains Mono', monospace; font-size:0.72em;
-        letter-spacing:0.12em; color:#fff; background: rgba(8,11,18,0.85); padding: 5px 10px; border-radius:6px;
-        border: 1px solid rgba(255,255,255,0.15); text-transform: uppercase;
+        position:absolute; bottom:0px; left:14px; font-family:'JetBrains Mono', monospace; font-size:0.72em;
+        letter-spacing:0.12em; color:var(--cyan); background: transparent; padding: 2px 0px; border-radius:0px;
+        border: none; text-transform: uppercase;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -227,190 +228,170 @@ def get_svg_url(svg_string):
     return f"data:image/svg+xml;base64,{b64}"
 
 # =========================================================
-#  GRAFICA FUTURISTICA ESPRESSA IN SVG (STILE SPORT TECH / MESH)
+#  GRAFICHE VETTORIALI SFUMATE SENZA ALCUN BORDO (STILE HOLOGRAPHIC MESH)
 # =========================================================
 
-# 1. Modulo Analisi Stato di Forma: Runner Wireframe Poligonale Dissolto
+# 1. Runner Poligonale Astratto Sfumato (Ispirato a IMG_3309)
 SVG_ANALISI = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400">
   <defs>
-    <radialGradient id="bgGrad1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#0E1E32"/><stop offset="100%" stop-color="#080B12"/></radialGradient>
-    <filter id="glow1"><feGaussianBlur stdDeviation="8" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="softGlow1" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="15" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
-  <rect width="900" height="400" fill="url(#bgGrad1)"/>
-  <!-- Griglia di sfondo astratta -->
-  <path d="M0,100 L900,100 M0,200 L900,200 M0,300 L900,300 M150,0 L150,400 M450,0 L450,400 M750,0 L750,400" stroke="#1c2333" stroke-width="0.8" opacity="0.4"/>
-  <!-- Corpo Runner Wireframe Astratto -->
-  <g transform="translate(320, 70) scale(1.1)" filter="url(#glow1)">
-    <!-- Linee Mesh & Nodi -->
-    <path d="M120,40 L150,60 L180,90 L160,130 L130,110 L100,80 Z" fill="#00E5FF" opacity="0.15" stroke="#00E5FF" stroke-width="1"/>
-    <path d="M130,110 L160,130 L150,180 L110,210 L80,180 L100,140 Z" fill="#00F5A0" opacity="0.2" stroke="#00F5A0" stroke-width="1"/>
-    <!-- Silhouette Runner Poligonale -->
-    <path d="M135,28 C145,28 155,35 152,48 C148,60 135,65 125,58 C122,50 125,32 135,28 Z" fill="#00E5FF" opacity="0.8"/>
-    <path d="M128,55 C140,70 160,85 185,100 C195,105 190,115 180,112 C155,98 135,82 120,70 Z" fill="#00E5FF" opacity="0.6" stroke="#00E5FF" stroke-width="1.5"/>
-    <path d="M125,75 C135,110 145,150 155,190 C160,210 145,215 138,198 C128,160 118,120 110,95 Z" fill="#00F5A0" opacity="0.7" stroke="#00F5A0" stroke-width="1.5"/>
-    <path d="M138,198 L160,250 L195,290 C202,298 192,308 182,298 L152,255 L130,210 Z" fill="#00E5FF" opacity="0.5" stroke="#00E5FF" stroke-width="1.5"/>
-    <path d="M128,75 L95,110 L70,145 C62,155 52,145 60,135 L85,100 L112,65 Z" fill="#00E5FF" opacity="0.5" stroke="#00E5FF" stroke-width="1.5"/>
-    <path d="M110,95 L80,160 L50,225 C42,242 58,252 68,235 L95,170 L120,105 Z" fill="#00F5A0" opacity="0.5" stroke="#00F5A0" stroke-width="1.5"/>
-    <!-- Nodi biometrici brillanti -->
-    <circle cx="135" cy="40" r="3" fill="#FFF"/><circle cx="155" cy="95" r="3" fill="#00F5A0"/><circle cx="145" cy="190" r="3" fill="#00E5FF"/><circle cx="180" cy="295" r="3" fill="#FF6A3D"/><circle cx="75" cy="140" r="3" fill="#00E5FF"/>
+  <rect width="900" height="400" fill="transparent"/>
+  <!-- Gruppo runner sfumato che emerge nel vuoto senza cornici -->
+  <g transform="translate(230, 40) scale(1.3)" filter="url(#softGlow1)">
+    <!-- Corpo mesh reticolato sfumato -->
+    <path d="M135,28 C145,28 155,35 152,48 C148,60 135,65 125,58 C122,50 125,32 135,28 Z" fill="#00E5FF" opacity="0.9"/>
+    <path d="M128,55 C140,70 160,85 185,100 C195,105 190,115 180,112 C155,98 135,82 120,70 Z" fill="#00E5FF" opacity="0.7"/>
+    <path d="M125,75 C135,110 145,150 155,190 C160,210 145,215 138,198 C128,160 118,120 110,95 Z" fill="#00F5A0" opacity="0.8"/>
+    <path d="M138,198 L160,250 L195,290 C202,298 192,308 182,298 L152,255 L130,210 Z" fill="#00E5FF" opacity="0.5"/>
+    <path d="M128,75 L95,110 L70,145 C62,155 52,145 60,135 L85,100 L112,65 Z" fill="#00E5FF" opacity="0.6"/>
+    <path d="M110,95 L80,160 L50,225 C42,242 58,252 68,235 L95,170 L120,105 Z" fill="#00F5A0" opacity="0.7"/>
+    <!-- Nodi biometrici luminosi diffusi -->
+    <circle cx="135" cy="40" r="4" fill="#FFF" filter="url(#softGlow1)"/>
+    <circle cx="155" cy="95" r="5" fill="#00F5A0"/>
+    <circle cx="145" cy="190" r="5" fill="#00E5FF"/>
+    <circle cx="180" cy="295" r="4" fill="#FF6A3D"/>
+    <circle cx="75" cy="140" r="4" fill="#00E5FF"/>
   </g>
 </svg>"""
 
-# 2. Modulo Statistiche: Smartwatch & Nodo di Rete Biometrica (ispirato a IMG_3310)
+# 2. Orologio Smartwatch e Rete Neurale Senza Confini (Ispirato a IMG_3310)
 SVG_STATS = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400">
   <defs>
-    <radialGradient id="bgGrad2" cx="70%" cy="50%" r="60%"><stop offset="0%" stop-color="#0D1B2A"/><stop offset="100%" stop-color="#080B12"/></radialGradient>
-    <filter id="glow2"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="softGlow2" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
-  <rect width="900" height="400" fill="url(#bgGrad2)"/>
-  <!-- Smartwatch futuristico a sinistra -->
-  <g transform="translate(140, 110)" filter="url(#glow2)">
-    <rect x="0" y="10" width="110" height="160" rx="35" fill="#111827" stroke="#00E5FF" stroke-width="3"/>
-    <rect x="15" y="30" width="80" height="120" rx="15" fill="#080B12" stroke="#1c2333" stroke-width="1"/>
-    <!-- Onde polso / cinturino -->
-    <path d="M -25,60 C -10,60 -10,80 -25,80" fill="none" stroke="#00E5FF" stroke-width="4" stroke-linecap="round"/>
-    <path d="M -25,100 C -10,100 -10,120 -25,120" fill="none" stroke="#00E5FF" stroke-width="4" stroke-linecap="round"/>
-    <!-- Display dati sport -->
-    <circle cx="55" cy="70" r="22" fill="none" stroke="#00F5A0" stroke-width="3" stroke-dasharray="100, 30"/>
-    <text x="55" y="75" fill="#FFF" font-family="monospace" font-size="14" font-weight="bold" text-anchor="middle">178</text>
-    <text x="55" y="115" fill="#00E5FF" font-family="monospace" font-size="10" text-anchor="middle">HR ZONE 4</text>
+  <rect width="900" height="400" fill="transparent"/>
+  <!-- Smartwatch a sinistra fluttuante senza box -->
+  <g transform="translate(180, 100)" filter="url(#softGlow2)">
+    <rect x="0" y="0" width="100" height="150" rx="35" fill="none" stroke="#00E5FF" stroke-width="3" opacity="0.8"/>
+    <circle cx="50" cy="75" r="28" fill="none" stroke="#00F5A0" stroke-width="4" stroke-dasharray="120, 40"/>
+    <text x="50" y="80" fill="#FFF" font-family="monospace" font-size="16" font-weight="bold" text-anchor="middle">178</text>
   </g>
-  <!-- Linee di connessione dati biometrici verso il runner -->
-  <g filter="url(#glow2)">
-    <line x1="260" y1="180" x2="350" y2="130" stroke="#00E5FF" stroke-width="1.5" stroke-dasharray="4,4"/>
-    <line x1="260" y1="180" x2="380" y2="220" stroke="#00E5FF" stroke-width="1.5"/>
-    <line x1="260" y1="180" x2="420" y2="150" stroke="#00F5A0" stroke-width="1.5" stroke-dasharray="3,3"/>
-    <line x1="350" y1="130" x2="420" y2="150" stroke="#00E5FF" stroke-width="1"/>
-    <line x1="380" y1="220" x2="480" y2="250" stroke="#00E5FF" stroke-width="1"/>
-    <circle cx="350" cy="130" r="5" fill="#00F5A0"/>
-    <circle cx="380" cy="220" r="5" fill="#00E5FF"/>
-    <circle cx="420" cy="150" r="5" fill="#FFB020"/>
-    <circle cx="480" cy="250" r="5" fill="#FF6A3D"/>
+  <!-- Nodi e reticolo di trasmissione dati nel vuoto -->
+  <g filter="url(#softGlow2)">
+    <line x1="280" y1="175" x2="420" y2="120" stroke="#00E5FF" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <line x1="280" y1="175" x2="450" y2="230" stroke="#00F5A0" stroke-width="1.5"/>
+    <line x1="420" y1="120" x2="520" y2="170" stroke="#00E5FF" stroke-width="2"/>
+    <circle cx="420" cy="120" r="6" fill="#00F5A0"/>
+    <circle cx="450" cy="230" r="6" fill="#00E5FF"/>
+    <circle cx="520" cy="170" r="8" fill="#FF6A3D"/>
   </g>
-  <!-- Silhouette Runner Astratto a destra -->
-  <g transform="translate(550, 70) scale(0.9)" opacity="0.85">
+  <!-- Runner sagomato fluttuante a destra -->
+  <g transform="translate(560, 80) scale(0.9)" opacity="0.85" filter="url(#softGlow2)">
     <path d="M135,28 C145,28 155,35 152,48 C148,60 135,65 125,58 C122,50 125,32 135,28 Z" fill="#00E5FF"/>
     <path d="M128,55 C140,70 160,85 185,100 C195,105 190,115 180,112 C155,98 135,82 120,70 Z" fill="#00E5FF"/>
     <path d="M125,75 C135,110 145,150 155,190 C160,210 145,215 138,198 C128,160 118,120 110,95 Z" fill="#00F5A0"/>
     <path d="M138,198 L160,250 L195,290 C202,298 192,308 182,298 L152,255 L130,210 Z" fill="#00E5FF"/>
-    <path d="M128,75 L95,110 L70,145 C62,155 52,145 60,135 L85,100 L112,65 Z" fill="#00E5FF"/>
-    <path d="M110,95 L80,160 L50,225 C42,242 58,252 68,235 L95,170 L120,105 Z" fill="#00F5A0"/>
   </g>
 </svg>"""
 
-# 3. Modulo KPI Dashboard: Analisi Tachimetrica e Mesh Radiale
+# 3. Radar Tachimetrico Olografico Senza Cornice (Come da tua foto IMG_3311)
 SVG_KPI = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400">
   <defs>
-    <radialGradient id="bgGrad3" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#0E1A2B"/><stop offset="100%" stop-color="#080B12"/></radialGradient>
-    <filter id="glow3"><feGaussianBlur stdDeviation="8" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="softGlow3" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="15" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
-  <rect width="900" height="400" fill="url(#bgGrad3)"/>
-  <!-- Cerchi Concentrici Tech / Radar -->
-  <g transform="translate(450, 200)" filter="url(#glow3)">
-    <circle cx="0" cy="0" r="140" fill="none" stroke="#1c2333" stroke-width="2" stroke-dasharray="6,6"/>
-    <circle cx="0" cy="0" r="100" fill="none" stroke="#00E5FF" stroke-width="1.5" opacity="0.4"/>
-    <circle cx="0" cy="0" r="60" fill="none" stroke="#00F5A0" stroke-width="2" opacity="0.6"/>
-    <path d="M -100,0 L 100,0 M 0,-100 L 0,100" stroke="#1c2333" stroke-width="1"/>
-    <!-- Indicatore Tachimetro -->
-    <path d="M 0,0 L 70,-70" stroke="#00E5FF" stroke-width="4" stroke-linecap="round"/>
-    <circle cx="0" cy="0" r="8" fill="#00F5A0"/>
-    <text x="0" y="45" fill="#E8ECF2" font-family="monospace" font-size="24" font-weight="bold" text-anchor="middle">98.2%</text>
+  <rect width="900" height="400" fill="transparent"/>
+  <!-- HUD radar centrale fluttuante senza box -->
+  <g transform="translate(450, 200)" filter="url(#softGlow3)">
+    <circle cx="0" cy="0" r="130" fill="none" stroke="#00E5FF" stroke-width="1.5" opacity="0.3" stroke-dasharray="8,8"/>
+    <circle cx="0" cy="0" r="90" fill="none" stroke="#00F5A0" stroke-width="2" opacity="0.6"/>
+    <circle cx="0" cy="0" r="50" fill="none" stroke="#00E5FF" stroke-width="1" opacity="0.4"/>
+    <path d="M 0,0 L 70,-70" stroke="#00F5A0" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="0" cy="0" r="6" fill="#00F5A0"/>
+    <text x="0" y="45" fill="#E8ECF2" font-family="monospace" font-size="28" font-weight="bold" text-anchor="middle">98.2%</text>
     <text x="0" y="65" fill="#00E5FF" font-family="monospace" font-size="10" text-anchor="middle">SYSTEM STATUS: OPTIMAL</text>
   </g>
-  <!-- Dettagli geometrici laterali -->
-  <g opacity="0.5">
-    <line x1="100" y1="100" x2="250" y2="100" stroke="#00E5FF" stroke-width="1"/>
-    <line x1="100" y1="100" x2="130" y2="130" stroke="#00E5FF" stroke-width="1"/>
-    <text x="100" y="85" fill="#00E5FF" font-family="monospace" font-size="10">RECOVERY INDEX</text>
+  <!-- Vettori laterali diffusi -->
+  <g filter="url(#softGlow3)" opacity="0.7">
+    <text x="200" y="160" fill="#00E5FF" font-family="monospace" font-size="10">RECOVERY INDEX</text>
+    <path d="M 200,170 L 320,170" fill="none" stroke="#00E5FF" stroke-width="1"/>
     
-    <line x1="650" y1="300" x2="800" y2="300" stroke="#FF6A3D" stroke-width="1"/>
-    <line x1="800" y1="300" x2="770" y2="270" stroke="#FF6A3D" stroke-width="1"/>
-    <text x="680" y="325" fill="#FF6A3D" font-family="monospace" font-size="10">STRAIN THRESHOLD</text>
+    <text x="620" y="250" fill="#FF6A3D" font-family="monospace" font-size="10">STRAIN THRESHOLD</text>
+    <path d="M 620,240 L 720,240" fill="none" stroke="#FF6A3D" stroke-width="1"/>
   </g>
 </svg>"""
 
-# 4. Modulo Analisi Predittiva ML: Rete Neurale e Nodi di Classificazione
+# 4. Modulo AI Machine Learning: Rete Neurale Sfumata nel Vuoto
 SVG_ML = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400">
   <defs>
-    <radialGradient id="bgGrad4" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#111B2C"/><stop offset="100%" stop-color="#080B12"/></radialGradient>
-    <filter id="glow4"><feGaussianBlur stdDeviation="7" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="softGlow4" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="14" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
-  <rect width="900" height="400" fill="url(#bgGrad4)"/>
-  <!-- Connessioni Rete Neurale -->
-  <g stroke="#1c2333" stroke-width="1.5" filter="url(#glow4)">
-    <line x1="180" y1="200" x2="350" y2="100"/>
-    <line x1="180" y1="200" x2="350" y2="300"/>
-    <line x1="350" y1="100" x2="550" y2="150" stroke="#00E5FF"/>
-    <line x1="350" y1="100" x2="550" y2="250"/>
-    <line x1="350" y1="300" x2="550" y2="150"/>
-    <line x1="350" y1="300" x2="550" y2="250" stroke="#00F5A0"/>
-    <line x1="550" y1="150" x2="720" y2="200" stroke="#FF6A3D" stroke-width="3"/>
-    <line x1="550" y1="250" x2="720" y2="200" stroke="#00E5FF" stroke-width="2"/>
+  <rect width="900" height="400" fill="transparent"/>
+  <!-- Connessioni neurali fluide -->
+  <g stroke="#1c2333" stroke-width="2" filter="url(#softGlow4)">
+    <line x1="200" y1="200" x2="380" y2="100" stroke="#00E5FF" opacity="0.5"/>
+    <line x1="200" y1="200" x2="380" y2="300" stroke="#00F5A0" opacity="0.5"/>
+    <line x1="380" y1="100" x2="580" y2="180" stroke="#00E5FF" stroke-width="3"/>
+    <line x1="380" y1="300" x2="580" y2="180" stroke="#FFB020" stroke-width="3"/>
+    <line x1="580" y1="180" x2="720" y2="200" stroke="#FF6A3D" stroke-width="4"/>
   </g>
-  <!-- Nodi della rete -->
-  <g filter="url(#glow4)">
-    <circle cx="180" cy="200" r="10" fill="#00E5FF"/>
-    <circle cx="350" cy="100" r="14" fill="#00F5A0"/>
-    <circle cx="350" cy="300" r="14" fill="#FFB020"/>
-    <circle cx="550" cy="150" r="18" fill="#FF6A3D"/>
-    <circle cx="550" cy="250" r="12" fill="#00E5FF"/>
-    <circle cx="720" cy="200" r="24" fill="#00F5A0" opacity="0.9"/>
-    <text x="720" y="205" fill="#04121a" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">AI</text>
+  <!-- Nodi luminosi senza bordi -->
+  <g filter="url(#softGlow4)">
+    <circle cx="200" cy="200" r="12" fill="#00E5FF"/>
+    <circle cx="380" cy="100" r="16" fill="#00F5A0"/>
+    <circle cx="380" cy="300" r="16" fill="#FFB020"/>
+    <circle cx="580" cy="180" r="22" fill="#FF6A3D"/>
+    <circle cx="720" cy="200" r="28" fill="#00F5A0" opacity="0.8"/>
+    <text x="720" y="206" fill="#04121a" font-family="monospace" font-size="14" font-weight="bold" text-anchor="middle">AI</text>
   </g>
 </svg>"""
 
-# 5. Modulo Consiglio Finale: Action Plan e Targeting Fisiologico
+# 5. Modulo Action Plan: Obiettivo e Targeting Fisiologico Sfumato
 SVG_PLAN = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400">
   <defs>
-    <radialGradient id="bgGrad5" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#0E1B2D"/><stop offset="100%" stop-color="#080B12"/></radialGradient>
-    <filter id="glow5"><feGaussianBlur stdDeviation="8" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="softGlow5" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="15" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
-  <rect width="900" height="400" fill="url(#bgGrad5)"/>
-  <!-- Target concentrico e vettori di azione -->
-  <g transform="translate(450, 200)" filter="url(#glow5)">
-    <circle cx="0" cy="0" r="130" fill="none" stroke="#1c2333" stroke-width="3"/>
-    <circle cx="0" cy="0" r="90" fill="none" stroke="#00E5FF" stroke-width="1.5" stroke-dasharray="5,5"/>
-    <circle cx="0" cy="0" r="50" fill="none" stroke="#00F5A0" stroke-width="2"/>
-    <circle cx="0" cy="0" r="12" fill="#FF6A3D"/>
-    <!-- Linee di mira -->
-    <line x1="-150" y1="0" x2="150" y2="0" stroke="#1c2333" stroke-width="1"/>
-    <line x1="0" y1="-150" x2="0" y2="150" stroke="#1c2333" stroke-width="1"/>
-    <!-- Vettori dinamici -->
-    <path d="M 0,0 L 80,-80" stroke="#FFB020" stroke-width="4" stroke-linecap="round"/>
-    <circle cx="80" cy="-80" r="6" fill="#FFB020"/>
+  <rect width="900" height="400" fill="transparent"/>
+  <!-- Target concentrico a diffusione libera -->
+  <g transform="translate(450, 200)" filter="url(#softGlow5)">
+    <circle cx="0" cy="0" r="140" fill="none" stroke="#00E5FF" stroke-width="1.5" opacity="0.4" stroke-dasharray="10,10"/>
+    <circle cx="0" cy="0" r="90" fill="none" stroke="#00F5A0" stroke-width="2" opacity="0.6"/>
+    <circle cx="0" cy="0" r="40" fill="none" stroke="#FF6A3D" stroke-width="3"/>
+    <circle cx="0" cy="0" r="8" fill="#FF6A3D"/>
+    <!-- Vettori dinamici di mira -->
+    <path d="M 0,0 L 90,-90" stroke="#FFB020" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="90" cy="-90" r="7" fill="#FFB020"/>
   </g>
 </svg>"""
 
-# 6. Modulo Computer Vision: Anatomia Mesh, Raggi X / Biomeccanica (ispirato a IMG_3308)
+# 6. Modulo Computer Vision: Anatomia Mesh & RX Ginocchio Sfumata (Ispirato a IMG_3308)
 SVG_CV = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400">
   <defs>
-    <radialGradient id="bgGrad6" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#0F1726"/><stop offset="100%" stop-color="#080B12"/></radialGradient>
-    <filter id="glow6"><feGaussianBlur stdDeviation="8" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="softGlow6" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="15" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
-  <rect width="900" height="400" fill="url(#bgGrad6)"/>
-  <!-- Struttura Radiografica / Anatomica / Mesh a destra -->
-  <g transform="translate(520, 50) scale(1.05)" filter="url(#glow6)" opacity="0.9">
-    <!-- Silhouette anatomica stilizzata a reticolo -->
-    <path d="M125,25 C135,25 145,32 142,45 C138,55 125,60 115,53 C112,45 115,28 125,25 Z" fill="#00E5FF" opacity="0.8"/>
-    <path d="M118,52 C135,68 155,80 180,95 C190,100 185,110 175,107 C150,92 130,80 110,65 Z" fill="#00E5FF" opacity="0.7" stroke="#00E5FF" stroke-width="1.5"/>
-    <path d="M115,70 C125,105 138,145 148,185 C153,205 138,210 130,193 C120,155 110,115 102,90 Z" fill="#00F5A0" opacity="0.8" stroke="#00F5A0" stroke-width="1.5"/>
-    <path d="M130,193 L152,245 L185,285 C192,293 182,303 172,293 L142,250 L122,205 Z" fill="#00E5FF" opacity="0.6" stroke="#00E5FF" stroke-width="1.5"/>
-    <path d="M118,70 L85,105 L60,140 C52,150 42,140 50,130 L75,95 L102,60 Z" fill="#00E5FF" opacity="0.6" stroke="#00E5FF" stroke-width="1.5"/>
-    <path d="M102,90 L72,155 L42,220 C34,238 50,248 60,230 L85,165 L110,100 Z" fill="#00F5A0" opacity="0.6" stroke="#00F5A0" stroke-width="1.5"/>
-    <!-- Nodi articolari focali -->
-    <circle cx="148" cy="185" r="7" fill="#FF6A3D" stroke="#FFF" stroke-width="2"/>
-    <circle cx="85" cy="165" r="5" fill="#00E5FF"/>
+  <rect width="900" height="400" fill="transparent"/>
+  <!-- Raggi X Ginocchio a sinistra nel vuoto -->
+  <g transform="translate(200, 40)" filter="url(#softGlow6)" opacity="0.9">
+    <path d="M 60,30 C 50,90 40,150 45,210 C 47,230 70,250 65,270 C 60,290 30,300 25,320" fill="none" stroke="#00E5FF" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="65" cy="210" r="22" fill="none" stroke="#00F5A0" stroke-width="3"/>
+    <circle cx="68" cy="207" r="8" fill="#FF6A3D"/>
+    <text x="100" y="160" fill="#FF6A3D" font-family="monospace" font-size="12" font-weight="bold">PATELLAR STRESS</text>
   </g>
-  <!-- Dettaglio Anatomico / RX Ginocchio a sinistra (ispirato a IMG_3308) -->
-  <g transform="translate(180, 80)" filter="url(#glow6)" opacity="0.85">
-    <path d="M 60,20 C 50,70 40,120 45,170 C 47,190 70,210 65,230 C 60,250 30,260 25,280 C 20,300 35,320 40,320" fill="none" stroke="#00E5FF" stroke-width="4" stroke-linecap="round"/>
-    <path d="M 70,20 C 80,70 90,120 85,170 C 83,190 60,210 65,230 C 70,250 100,260 105,280 C 110,300 95,320 90,320" fill="none" stroke="#00E5FF" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
-    <!-- Articolazione Rotula in evidenza -->
-    <circle cx="65" cy="180" r="18" fill="#111827" stroke="#00F5A0" stroke-width="3"/>
-    <circle cx="68" cy="178" r="6" fill="#FF6A3D"/>
-    <path d="M 90,160 L 130,130" stroke="#FF6A3D" stroke-width="1.5" stroke-dasharray="3,3"/>
-    <rect x="135" y="115" width="120" height="30" fill="#0E1420" stroke="#FF6A3D" stroke-width="1" rx="4"/>
-    <text x="145" y="134" fill="#FF6A3D" font-family="monospace" font-size="11" font-weight="bold">PATELLAR STRESS</text>
+  <!-- Runner anatomico mesh a destra nel vuoto -->
+  <g transform="translate(560, 50) scale(1.1)" filter="url(#softGlow6)" opacity="0.9">
+    <path d="M125,25 C135,25 145,32 142,45 C138,55 125,60 115,53 C112,45 115,28 125,25 Z" fill="#00E5FF"/>
+    <path d="M118,52 C135,68 155,80 180,95 C190,100 185,110 175,107 C150,92 130,80 110,65 Z" fill="#00E5FF"/>
+    <path d="M115,70 C125,105 138,145 148,185 C153,205 138,210 130,193 C120,155 110,115 102,90 Z" fill="#00F5A0"/>
+    <path d="M130,193 L152,245 L185,285 C192,293 182,303 172,293 L142,250 L122,205 Z" fill="#00E5FF"/>
+    <circle cx="148" cy="185" r="9" fill="#FF6A3D" stroke="#FFF" stroke-width="2"/>
   </g>
 </svg>"""
 
@@ -1248,18 +1229,13 @@ elif pagina == "COMPUTER VISION":
                 st.markdown("<p style='font-size:0.82em; color:#00E5FF; font-family:\"JetBrains Mono\",monospace; margin-bottom:6px; letter-spacing:0.1em;'>DIGITAL TWIN // KINEMATIC STRESS MAP (REALE)</p>", unsafe_allow_html=True)
 
                 digital_twin_real_svg = f"""
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320" style="background: radial-gradient(circle at center, #0B111A 0%, #04070B 100%); border-radius: 12px; border: 1px solid #1c2333; width: 100%; box-shadow: 0 8px 30px rgba(0,229,255,0.08);">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320" style="background: transparent; width: 100%;">
                   <defs>
                     <filter id="glow-red-real" x="-50%" y="-50%" width="200%" height="200%">
                       <feGaussianBlur stdDeviation="6" result="blur" />
                       <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
                     </filter>
-                    <pattern id="grid-real" width="25" height="25" patternUnits="userSpaceOnUse">
-                      <path d="M 25 0 L 0 0 0 25" fill="none" stroke="#1c2333" stroke-width="0.5" opacity="0.3"/>
-                    </pattern>
                   </defs>
-
-                  <rect width="100%" height="100%" fill="url(#grid-real)" />
 
                   <g transform="translate(40, -15)">
                       <path d="M 180 60 C 190 100, 205 140, 215 180 C 200 190, 185 160, 175 110 Z" fill="#00E5FF" opacity="0.25"/>
@@ -1273,21 +1249,12 @@ elif pagina == "COMPUTER VISION":
                   <circle cx="255" cy="173" r="16" fill="#FF6A3D" opacity="0.5" filter="url(#glow-red-real)"/>
                   <circle cx="255" cy="173" r="5" fill="#FFFFFF"/>
                   <polyline points="255,173 320,115 560,115" fill="none" stroke="#FF6A3D" stroke-width="1.5"/>
-                  <rect x="330" y="93" width="235" height="42" fill="#0A0F17" stroke="#FF6A3D" stroke-width="1" rx="4"/>
                   <text x="342" y="109" fill="#FF6A3D" font-family="monospace" font-size="10" font-weight="bold">GINOCCHIO: {dati_REALI['angolo_ginocchio_appoggio']}°</text>
-                  <text x="342" y="123" fill="#8792A3" font-family="monospace" font-size="8">Angolo critico estratto dal video</text>
 
                   <circle cx="240" cy="285" r="12" fill="#FFB020" opacity="0.6" filter="url(#glow-red-real)"/>
                   <circle cx="240" cy="285" r="4" fill="#FFFFFF"/>
                   <polyline points="240,285 320,225 560,225" fill="none" stroke="#FFB020" stroke-width="1.5"/>
-                  <rect x="330" y="203" width="235" height="42" fill="#0A0F17" stroke="#FFB020" stroke-width="1" rx="4"/>
                   <text x="342" y="219" fill="#FFB020" font-family="monospace" font-size="10" font-weight="bold">OVERSTRIDE: {dati_REALI['overstride_cm']} CM</text>
-                  <text x="342" y="233" fill="#8792A3" font-family="monospace" font-size="8">Anticipo falcata rilevato dal tracking</text>
-
-                  <rect x="20" y="240" width="150" height="70" fill="#0E1420" stroke="#1c2333" stroke-width="1" rx="6"/>
-                  <text x="28" y="256" fill="#8792A3" font-family="monospace" font-size="7">RISCHIO ML VIDEO</text>
-                  <text x="28" y="282" fill="#FF6A3D" font-family="monospace" font-size="20" font-weight="bold">{dati_REALI['probabilita_infortunio_ml']}%</text>
-                  <text x="28" y="298" fill="#FF6A3D" font-family="monospace" font-size="7">STATUS: CRITICO</text>
                 </svg>
                 """
                 st.components.v1.html(digital_twin_real_svg, height=330, scrolling=False)
@@ -1296,7 +1263,7 @@ elif pagina == "COMPUTER VISION":
                 st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
 
                 grf_real_svg = f"""
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" style="background: #080B12; border-radius: 12px; border: 1px solid #1c2333; width: 100%;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" style="background: transparent; width: 100%;">
                     <defs>
                         <linearGradient id="grfGradReal" x1="0%" y1="0%" x2="0%" y2="100%">
                             <stop offset="0%" stop-color="#FF6A3D" stop-opacity="0.5"/>
@@ -1305,22 +1272,12 @@ elif pagina == "COMPUTER VISION":
                     </defs>
                     
                     <line x1="50" y1="150" x2="570" y2="150" stroke="#566178" stroke-width="1.5"/>
-                    <line x1="50" y1="40" x2="570" y2="40" stroke="#1c2333" stroke-width="1" stroke-dasharray="3,3"/>
-                    <text x="15" y="44" fill="#8792A3" font-family="monospace" font-size="8">3.0 BW</text>
-                    <text x="15" y="154" fill="#8792A3" font-family="monospace" font-size="8">0.0 BW</text>
-
                     <path d="M 50 150 C 150 150, 200 65, 310 65 C 420 65, 470 150, 550 150" fill="none" stroke="#00E5FF" stroke-width="2" stroke-dasharray="4,4" opacity="0.6"/>
-                    <text x="430" y="55" fill="#00E5FF" font-family="monospace" font-size="8">Standard Ideale</text>
-
                     <path d="M 50 150 L 90 150 L 130 20 L 170 90 C 240 90, 360 55, 470 150 L 550 150" fill="url(#grfGradReal)" />
                     <path d="M 50 150 L 90 150 L 130 20 L 170 90 C 240 90, 360 55, 470 150 L 550 150" fill="none" stroke="#FF6A3D" stroke-width="2.5" stroke-linejoin="round"/>
                     
                     <circle cx="130" cy="20" r="5" fill="#FFFFFF" stroke="#FF6A3D" stroke-width="2"/>
-                    <line x1="130" y1="20" x2="190" y2="20" stroke="#FF6A3D" stroke-width="1"/>
-                    <rect x="195" y="10" width="195" height="20" fill="#0A0F17" stroke="#FF6A3D" stroke-width="1" rx="3"/>
                     <text x="202" y="24" fill="#FF6A3D" font-family="monospace" font-size="9" font-weight="bold">OVERSTRIDE: {dati_REALI['overstride_cm']} CM</text>
-                    
-                    <text x="270" y="185" fill="#566178" font-family="monospace" font-size="8">TEMPO DI CONTATTO (ms)</text>
                 </svg>
                 """
                 st.components.v1.html(grf_real_svg, height=195, scrolling=False)
