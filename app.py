@@ -110,13 +110,11 @@ st.markdown("""
 
     .stForm { background-color: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 26px; }
     
-    /* INPUTS, SELECTBOX, MULTISELECT, DATEINPUT GLOBALI SCURI */
     .stTextInput input, .stNumberInput input, .stTextArea textarea, .stDateInput input {
         background-color: #131a29 !important; color: var(--text) !important; border: 1px solid var(--line) !important;
         font-family: 'Inter', sans-serif !important;
     }
     
-    /* Sfondi dropdown e selettori scuri */
     .stSelectbox div[data-baseweb="select"] > div, 
     .stMultiSelect div[data-baseweb="select"] > div,
     div[data-baseweb="select"] > div {
@@ -138,7 +136,6 @@ st.markdown("""
         color: #ffffff !important; 
     }
 
-    /* CUSTOM STYLING PER LE TABS (SOSTITUZIONE BIANCO CON TEMA SCURO / CYAN) */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
         background-color: var(--bg);
@@ -166,7 +163,6 @@ st.markdown("""
         box-shadow: 0 -2px 10px rgba(0, 229, 255, 0.15);
     }
 
-    /* FILE UPLOADER SCURO */
     div[data-testid="stFileUploader"] {
         background-color: var(--panel) !important;
         border: 1px solid var(--line) !important;
@@ -257,6 +253,7 @@ def get_svg_url(svg_string):
     b64 = base64.b64encode(svg_string.encode('utf-8')).decode('utf-8')
     return f"data:image/svg+xml;base64,{b64}"
 
+SVG_HOME = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400"><rect width="900" height="400" fill="#080B12"/><circle cx="450" cy="200" r="140" fill="none" stroke="#00E5FF" stroke-width="2" opacity="0.3"/><circle cx="450" cy="200" r="90" fill="none" stroke="#00F5A0" stroke-width="2" opacity="0.4"/><path d="M200,200 L700,200" stroke="#1c2333" stroke-width="2"/><path d="M450,50 L450,350" stroke="#1c2333" stroke-width="2"/><circle cx="450" cy="200" r="25" fill="#00E5FF"/><circle cx="600" cy="130" r="8" fill="#FF6A3D"/><path d="M450,200 L600,130" stroke="#FFB020" stroke-width="2" stroke-dasharray="4,4"/></svg>"""
 SVG_ANALISI = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400"><rect width="900" height="400" fill="#080B12"/><path d="M50,200 L250,200 L300,80 L350,280 L400,150 L450,250 L500,200 L850,200" stroke="#00E5FF" stroke-width="4" fill="none" opacity="0.8"/><circle cx="300" cy="80" r="6" fill="#00F5A0"/><circle cx="350" cy="280" r="6" fill="#FF6A3D"/><g opacity="0.3"><line x1="0" y1="100" x2="900" y2="100" stroke="#1c2333" stroke-width="1"/><line x1="0" y1="300" x2="900" y2="300" stroke="#1c2333" stroke-width="1"/></g></svg>"""
 SVG_STATS = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400"><rect width="900" height="400" fill="#080B12"/><rect x="150" y="150" width="40" height="150" fill="#00E5FF" opacity="0.3"/><rect x="250" y="200" width="40" height="100" fill="#00E5FF" opacity="0.5"/><rect x="350" y="100" width="40" height="200" fill="#00F5A0" opacity="0.8"/><rect x="450" y="220" width="40" height="80" fill="#00E5FF" opacity="0.4"/><rect x="550" y="70" width="40" height="230" fill="#FFB020" opacity="0.9"/><rect x="650" y="180" width="40" height="120" fill="#00E5FF" opacity="0.6"/><path d="M170,150 L270,200 L370,100 L470,220 L570,70 L670,180" stroke="#fff" stroke-width="3" fill="none"/><circle cx="570" cy="70" r="5" fill="#FF6A3D"/></svg>"""
 SVG_KPI = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400"><rect width="900" height="400" fill="#080B12"/><path d="M300,300 A 150 150 0 1 1 600,300" fill="none" stroke="#1c2333" stroke-width="20"/><path d="M300,300 A 150 150 0 0 1 500,170" fill="none" stroke="#00F5A0" stroke-width="20"/><circle cx="450" cy="270" r="10" fill="#00E5FF"/><line x1="450" y1="270" x2="520" y2="150" stroke="#00E5FF" stroke-width="4"/><text x="400" y="330" fill="#E8ECF2" font-family="monospace" font-size="28" font-weight="bold">98.2%</text></svg>"""
@@ -264,6 +261,7 @@ SVG_ML = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400"><rect 
 SVG_PLAN = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400"><rect width="900" height="400" fill="#080B12"/><circle cx="450" cy="200" r="120" fill="none" stroke="#1c2333" stroke-width="2"/><circle cx="450" cy="200" r="80" fill="none" stroke="#1c2333" stroke-width="2"/><circle cx="450" cy="200" r="40" fill="#00E5FF" opacity="0.2"/><circle cx="450" cy="200" r="10" fill="#00F5A0"/><path d="M450,200 L550,100" stroke="#FFB020" stroke-width="3"/><circle cx="550" cy="100" r="6" fill="#FFB020"/><path d="M450,200 L300,250" stroke="#FF6A3D" stroke-width="3"/><circle cx="300" cy="250" r="6" fill="#FF6A3D"/></svg>"""
 SVG_CV = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400"><rect width="900" height="400" fill="#080B12"/><circle cx="450" cy="150" r="20" fill="#00E5FF"/><line x1="450" y1="170" x2="450" y2="260" stroke="#00F5A0" stroke-width="4"/><line x1="450" y1="200" x2="380" y2="240" stroke="#FFB020" stroke-width="3"/><line x1="450" y1="200" x2="520" y2="240" stroke="#FFB020" stroke-width="3"/><line x1="450" y1="260" x2="400" y2="340" stroke="#FF6A3D" stroke-width="4"/><line x1="450" y1="260" x2="500" y2="340" stroke="#00E5FF" stroke-width="4"/></svg>"""
 
+IMG_HERO_HOME = get_svg_url(SVG_HOME)
 IMG_HERO_ANALISI = get_svg_url(SVG_ANALISI)
 IMG_HERO_STATS = get_svg_url(SVG_STATS)
 IMG_HERO_KPI = get_svg_url(SVG_KPI)
@@ -328,6 +326,7 @@ if 'dati' not in st.session_state:
     st.session_state.analisi_fatta = False
     st.session_state.risultati_analisi = {}
     st.session_state.device_connected = False
+    st.session_state.diario_note = []
 
 # ----------------- SIDEBAR -----------------
 with st.sidebar:
@@ -371,28 +370,90 @@ with st.sidebar:
         ), unsafe_allow_html=True)
 
     st.markdown("---")
+    st.subheader("Filtri Temporali Storico")
+    filtro_tempo = st.selectbox("Intervallo Analisi:", ["Ultimi 30 giorni", "Ultimi 60 giorni", "Ultimi 90 giorni (Tutto)"], label_visibility="collapsed")
+
+    st.markdown("---")
     st.markdown("<h3 style='color: #00E5FF; font-size: 0.85em; letter-spacing: 0.15em; text-transform: uppercase;'>SELEZIONA</h3>", unsafe_allow_html=True)
     
     pagina = st.radio(
         "Menu",
-        ["ANALISI STATO DI FORMA", "STATISTICHE ANALISI", "KPI DASHBOARD", "ANALISI PREDITTIVA ML", "CONSIGLIO FINALE", "COMPUTER VISION"],
+        ["HOME", "ANALISI STATO DI FORMA", "STATISTICHE ANALISI", "KPI DASHBOARD", "ANALISI PREDITTIVA ML", "CONSIGLIO FINALE", "COMPUTER VISION"],
         label_visibility="collapsed"
     )
+
+# Filtro dataframe in base alla selezione temporale della sidebar
+df_full = st.session_state.dati.copy()
+if filtro_tempo == "Ultimi 30 giorni":
+    df = df_full.tail(30)
+elif filtro_tempo == "Ultimi 60 giorni":
+    df = df_full.tail(60)
+else:
+    df = df_full
+
+# ---------------------------------------------------------
+# PAGINA 0: HOME / LANDING PAGE
+# ---------------------------------------------------------
+if pagina == "HOME":
+    header_block(
+        "RUNAI // Master Thesis Project",
+        "PERFORMANCE INTELLIGENCE SYSTEM",
+        "Piattaforma avanzata di Sport Data Science e Machine Learning per l'analisi predittiva e la prevenzione del rischio infortuni nei runner amatori.",
+        IMG_HERO_HOME, "Executive Dashboard"
+    )
+
+    st.markdown("""
+    <div class='info-box'>
+    <strong>Benvenuto in RUNAI.</strong> Questo sistema integra IoT, Wearable Analytics e modelli di Machine Learning supervisionati per ottimizzare i carichi di allenamento e supportare le decisioni del preparatore o dell'atleta.
+    </div>
+    """, unsafe_allow_html=True)
+
+    col_h1, col_h2, col_h3, col_h4 = st.columns(4)
+    col_h1.metric("KM Totali (90gg)", f"{df_full['Distanza (km)'].sum():.0f} km")
+    col_h2.metric("Sessioni Monitorate", f"{len(df_full)}")
+    col_h3.metric("Modelli ML Attivi", "5 Algoritmi")
+    col_h4.metric("Stato Sistema", "Online / Sync")
+
+    st.markdown("---")
+    st.subheader("Panoramica Moduli Principali")
+
+    c_card1, c_card2, c_card3 = st.columns(3)
+    with c_card1:
+        st.markdown("""
+        <div class='kpi-card' style='text-align:left; height: 210px;'>
+            <h3 style='color:#00E5FF; margin-bottom:8px;'>01. Stato di Forma</h3>
+            <p style='color:#8792A3; font-size:0.9em;'>Configura i parametri biologici giornalieri, sonno e stress per avviare il calcolo predittivo dell'allenamento.</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with c_card2:
+        st.markdown("""
+        <div class='kpi-card' style='text-align:left; height: 210px;'>
+            <h3 style='color:#00F5A0; margin-bottom:8px;'>02. Analytics & ML</h3>
+            <p style='color:#8792A3; font-size:0.9em;'>Esplora Random Forest, Regressioni e Cluster K-Means per comprendere i pattern nascosti nel tuo storico.</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with c_card3:
+        st.markdown("""
+        <div class='kpi-card' style='text-align:left; height: 210px;'>
+            <h3 style='color:#FFB020; margin-bottom:8px;'>03. Computer Vision</h3>
+            <p style='color:#8792A3; font-size:0.9em;'>Analisi biomeccanica della falcata tramite video e stima del rischio clinico associato ai sovraccarichi.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # PAGINA 1: ANALISI STATO DI FORMA
 # ---------------------------------------------------------
-if pagina == "ANALISI STATO DI FORMA":
+elif pagina == "ANALISI STATO DI FORMA":
     header_block(
         "Modulo 01 — Acquisizione Dati",
         "ANALISI STATO DI FORMA",
-        "Inserisci i parametri fisiologici e seleziona l'obiettivo odierno: il sistema elaborerà lo stato di preparazione in tempo reale.",
+        "Inserisci i parametri fisiologici, annota le sensazioni soggettive e seleziona l'obiettivo odierno.",
         IMG_HERO_ANALISI, "Sport Tech Scan"
     )
 
     st.markdown("""
     <div class='info-box'>
-    <strong>Configura i parametri odierni per avviare l'analisi predittiva.</strong>
+    <strong>Configura i parametri odierni e compila il diario delle sensazioni prima di avviare l'analisi predittiva.</strong>
     </div>
     """, unsafe_allow_html=True)
 
@@ -424,12 +485,13 @@ if pagina == "ANALISI STATO DI FORMA":
             fc_riposo = st.slider("FC a riposo (bpm)", 40, 90, 60)
 
         st.markdown("---")
-        st.markdown("### Stress Mentale")
+        st.markdown("### Stress Mentale & Diario Sensazioni")
         col_st1, col_st2 = st.columns(2)
         with col_st1:
             stress_lavoro = st.slider("Stress Lavoro (1-10)", 1, 10, 5)
-        with col_st2:
             ore_lavoro = st.slider("Ore lavorate oggi", 0.0, 14.0, 8.0)
+        with col_st2:
+            nota_soggettiva = st.text_area("Diario Feedback Atleta (Sensazioni, dolori lievi, umore)", placeholder="Es: Gambe leggermente pesanti dopo il lavoro di ieri, ma buon focus mentale...")
 
         st.markdown("---")
         st.markdown("### Allenamento Previsto")
@@ -448,8 +510,22 @@ if pagina == "ANALISI STATO DI FORMA":
             'obj_oggi': obj_oggi, 'distanza_oggi': distanza_oggi, 'obj_finale': obj_finale, 'data_obj_finale': data_obj_finale,
             'km_obj_finale': km_obj_finale, 'ore_sonno': ore_sonno, 'qualita_sonno': qualita_sonno, 'fc_riposo': fc_riposo,
             'stress_lavoro': stress_lavoro, 'ore_lavoro': ore_lavoro, 'tipo_allenamento': tipo_allenamento, 'rpe_previsto': rpe_previsto,
+            'nota_soggettiva': nota_soggettiva, 'data_nota': pd.Timestamp.now().strftime('%d/%m/%Y %H:%M')
         }
-        st.success("Stato di forma analizzato con successo.")
+        if nota_soggettiva.strip():
+            st.session_state.diario_note.append({'data': st.session_state.risultati_analisi['data_nota'], 'nota': nota_soggettiva})
+        st.success("Stato di forma analizzato e note salvate con successo nel diario!")
+
+    if st.session_state.diario_note:
+        st.markdown("---")
+        st.subheader("Diario Storico Feedback Atleta")
+        for item in reversed(st.session_state.diario_note[-5:]):
+            st.markdown(f"""
+            <div style='background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; margin-bottom: 8px;'>
+                <span style='color: var(--cyan); font-family: "JetBrains Mono", monospace; font-size: 0.8em;'>{item['data']}</span>
+                <p style='color: var(--text-dim); margin: 4px 0 0 0; font-size: 0.95em;'>{item['nota']}</p>
+            </div>
+            """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # PAGINA 2: STATISTICHE ANALISI
@@ -458,15 +534,13 @@ elif pagina == "STATISTICHE ANALISI":
     header_block(
         "Modulo 02 — Analytics Storico",
         "STATISTICHE ANALISI",
-        "Volume, intensità e recupero degli ultimi tre mesi, decodificati in metriche di performance avanzate.",
+        f"Volume, intensità e recupero filtrati per: **{filtro_tempo}**.",
         IMG_HERO_STATS, "Historical Metrics"
     )
 
-    df = st.session_state.dati.copy()
-
     st.subheader("KPI Panoramica")
     col_m1, col_m2, col_m3, col_m4 = st.columns(4)
-    col_m1.metric("KM Totali", f"{df['Distanza (km)'].sum():.0f} km", "90 giorni")
+    col_m1.metric("KM Totali", f"{df['Distanza (km)'].sum():.0f} km", filtro_tempo)
     col_m2.metric("Sessioni", f"{len(df)}")
     col_m3.metric("Media/Sessione", f"{df['Distanza (km)'].mean():.1f} km")
     col_m4.metric("Giorni Rischio", f"{df['Rischio Infortunio'].sum()}")
@@ -487,19 +561,21 @@ elif pagina == "STATISTICHE ANALISI":
             st.markdown("<div class='explain-text'>Verifica che le barre non presentino sbalzi improvvisi superiori al 10% da una settimana all'altra per prevenire sovraccarichi tendinei.</div>", unsafe_allow_html=True)
 
             st.markdown("**Carico per Giorno della Settimana**")
-            df['Giorno_Settimana'] = df['Giorno'].dt.day_name()
-            df_day = df.groupby('Giorno_Settimana')['Distanza (km)'].mean().reindex(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']).reset_index()
+            df_copy = df.copy()
+            df_copy['Giorno_Settimana'] = df_copy['Giorno'].dt.day_name()
+            df_day = df_copy.groupby('Giorno_Settimana')['Distanza (km)'].mean().reindex(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']).reset_index()
             fig_day = px.bar(df_day, x='Giorno_Settimana', y='Distanza (km)', height=300, color_discrete_sequence=['#00E5FF'])
             st.plotly_chart(style_fig(fig_day), use_container_width=True)
             st.markdown("<div class='explain-text'>Evidenzia la distribuzione settimanale dei chilometri. Assicurati di alternare giorni di carico a giorni di recupero attivo.</div>", unsafe_allow_html=True)
 
         with col2:
             st.markdown("**Distanza Cumulativa**")
-            df['Cumulativa'] = df['Distanza (km)'].cumsum()
-            fig_cum = px.line(df, x='Giorno', y='Cumulativa', height=300, markers=True)
+            df_copy = df.copy()
+            df_copy['Cumulativa'] = df_copy['Distanza (km)'].cumsum()
+            fig_cum = px.line(df_copy, x='Giorno', y='Cumulativa', height=300, markers=True)
             fig_cum.update_traces(line_color="#00E5FF")
             st.plotly_chart(style_fig(fig_cum), use_container_width=True)
-            st.markdown("<div class='explain-text'>Traccia la progressione lineare dei chilometri accumulati nel trimestre di riferimento.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Traccia la progressione lineare dei chilometri accumulati nel periodo di riferimento.</div>", unsafe_allow_html=True)
 
             record_km = df.loc[df['Distanza (km)'].idxmax()]
             record_vel = df.loc[df['Velocità (km/h)'].idxmax()]
@@ -508,7 +584,7 @@ elif pagina == "STATISTICHE ANALISI":
 
             st.markdown(f"""
             <div class='kpi-card' style='text-align:left; margin-top:10px; background: linear-gradient(135deg, #0E1420 0%, #131427 100%);'>
-                <h3 style='color:#FFB020; margin-bottom:15px;'>Bacheca Record — Ultimi 90 giorni</h3>
+                <h3 style='color:#FFB020; margin-bottom:15px;'>Bacheca Record — Periodo Selezionato</h3>
                 <div style='display:flex; justify-content:space-between; margin:8px 0; color:#B8C2D0;'><span>Corsa più lunga</span><strong style='color:#fff; font-family:"JetBrains Mono",monospace;'>{record_km['Distanza (km)']:.1f} km</strong></div>
                 <div style='display:flex; justify-content:space-between; margin:8px 0; color:#B8C2D0;'><span>Velocità massima</span><strong style='color:#fff; font-family:"JetBrains Mono",monospace;'>{record_vel['Velocità (km/h)']:.1f} km/h</strong></div>
                 <div style='display:flex; justify-content:space-between; margin:8px 0; color:#B8C2D0;'><span>Miglior striscia sopra media</span><strong style='color:#fff; font-family:"JetBrains Mono",monospace;'>{streak} allenamenti</strong></div>
@@ -527,8 +603,9 @@ elif pagina == "STATISTICHE ANALISI":
             st.markdown("**Ripartizione Zone Cardiache**")
             bins = [0, 120, 140, 160, 180, 200]
             labels = ['Z1 (Recupero)', 'Z2 (Fondo Lento)', 'Z3 (Medio/Tempo)', 'Z4 (Soglia)', 'Z5 (Max)']
-            df['Zone'] = pd.cut(df['FC Media'], bins=bins, labels=labels)
-            zone_counts = df['Zone'].value_counts().reset_index()
+            df_copy = df.copy()
+            df_copy['Zone'] = pd.cut(df_copy['FC Media'], bins=bins, labels=labels)
+            zone_counts = df_copy['Zone'].value_counts().reset_index()
             fig_zones = px.pie(zone_counts, values='count', names='Zone', hole=0.6, height=300, color_discrete_sequence=['#00E5FF','#00B8D4','#0E4A57','#FFB020','#FF6A3D'])
             st.plotly_chart(style_fig(fig_zones), use_container_width=True)
             st.markdown("<div class='explain-text'>Distribuzione percentuale del tempo trascorso nelle diverse zone cardiache di allenamento.</div>", unsafe_allow_html=True)
@@ -553,8 +630,9 @@ elif pagina == "STATISTICHE ANALISI":
             st.markdown("<div class='explain-text'>Monitoraggio giornaliero delle ore di sonno rispetto alle soglie di recupero raccomandate.</div>", unsafe_allow_html=True)
 
             st.markdown("**Debito di Sonno (Rolling 7gg)**")
-            df['Debito'] = df['Ore Sonno'].apply(lambda x: max(0, 7.5 - x)).rolling(7).sum()
-            fig_debt = px.area(df, x='Giorno', y='Debito', height=300, color_discrete_sequence=['#FF6A3D'])
+            df_copy = df.copy()
+            df_copy['Debito'] = df_copy['Ore Sonno'].apply(lambda x: max(0, 7.5 - x)).rolling(7).sum()
+            fig_debt = px.area(df_copy, x='Giorno', y='Debito', height=300, color_discrete_sequence=['#FF6A3D'])
             st.plotly_chart(style_fig(fig_debt), use_container_width=True)
             st.markdown("<div class='explain-text'>Accumulo settimanale del deficit di sonno rispetto allo standard ottimale di 7.5 ore.</div>", unsafe_allow_html=True)
 
@@ -567,7 +645,7 @@ elif pagina == "STATISTICHE ANALISI":
             st.markdown("<div class='explain-text'>Correlazione bivariata tra ore di sonno e intensità dello sforzo in relazione al rischio infortuni.</div>", unsafe_allow_html=True)
 
     with tab4:
-        st.markdown("**Ultimi 15 Allenamenti**")
+        st.markdown("**Storico Allenamenti Selezionati**")
         tab_data = df[['Giorno', 'Distanza (km)', 'Velocità (km/h)', 'FC Media', 'RPE', 'Ore Sonno', 'Stress Lavoro']].tail(15).copy()
         tab_data['Giorno'] = tab_data['Giorno'].dt.strftime('%d/%m/%y')
         tab_data['Rischio'] = df['Rischio Infortunio'].tail(15).apply(lambda x: 'ALTO' if x == 1 else 'OK')
@@ -594,10 +672,10 @@ elif pagina == "KPI DASHBOARD":
         st.warning("Completa prima il questionario nella pagina 'ANALISI STATO DI FORMA'.")
     else:
         r = st.session_state.risultati_analisi
-        df = st.session_state.dati.copy()
+        df_base = st.session_state.dati.copy()
 
         st.markdown("### Bilancio Carico vs Recupero (Ultimi 14 Giorni + Oggi)")
-        df_14 = df.tail(14).copy()
+        df_14 = df_base.tail(14).copy()
         fig_balance = go.Figure()
         fig_balance.add_trace(go.Scatter(x=df_14['Giorno'], y=df_14['RPE']*10, name="Carico Sforzo (Strain)", fill='tozeroy', fillcolor='rgba(255, 106, 61, 0.18)', line=dict(color='#FF6A3D', width=3)))
         fig_balance.add_trace(go.Scatter(x=df_14['Giorno'], y=(df_14['Ore Sonno']/8)*100, name="Capacità di Recupero", line=dict(color='#00F5A0', width=4)))
@@ -660,7 +738,7 @@ elif pagina == "KPI DASHBOARD":
 
         st.markdown("---")
         st.markdown("### Il Tuo Profilo Atletico AI")
-        cv_sonno, cv_rpe = df['Ore Sonno'].std() / df['Ore Sonno'].mean(), df['RPE'].std() / df['RPE'].mean()
+        cv_sonno, cv_rpe = df_base['Ore Sonno'].std() / df_base['Ore Sonno'].mean(), df_base['RPE'].std() / df_base['RPE'].mean()
         consistenza = max(0, 100 - (cv_sonno + cv_rpe) * 100)
 
         if recovery_score >= 75 and sma < 10:
@@ -701,18 +779,18 @@ elif pagina == "ANALISI PREDITTIVA ML":
         IMG_HERO_ML, "Machine Learning Engine"
     )
 
-    df = st.session_state.dati.copy()
+    df_base = st.session_state.dati.copy()
 
     st.markdown("""
     <div class='info-box'>
     <h3>Come opera il Machine Learning in RUNAI?</h3>
-    <p style='color: #B8C2D0; font-family:"Inter",sans-serif;'>Il sistema analizza i tuoi 90 giorni di dati storici mediante algoritmi di classificazione, regressione e clustering non supervisionato per individuare pattern invisibili e stimare con precisione la tua risposta biologica agli stimoli.</p>
+    <p style='color: #B8C2D0; font-family:"Inter",sans-serif;'>Il sistema analizza i tuoi dati storici mediante algoritmi di classificazione, regressione e clustering non supervisionato per individuare pattern invisibili e stimare con precisione la tua risposta biologica agli stimoli.</p>
     </div>
     """, unsafe_allow_html=True)
 
     try:
-        X_train_class = df[['Distanza (km)', 'Ore Sonno', 'Stress Lavoro', 'FC Media', 'RPE']].values
-        y_train_class = df['Rischio Infortunio'].values
+        X_train_class = df_base[['Distanza (km)', 'Ore Sonno', 'Stress Lavoro', 'FC Media', 'RPE']].values
+        y_train_class = df_base['Rischio Infortunio'].values
         scaler = StandardScaler()
         X_scaled_class = scaler.fit_transform(X_train_class)
 
@@ -764,14 +842,14 @@ elif pagina == "ANALISI PREDITTIVA ML":
             st.markdown("### Linear Regression (Previsione FC Media)")
             st.markdown("<div class='explain-text'><strong>Spiegazione Algoritmo:</strong> Algoritmo di regressione supervisionata che modella il legame lineare tra una variabile continua dipendente (Frequenza Cardiaca) e variabili indipendenti (Velocità, Temperatura, Distanza).</div>", unsafe_allow_html=True)
             
-            X_lr = df[['Velocità (km/h)', 'Temp (°C)', 'Distanza (km)']]
-            y_lr = df['FC Media']
+            X_lr = df_base[['Velocità (km/h)', 'Temp (°C)', 'Distanza (km)']]
+            y_lr = df_base['FC Media']
             lr_model = LinearRegression()
             lr_model.fit(X_lr, y_lr)
-            df['FC_Predetta'] = lr_model.predict(X_lr)
+            df_base['FC_Predetta'] = lr_model.predict(X_lr)
             
-            fig_lr = px.scatter(df, x='FC Media', y='FC_Predetta', color='RPE', color_continuous_scale=[[0,'#00E5FF'],[1,'#FF6A3D']])
-            fig_lr.add_shape(type="line", x0=df['FC Media'].min(), y0=df['FC Media'].min(), x1=df['FC Media'].max(), y1=df['FC Media'].max(), line=dict(color="#00F5A0", dash="dash"))
+            fig_lr = px.scatter(df_base, x='FC Media', y='FC_Predetta', color='RPE', color_continuous_scale=[[0,'#00E5FF'],[1,'#FF6A3D']])
+            fig_lr.add_shape(type="line", x0=df_base['FC Media'].min(), y0=df_base['FC Media'].min(), x1=df_base['FC Media'].max(), y1=df_base['FC Media'].max(), line=dict(color="#00F5A0", dash="dash"))
             fig_lr.update_layout(height=400, title="FC Reale vs FC Predetta", xaxis_title="FC Reale", yaxis_title="FC Predetta")
             st.plotly_chart(style_fig(fig_lr), use_container_width=True)
             
@@ -781,12 +859,12 @@ elif pagina == "ANALISI PREDITTIVA ML":
             st.markdown("### Cluster Analysis (K-Means)")
             st.markdown("<div class='explain-text'><strong>Spiegazione Algoritmo:</strong> Algoritmo di apprendimento non supervisionato che raggruppa automaticamente il set di dati in 3 cluster omogenei in base a similarità di distanza percorsa e frequenza cardiaca media.</div>", unsafe_allow_html=True)
             
-            X_clust = df[['Distanza (km)', 'FC Media']]
+            X_clust = df_base[['Distanza (km)', 'FC Media']]
             km = KMeans(n_clusters=3, random_state=42)
-            df['Cluster_ID'] = km.fit_predict(X_clust)
-            df['Cluster_Type'] = df['Cluster_ID'].apply(lambda x: f"Cluster {x+1}")
+            df_base['Cluster_ID'] = km.fit_predict(X_clust)
+            df_base['Cluster_Type'] = df_base['Cluster_ID'].apply(lambda x: f"Cluster {x+1}")
             
-            fig_km = px.scatter(df, x='Distanza (km)', y='FC Media', color='Cluster_Type', color_discrete_sequence=['#00E5FF', '#FFB020', '#00F5A0'], size='RPE')
+            fig_km = px.scatter(df_base, x='Distanza (km)', y='FC Media', color='Cluster_Type', color_discrete_sequence=['#00E5FF', '#FFB020', '#00F5A0'], size='RPE')
             fig_km.update_layout(height=400, title="Segmentazione Cluster Allenamenti")
             st.plotly_chart(style_fig(fig_km), use_container_width=True)
             
@@ -796,7 +874,7 @@ elif pagina == "ANALISI PREDITTIVA ML":
             st.markdown("### Stress / Overload Prediction (Time Series)")
             st.markdown("<div class='explain-text'><strong>Spiegazione Algoritmo:</strong> Analisi delle serie temporali basata sul calcolo della media mobile dello stress sistemico (SMA = Stress * RPE / Sonno), finalizzata a intercettare trend di accumulo di fatica cronica.</div>", unsafe_allow_html=True)
             
-            df_stress = df[['Giorno', 'SMA']].sort_values('Giorno').copy()
+            df_stress = df_base[['Giorno', 'SMA']].sort_values('Giorno').copy()
             df_stress['SMA_Rolling'] = df_stress['SMA'].rolling(7, min_periods=1).mean()
             
             fig_sp = px.area(df_stress, x='Giorno', y='SMA_Rolling', color_discrete_sequence=['#FF6A3D'])
@@ -849,7 +927,7 @@ elif pagina == "CONSIGLIO FINALE":
     header_block(
         "Modulo 05 — Action Plan",
         "CONSIGLIO FINALE",
-        "Protocollo operativo e proiezioni fisiologiche generate su misura per la sessione odierna.",
+        "Protocollo operativo, proiezioni fisiologiche e export report per la sessione odierna.",
         IMG_HERO_PLAN, "Coach Protocol"
     )
 
@@ -857,7 +935,7 @@ elif pagina == "CONSIGLIO FINALE":
         st.warning("Completa prima il questionario nella pagina 'ANALISI STATO DI FORMA'.")
     else:
         r = st.session_state.risultati_analisi
-        df = st.session_state.dati.copy()
+        df_base = st.session_state.dati.copy()
 
         risk_score = min(100,
             (40 if r['ore_sonno'] < 6 else 25 if r['ore_sonno'] < 6.5 else 10) +
@@ -946,8 +1024,23 @@ elif pagina == "CONSIGLIO FINALE":
             """, unsafe_allow_html=True)
 
         st.markdown("<br>---<br>", unsafe_allow_html=True)
+        
+        # NUOVA IDEA 4: EXPORT REPORT RAPIDO
+        st.subheader("Generazione Report per Coach / Export")
+        report_testo = f"""--- RUNAI PERFORMANCE REPORT ---
+Status: {tit}
+Distanza Consigliata: {distanza_consigliata:.1f} km (Target: {distanza_target} km)
+Indice Rischio: {risk_score:.0f}%
+Recovery Score: {recovery_score:.0f}%
+Stress Mentale (SMA): {sma:.1f}
+Note Atleta: {r.get('nota_soggettiva', 'Nessuna nota')}
+--------------------------------"""
+        st.text_area("Testo Report Formattato:", value=report_testo, height=120)
+        st.download_button("SCARICA REPORT TXT", data=report_testo, file_name="runai_report_allenamento.txt", mime="text/plain", use_container_width=True)
+
+        st.markdown("<br><hr><br>", unsafe_allow_html=True)
         st.subheader("Analisi Parametri vs Media (90 giorni)")
-        media_sonno_90, media_stress_90, media_rpe_90 = df['Ore Sonno'].mean(), df['Stress Lavoro'].mean(), df['RPE'].mean()
+        media_sonno_90, media_stress_90, media_rpe_90 = df_base['Ore Sonno'].mean(), df_base['Stress Lavoro'].mean(), df_base['RPE'].mean()
         sonno_vs_media, stress_vs_media, rpe_vs_media = r['ore_sonno'] - media_sonno_90, r['stress_lavoro'] - media_stress_90, r['rpe_previsto'] - media_rpe_90
 
         col_a1, col_a2, col_a3 = st.columns(3)
@@ -981,54 +1074,6 @@ elif pagina == "CONSIGLIO FINALE":
                 <p style='font-family:"Inter",sans-serif; color:#566178; font-size:0.85em; margin-top:8px;'>Sforzo pianificato per la sessione odierna rispetto alla media storica registrata.</p>
             </div>
             """, unsafe_allow_html=True)
-
-        st.markdown("<br><hr><br>", unsafe_allow_html=True)
-        st.markdown("<h2>Proiezione Fisiologica Odierna</h2>", unsafe_allow_html=True)
-
-        g_col1, g_col2 = st.columns(2)
-        with g_col1:
-            time_x = np.arange(0, 60, 5)
-            hr_y = [r['fc_riposo'] + 20] + [r['fc_riposo'] + 70 + np.random.randint(-5, 5) for _ in range(10)] + [r['fc_riposo'] + 30]
-            fig_pace = px.line(x=time_x, y=hr_y, title="1. Curva BPM Consigliata Oggi", labels={'x':'Minuti', 'y':'BPM'})
-            fig_pace.update_traces(line_color="#FF6A3D")
-            fig_pace.update_layout(height=300)
-            st.plotly_chart(style_fig(fig_pace), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Spiegazione Grafico:</strong> Andamento raccomandato della frequenza cardiaca nel corso della sessione, utile per evitare picchi precoci di affaticamento e mantenere il corretto profilo aerobico.</div>", unsafe_allow_html=True)
-        
-        with g_col2:
-            hours = ["+0h", "+6h", "+12h", "+24h", "+48h"]
-            rec_y = [30, 55, 75, 95, 100] if risk_score < 50 else [15, 30, 50, 70, 90]
-            fig_rec = px.bar(x=hours, y=rec_y, title="2. Tempo di Ricarica Glicogeno Stimato", labels={'x':'Ore Post-Workout', 'y':'% Energie'})
-            fig_rec.update_traces(marker_color="#00F5A0")
-            fig_rec.update_layout(height=300)
-            st.plotly_chart(style_fig(fig_rec), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Spiegazione Grafico:</strong> Stima temporale del ripristino delle scorte di glicogeno muscolare ed epatico nelle ore successive al termine dell'attività fisica.</div>", unsafe_allow_html=True)
-            
-        g_col3, g_col4 = st.columns(2)
-        with g_col3:
-            fig_acwr = go.Figure(data=[
-                go.Bar(name='Carico Ultimi 7gg', x=['Carico'], y=[450], marker_color='#FFB020'),
-                go.Bar(name='Media 28gg', x=['Carico'], y=[390], marker_color='#00E5FF')
-            ])
-            fig_acwr.update_layout(title="3. Bilancio Acuto vs Cronico (ACWR)", barmode='group', height=300)
-            st.plotly_chart(style_fig(fig_acwr), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Spiegazione Grafico:</strong> Rapporto di carico tra gli ultimi 7 giorni (acuto) e le ultime 4 settimane (cronico). Valori compresi tra 1.0 e 1.3 rappresentano il finestrino ideale di carico progressivo.</div>", unsafe_allow_html=True)
-        
-        with g_col4:
-            fig_pie2 = px.pie(values=[70, 20, 10], names=['Aerobico Base', 'Soglia Lattata', 'Anaerobico'], title="4. Ripartizione Energetica Richiesta", hole=0.6, color_discrete_sequence=['#00E5FF', '#FFB020', '#FF6A3D'])
-            fig_pie2.update_layout(height=300)
-            st.plotly_chart(style_fig(fig_pie2), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Spiegazione Grafico:</strong> Ripartizione percentuale dei sistemi energetici attivati durante la sessione programmata per ottimizzare la risposta metabolica.</div>", unsafe_allow_html=True)
-        
-        st.markdown("<br><hr>", unsafe_allow_html=True)
-        st.markdown("<h3>Consigli Operativi Basati sui Risultati</h3>", unsafe_allow_html=True)
-        
-        if risk_score < 33:
-            st.success("VIA LIBERA ALL'ALLENAMENTO: Il tuo sistema biologico è pienamente rigenerato. I modelli confermano un rischio di infortunio minimo: puoi eseguire la sessione pianificata a pieno regime o incrementare il volume del 5%.")
-        elif risk_score < 66:
-            st.warning("ATTENZIONE MODERATA: Si rileva un lieve accumulo di fatica o uno stress lavorativo superiore alla media. Ti consigliamo di eseguire l'allenamento riducendo del 15% il volume complessivo ed evitando variazioni di ritmo troppo violente.")
-        else:
-            st.error("STOP E RECUPERO NECESSARIO: I parametri indicano un profilo di rischio critico e un forte debito di sonno/stress. Sostituisci la corsa con una sessione di sola mobilità articolare o riposo totale per evitare infortuni muscolari imminenti.")
 
 # ---------------------------------------------------------
 # PAGINA 6: COMPUTER VISION & BIOMECHANIC AI
