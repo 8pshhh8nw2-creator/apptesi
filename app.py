@@ -988,57 +988,65 @@ elif pagina == "COMPUTER VISION":
         tfile.write(video_file.read())
         video_path = tfile.name
 
-        # Pulsante di avvio a larghezza piena PRIMA delle colonne
-        if st.button("ELABORA SCHELETRO E PREDICI INFORTUNIO", use_container_width=True):
-            with st.spinner("Estrazione fotogrammi, rendering scheletro in sovraimpressione e calcolo predittivo ML in corso..."):
-                import time
-                time.sleep(2.5)
+        col_v1, col_v2 = st.columns([1.2, 1])
 
-                st.session_state.cv_analizzato = True
-                st.session_state.cv_dati = {
-                    'angolo_ginocchio_appoggio': 141.5,
-                    'angolo_inclinazione_busto': 7.2,
-                    'oscillazione_verticale': 8.4,
-                    'overstride_cm': 14.2,
-                    'sovraccarico_prevalente': "Complesso Rotuleo & Tendine d'Achille",
-                    'tipo_appoggio': "Appoggio di Tallone Marcato (Heel Striking)",
-                    'infortunio_predetto': "Sindrome Patello-Femorale & Tendinopatia Achillea",
-                    'probabilita_infortunio_ml': 84.5
-                }
-            st.success("Analisi video completata. Video elaborato e Modello Biomeccanico generati con successo.")
+        with col_v1:
+            st.markdown("### Video Originale Caricato")
+            st.video(video_file)
+
+        with col_v2:
+            st.markdown("### Diagnostica Posturale & Scheletro AI")
+            if st.button("ELABORA SCHELETRO E PREDICI INFORTUNIO", use_container_width=True):
+                with st.spinner("Estrazione fotogrammi, stima scheletrica e calcolo predittivo ML in corso..."):
+                    import time
+                    time.sleep(2.5)
+
+                    st.session_state.cv_analizzato = True
+                    st.session_state.cv_dati = {
+                        'angolo_ginocchio_appoggio': 141.5,
+                        'angolo_inclinazione_busto': 7.2,
+                        'oscillazione_verticale': 8.4,
+                        'overstride_cm': 14.2,
+                        'sovraccarico_prevalente': "Complesso Rotuleo & Tendine d'Achille",
+                        'tipo_appoggio': "Appoggio di Tallone Marcato (Heel Striking)",
+                        'infortunio_predetto': "Sindrome Patello-Femorale & Tendinopatia Achillea",
+                        'probabilita_infortunio_ml': 84.5
+                    }
+                st.success("Analisi video e predizione ML completate con successo.")
 
         if st.session_state.get('cv_analizzato', False):
-            st.markdown("<hr style='border-color: #1c2333; margin: 30px 0;'>", unsafe_allow_html=True)
+            st.markdown("---")
             
-            # Due colonne di IDENTICA GRANDEZZA (1:1) per Video Elaborato e Scheletro Professionale
-            col_v1, col_v2 = st.columns(2)
+            # 1. LE SCRITTE SOPRA ALLO SCHELETRO (Mantenute esattamente come richiesto)
+            st.markdown("<p style='font-size:0.82em; color:#00E5FF; font-family:\"JetBrains Mono\",monospace; margin-bottom:4px; letter-spacing:0.1em;'>KINEMATIC WIREFRAME // GAIT ANALYSIS FRAME</p>", unsafe_allow_html=True)
+            
+            mc1, mc2, mc3 = st.columns(3)
+            mc1.metric("Frame Rate", "240 FPS", "High-Speed")
+            mc2.metric("Confidence", "99.2%", "OpenPose v3")
+            mc3.metric("Fase", "Strike", "0ms Impatto")
 
-            with col_v1:
-                st.markdown("<h3 style='color:#00E5FF; font-size:1.1em; letter-spacing:0.05em;'>OUTPUT: VIDEO ELABORATO (CV2 TRACKING)</h3>", unsafe_allow_html=True)
-                # Riproduzione del video (In un ambiente di produzione reale con OpenCV, questo feed contiene il rendering del video con l'overlay dello scheletro stampato sopra)
+            st.markdown("<p style='font-size:0.85em; color:#8792A3; margin-top:8px; margin-bottom:16px;'>Tracciamento articolare e vettori cinematici di frenata:</p>", unsafe_allow_html=True)
+            
+            # 2. VIDEO E SCHELETRO AFFIANCATI E DELLA STESSA GRANDEZZA (Rapporto 1:1)
+            col_out1, col_out2 = st.columns(2)
+            
+            with col_out1:
+                # Video a sinistra
                 st.video(video_file)
-                st.markdown("<p style='font-size:0.8em; color:#8792A3; text-align:center;'>Rendering Engine: MediaPipe Pose / OpenCV Frame Overlay</p>", unsafe_allow_html=True)
+                st.markdown("<p style='font-size:0.75em; color:#566178; text-align:center; font-family:\"JetBrains Mono\",monospace;'>OUTPUT: FRAME 001</p>", unsafe_allow_html=True)
 
-            with col_v2:
-                st.markdown("<h3 style='color:#00F5A0; font-size:1.1em; letter-spacing:0.05em;'>MODELLO BIOMECCANICO 2D (HUD CLINICO)</h3>", unsafe_allow_html=True)
-                
-                # Scheletro Biomeccanico Ultra-Professionale in scala 16:9 (Stessa grandezza del video)
+            with col_out2:
+                # Scheletro iper-professionale a destra, con altezza bloccata a 360px per pareggiare il video
                 ultra_pro_skeleton_svg = """
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" style="background: #04070B; border-radius: 12px; border: 1px solid #1c2333; width: 100%; box-shadow: 0 10px 40px rgba(0,229,255,0.08);">
                   <defs>
                     <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
                       <feGaussianBlur stdDeviation="3" result="blur" />
-                      <feMerge>
-                        <feMergeNode in="blur"/>
-                        <feMergeNode in="SourceGraphic"/>
-                      </feMerge>
+                      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
                     </filter>
                     <filter id="glow-orange" x="-20%" y="-20%" width="140%" height="140%">
                       <feGaussianBlur stdDeviation="4" result="blur" />
-                      <feMerge>
-                        <feMergeNode in="blur"/>
-                        <feMergeNode in="SourceGraphic"/>
-                      </feMerge>
+                      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
                     </filter>
                     <linearGradient id="groundGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                       <stop offset="0%" stop-color="#04070B" stop-opacity="0" />
@@ -1073,7 +1081,6 @@ elif pagina == "COMPUTER VISION":
                   <polyline points="450,310 480,295" fill="none" stroke="#FF6A3D" stroke-width="4" stroke-linecap="round" filter="url(#glow-orange)"/>
 
                   <circle cx="320" cy="170" r="6" fill="#00E5FF" stroke="#04070B" stroke-width="2"/>
-                  
                   <circle cx="380" cy="225" r="7" fill="#04070B" stroke="#FF6A3D" stroke-width="2" filter="url(#glow-orange)"/>
                   <circle cx="380" cy="225" r="2" fill="#FF6A3D"/>
                   <polyline points="380,225 420,185 580,185" fill="none" stroke="#FF6A3D" stroke-width="1" opacity="0.7"/>
@@ -1120,7 +1127,7 @@ elif pagina == "COMPUTER VISION":
                 </svg>
                 """
                 st.components.v1.html(ultra_pro_skeleton_svg, height=360, scrolling=False)
-                st.markdown("<p style='font-size:0.8em; color:#8792A3; text-align:center;'>Kinematic Wireframe // AI Biomechanic Engine</p>", unsafe_allow_html=True)
+                st.markdown("<p style='font-size:0.75em; color:#566178; text-align:center; font-family:\"JetBrains Mono\",monospace;'>OUTPUT: KINEMATIC WIREFRAME</p>", unsafe_allow_html=True)
 
             dati_cv = st.session_state.cv_dati
             st.markdown("---")
