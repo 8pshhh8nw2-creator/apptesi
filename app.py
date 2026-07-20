@@ -964,7 +964,7 @@ elif pagina == "CONSIGLIO FINALE":
             st.warning("ATTENZIONE MODERATA: Si rileva un lieve accumulo di fatica o uno stress lavorativo superiore alla media. Ti consigliamo di eseguire l'allenamento riducendo del 15% il volume complessivo ed evitando variazioni di ritmo troppo violente.")
         else:
             st.error("STOP E RECUPERO NECESSARIO: I parametri indicano un profilo di rischio critico e un forte debito di sonno/stress. Sostituisci la corsa con una sessione di sola mobilità articolare o riposo totale per evitare infortuni muscolari imminenti.")
-        # ---------------------------------------------------------
+# ---------------------------------------------------------
 # PAGINA 6: COMPUTER VISION & BIOMECHANIC AI
 # ---------------------------------------------------------
 elif pagina == "COMPUTER VISION":
@@ -1014,62 +1014,96 @@ elif pagina == "COMPUTER VISION":
                     }
                 st.success("Analisi video e predizione ML completate con successo.")
 
+            # Sezione visiva dello scheletro in stile HUD professionale con metriche integrate
             if st.session_state.get('cv_analizzato', False):
-                st.markdown("<p style='font-size:0.82em; color:#00E5FF; font-family:\"JetBrains Mono\",monospace; margin-bottom:4px; letter-spacing:0.1em;'>KINEMATIC WIREFRAME // GAIT ANALYSIS FRAME</p>", unsafe_allow_html=True)
+                st.markdown("<p style='font-size:0.82em; color:#00E5FF; font-family:\"JetBrains Mono\",monospace; margin-bottom:4px; letter-spacing:0.1em;'>HUD BIOMECCANICO // LIVE KINEMATIC OVERLAY</p>", unsafe_allow_html=True)
                 
-                mc1, mc2, mc3 = st.columns(3)
-                mc1.metric("Frame Rate", "240 FPS", "High-Speed")
-                mc2.metric("Confidence", "99.2%", "OpenPose v3")
-                mc3.metric("Fase", "Strike", "0ms Impatto")
-
-                st.markdown("<p style='font-size:0.85em; color:#8792A3; margin-top:8px;'>Tracciamento articolare e vettori cinematici di frenata:</p>", unsafe_allow_html=True)
-                
-                skeleton_widget_svg = """
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 260" style="background: linear-gradient(135deg, #090E17 0%, #0E1420 100%); border-radius: 12px; border: 1px solid #1c2333; width: 100%; box-shadow: 0 8px 24px rgba(0,0,0,0.5);">
-                    <g stroke="#1c2333" stroke-width="0.8" opacity="0.6">
-                        <line x1="0" y1="52" x2="450" y2="52" stroke-dasharray="3,3"/>
-                        <line x1="0" y1="104" x2="450" y2="104" stroke-dasharray="3,3"/>
-                        <line x1="0" y1="156" x2="450" y2="156" stroke-dasharray="3,3"/>
-                        <line x1="0" y1="208" x2="450" y2="208" stroke-dasharray="3,3"/>
-                        <line x1="225" y1="0" x2="225" y2="260" stroke="#00E5FF" stroke-width="1" opacity="0.25"/>
+                # Scheletro Biometrico Professionale in stile Lab Clinico con HUD incorporato
+                pro_skeleton_hud_svg = """
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 320" style="background: #080B12; border-radius: 12px; border: 1px solid #1c2333; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
+                    <!-- Griglia di calibrazione di fondo -->
+                    <g stroke="#1c2333" stroke-width="0.8" opacity="0.5">
+                        <line x1="0" y1="64" x2="500" y2="64" stroke-dasharray="2,2"/>
+                        <line x1="0" y1="128" x2="500" y2="128" stroke-dasharray="2,2"/>
+                        <line x1="0" y1="192" x2="500" y2="192" stroke-dasharray="2,2"/>
+                        <line x1="0" y1="256" x2="500" y2="256" stroke-dasharray="2,2"/>
+                        <line x1="250" y1="0" x2="250" y2="320" stroke="#00E5FF" stroke-width="1" opacity="0.2"/>
                     </g>
-                    <text x="232" y="16" fill="#00E5FF" font-family="monospace" font-size="9" letter-spacing="0.05em">VERTICAL COM AXIS</text>
-                    <line x1="40" y1="215" x2="410" y2="215" stroke="#566178" stroke-width="2"/>
-                    <rect x="315" y="213" width="70" height="4" fill="#FF6A3D" opacity="0.8"/>
-                    <text x="315" y="232" fill="#FF6A3D" font-family="monospace" font-size="8">FORCE PLATE ACTIVE</text>
-                    <line x1="195" y1="58" x2="215" y2="135" stroke="#00F5A0" stroke-width="3" stroke-linecap="round"/>
-                    <circle cx="195" cy="58" r="4" fill="#00E5FF"/>
-                    <line x1="195" y1="65" x2="160" y2="95" stroke="#8792A3" stroke-width="2"/>
-                    <circle cx="160" cy="95" r="3" fill="#8792A3"/>
-                    <line x1="160" y1="95" x2="135" y2="130" stroke="#8792A3" stroke-width="2"/>
-                    <circle cx="135" cy="130" r="3" fill="#8792A3"/>
-                    <line x1="195" y1="65" x2="235" y2="85" stroke="#8792A3" stroke-width="2"/>
-                    <circle cx="235" cy="85" r="3" fill="#8792A3"/>
-                    <line x1="235" y1="85" x2="260" y2="115" stroke="#8792A3" stroke-width="2"/>
-                    <circle cx="260" cy="115" r="3" fill="#8792A3"/>
-                    <circle cx="215" cy="135" r="5" fill="#FFB020"/>
-                    <line x1="215" y1="135" x2="275" y2="175" stroke="#FF6A3D" stroke-width="4" stroke-linecap="round"/>
-                    <circle cx="275" cy="175" r="6" fill="#FF6A3D" stroke="#fff" stroke-width="1.5"/>
-                    <line x1="275" y1="175" x2="335" y2="212" stroke="#FF6A3D" stroke-width="4" stroke-linecap="round"/>
-                    <circle cx="335" cy="212" r="4" fill="#FF6A3D"/>
-                    <polygon points="325,212 360,212 355,202 332,202" fill="#FF6A3D"/>
-                    <line x1="215" y1="135" x2="165" y2="185" stroke="#00F5A0" stroke-width="3" stroke-linecap="round"/>
-                    <circle cx="165" cy="185" r="4" fill="#00F5A0"/>
-                    <line x1="165" y1="185" x2="130" y2="212" stroke="#00F5A0" stroke-width="3" stroke-linecap="round"/>
-                    <circle cx="130" cy="212" r="3" fill="#8792A3"/>
-                    <circle cx="190" cy="35" r="14" fill="none" stroke="#00E5FF" stroke-width="2"/>
-                    <line x1="190" y1="49" x2="195" y2="58" stroke="#00E5FF" stroke-width="2"/>
-                    <path d="M 260 162 A 22 22 0 0 1 292 165" fill="none" stroke="#FFB020" stroke-width="2"/>
-                    <rect x="298" y="152" width="52" height="18" rx="4" fill="#0E1420" stroke="#FFB020" stroke-width="1"/>
-                    <text x="303" y="165" fill="#FFB020" font-family="monospace" font-size="11" font-weight="bold">141.5°</text>
-                    <line x1="225" y1="238" x2="335" y2="238" stroke="#FF6A3D" stroke-width="1.5" stroke-dasharray="2,2"/>
-                    <path d="M 225 235 L 225 241 M 335 235 L 335 241" stroke="#FF6A3D" stroke-width="1.5"/>
-                    <rect x="238" y="228" width="84" height="20" rx="4" fill="#0E1420" stroke="#FF6A3D" stroke-width="1"/>
-                    <text x="243" y="242" fill="#FF6A3D" font-family="monospace" font-size="9" font-weight="bold">OVERSTRIDE: 14.2cm</text>
+
+                    <!-- Terreno & Sensore di Forza (Force Plate) -->
+                    <line x1="40" y1="270" x2="460" y2="270" stroke="#8792A3" stroke-width="2"/>
+                    <rect x="330" y="267" width="90" height="6" fill="#FF6A3D" opacity="0.9" rx="2"/>
+                    <text x="330" y="290" fill="#FF6A3D" font-family="monospace" font-size="9" font-weight="bold">APPOGGIO OK</text>
+
+                    <!-- HUD Pannello Metriche in alto a sinistra (stile video di analisi) -->
+                    <rect x="20" y="20" width="180" height="135" rx="6" fill="#0E1420" stroke="#1c2333" stroke-width="1"/>
+                    <text x="30" y="36" fill="#00E5FF" font-family="monospace" font-size="10" font-weight="bold">METRICHE RUNNING</text>
+                    <text x="30" y="54" fill="#8792A3" font-family="monospace" font-size="9">CADENZA</text>
+                    <text x="170" y="54" fill="#fff" font-family="monospace" font-size="9" text-anchor="end">176 SPM</text>
+                    <text x="30" y="70" fill="#8792A3" font-family="monospace" font-size="9">TEMPO CONTATTO</text>
+                    <text x="170" y="70" fill="#fff" font-family="monospace" font-size="9" text-anchor="end">212 MS</text>
+                    <text x="30" y="86" fill="#8792A3" font-family="monospace" font-size="9">TEMPO VOLO</text>
+                    <text x="170" y="86" fill="#fff" font-family="monospace" font-size="9" text-anchor="end">136 MS</text>
+                    <text x="30" y="102" fill="#8792A3" font-family="monospace" font-size="9">OSCILLAZIONE VERT.</text>
+                    <text x="170" y="102" fill="#fff" font-family="monospace" font-size="9" text-anchor="end">8.4 CM</text>
+                    <text x="30" y="118" fill="#8792A3" font-family="monospace" font-size="9">SIMMETRIA BRACCIA</text>
+                    <text x="170" y="118" fill="#fff" font-family="monospace" font-size="9" text-anchor="end">91.7 %</text>
+                    <text x="30" y="134" fill="#8792A3" font-family="monospace" font-size="9">OVERSTRIDE (FRENATA)</text>
+                    <text x="170" y="134" fill="#FF6A3D" font-family="monospace" font-size="9" text-anchor="end">14.2 CM</text>
+
+                    <!-- HUD Badge Stato in alto a destra -->
+                    <rect x="360" y="20" width="120" height="26" rx="4" fill="#0E1420" stroke="#00F5A0" stroke-width="1"/>
+                    <circle cx="372" cy="33" r="4" fill="#00F5A0"/>
+                    <text x="384" y="36" fill="#00F5A0" font-family="monospace" font-size="9" font-weight="bold">STRIKE: VOLO</text>
+
+                    <!-- SKELETON WIREFRAME (Posizione di falcata laterale) -->
+                    <!-- Testa -->
+                    <circle cx="215" cy="55" r="14" fill="none" stroke="#00E5FF" stroke-width="2"/>
+                    <line x1="215" y1="69" x2="225" y2="85" stroke="#00F5A0" stroke-width="3"/>
+
+                    <!-- Busto / Tronco -->
+                    <line x1="225" y1="85" x2="245" y2="160" stroke="#00F5A0" stroke-width="3.5" stroke-linecap="round"/>
+
+                    <!-- Braccio Anteriore -->
+                    <line x1="230" y1="95" x2="195" y2="125" stroke="#8792A3" stroke-width="2"/>
+                    <circle cx="195" cy="125" r="3" fill="#8792A3"/>
+                    <line x1="195" y1="125" x2="175" y2="155" stroke="#8792A3" stroke-width="2"/>
+
+                    <!-- Braccio Posteriore -->
+                    <line x1="230" y1="95" x2="265" y2="115" stroke="#8792A3" stroke-width="2"/>
+                    <circle cx="265" cy="115" r="3" fill="#8792A3"/>
+                    <line x1="265" y1="115" x2="290" y2="145" stroke="#8792A3" stroke-width="2"/>
+
+                    <!-- Bacino / Pelvi -->
+                    <circle cx="245" cy="160" r="5" fill="#FFB020"/>
+
+                    <!-- Arto Inferiore Anteriore (Impatto con Overstride) -->
+                    <line x1="245" y1="160" x2="310" y2="210" stroke="#FF6A3D" stroke-width="4" stroke-linecap="round"/>
+                    <circle cx="310" cy="210" r="6" fill="#FF6A3D" stroke="#fff" stroke-width="1.5"/>
+                    <line x1="310" y1="210" x2="375" y2="265" stroke="#FF6A3D" stroke-width="4" stroke-linecap="round"/>
+                    <circle cx="375" cy="265" r="4" fill="#FF6A3D"/>
+                    <!-- Piede di appoggio -->
+                    <polygon points="365,265 405,265 400,255 372,255" fill="#FF6A3D"/>
+
+                    <!-- Arto Inferiore Posteriore (Spinta) -->
+                    <line x1="245" y1="160" x2="190" y2="220" stroke="#00F5A0" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="190" cy="220" r="4" fill="#00F5A0"/>
+                    <line x1="190" y1="220" x2="155" y2="265" stroke="#00F5A0" stroke-width="3" stroke-linecap="round"/>
+
+                    <!-- Annotazioni Angolari sul Ginocchio -->
+                    <path d="M 290 195 A 24 24 0 0 1 328 195" fill="none" stroke="#FFB020" stroke-width="2"/>
+                    <rect x="334" y="185" width="55" height="20" rx="4" fill="#0E1420" stroke="#FFB020" stroke-width="1"/>
+                    <text x="340" y="198" fill="#FFB020" font-family="monospace" font-size="11" font-weight="bold">141.5°</text>
+
+                    <!-- Indicatore Overstride sul terreno -->
+                    <line x1="250" y1="295" x2="375" y2="295" stroke="#FF6A3D" stroke-width="1.5" stroke-dasharray="2,2"/>
+                    <path d="M 250 291 L 250 299 M 375 291 L 375 299" stroke="#FF6A3D" stroke-width="1.5"/>
+                    <rect x="262" y="285" width="102" height="20" rx="4" fill="#0E1420" stroke="#FF6A3D" stroke-width="1"/>
+                    <text x="268" y="298" fill="#FF6A3D" font-family="monospace" font-size="9" font-weight="bold">OVERSTRIDE: 14.2cm</text>
                 </svg>
                 """
-                # Renderizzazione corretta dell'SVG nel browser tramite il componente HTML di Streamlit
-                st.components.v1.html(skeleton_widget_svg, height=270, scrolling=False)
+                # Renderizzazione pulita e fluida dell'HUD integrato nel browser
+                st.components.v1.html(pro_skeleton_hud_svg, height=335, scrolling=False)
             else:
                 st.markdown("<p style='color:#566178; font-size:0.9em; margin-top:20px; text-align:center;'>Premi il pulsante sopra per avviare il tracciamento dello scheletro e il calcolo dei vettori articolari.</p>", unsafe_allow_html=True)
 
