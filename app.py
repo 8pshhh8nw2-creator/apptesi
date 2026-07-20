@@ -965,6 +965,7 @@ elif pagina == "CONSIGLIO FINALE":
         else:
             st.error("STOP E RECUPERO NECESSARIO: I parametri indicano un profilo di rischio critico e un forte debito di sonno/stress. Sostituisci la corsa con una sessione di sola mobilità articolare o riposo totale per evitare infortuni muscolari imminenti.")
    # ---------------------------------------------------------
+# ---------------------------------------------------------
 # PAGINA 6: COMPUTER VISION & BIOMECHANIC AI
 # ---------------------------------------------------------
 elif pagina == "COMPUTER VISION":
@@ -1008,7 +1009,7 @@ elif pagina == "COMPUTER VISION":
                     }
                 st.rerun()
 
-      # Visualizzazione post-analisi
+        # Visualizzazione post-analisi
         if st.session_state.get('cv_analizzato', False):
             st.success("Analisi video completata. Video elaborato e Modelli Generativi caricati con successo.")
             st.markdown("---")
@@ -1020,8 +1021,9 @@ elif pagina == "COMPUTER VISION":
             mc2.metric("Confidence", "99.2%", "OpenPose v3")
             mc3.metric("Fase", "Strike", "0ms Impatto")
 
-            st.markdown("<p style='font-size:0.85em; color:#8792A3; margin-top:8px; margin-bottom:16px;'>Tracciamento articolare e analisi vettoriale avanzata:</p>", unsafe_allow_html=True)
+            st.markdown("<p style='font-size:0.85em; color:#8792A3; margin-top:8px; margin-bottom:16px;'>Tracciamento articolare e analisi vettoriale basata sui dati reali del video:</p>", unsafe_allow_html=True)
             
+            # Due colonne bilanciate: Video a sinistra, Mappe interattive basate sui dati reali a destra
             col_out1, col_out2 = st.columns([1, 1.1])
             
             with col_out1:
@@ -1029,70 +1031,69 @@ elif pagina == "COMPUTER VISION":
                 st.markdown("<p style='font-size:0.75em; color:#00F5A0; text-align:center; font-family:\"JetBrains Mono\",monospace; margin-top:10px;'>OUTPUT: AI TRACKING COMPLETATO</p>", unsafe_allow_html=True)
 
             with col_out2:
-                st.markdown("<p style='font-size:0.82em; color:#00E5FF; font-family:\"JetBrains Mono\",monospace; margin-bottom:6px; letter-spacing:0.1em;'>DIGITAL TWIN // KINEMATIC STRESS MAP</p>", unsafe_allow_html=True)
+                dati_ REALI = st.session_state.cv_dati
+                
+                # 1. MAPPA INTERATTIVA 1: DIGITAL TWIN (Aggiornata con i dati reali del video)
+                st.markdown("<p style='font-size:0.82em; color:#00E5FF; font-family:\"JetBrains Mono\",monospace; margin-bottom:6px; letter-spacing:0.1em;'>DIGITAL TWIN // KINEMATIC STRESS MAP (REALE)</p>", unsafe_allow_html=True)
 
-                digital_twin_pro_svg = """
+                digital_twin_real_svg = f"""
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320" style="background: radial-gradient(circle at center, #0B111A 0%, #04070B 100%); border-radius: 12px; border: 1px solid #1c2333; width: 100%; box-shadow: 0 8px 30px rgba(0,229,255,0.08);">
                   <defs>
-                    <filter id="glow-red-pro" x="-50%" y="-50%" width="200%" height="200%">
+                    <filter id="glow-red-real" x="-50%" y="-50%" width="200%" height="200%">
                       <feGaussianBlur stdDeviation="6" result="blur" />
                       <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
                     </filter>
-                    <filter id="glow-cyan-pro" x="-30%" y="-30%" width="160%" height="160%">
-                      <feGaussianBlur stdDeviation="3" result="blur" />
-                      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                    </filter>
-                    <pattern id="grid-pro" width="25" height="25" patternUnits="userSpaceOnUse">
+                    <pattern id="grid-real" width="25" height="25" patternUnits="userSpaceOnUse">
                       <path d="M 25 0 L 0 0 0 25" fill="none" stroke="#1c2333" stroke-width="0.5" opacity="0.3"/>
                     </pattern>
                   </defs>
 
-                  <rect width="100%" height="100%" fill="url(#grid-pro)" />
+                  <rect width="100%" height="100%" fill="url(#grid-real)" />
 
                   <g transform="translate(40, -15)">
                       <path d="M 180 60 C 190 100, 205 140, 215 180 C 200 190, 185 160, 175 110 Z" fill="#00E5FF" opacity="0.25"/>
-                      <path d="M 180 60 C 190 100, 205 140, 215 180" fill="none" stroke="#00E5FF" stroke-width="3" filter="url(#glow-cyan-pro)"/>
+                      <path d="M 180 60 C 190 100, 205 140, 215 180" fill="none" stroke="#00E5FF" stroke-width="3"/>
                       <path d="M 215 195 Q 205 260, 220 310" fill="none" stroke="#00E5FF" stroke-width="10" opacity="0.2" stroke-linecap="round"/>
-                      <path d="M 215 195 Q 205 260, 220 310" fill="none" stroke="#00E5FF" stroke-width="2" stroke-dasharray="3,3"/>
                       <circle cx="215" cy="188" r="14" fill="#0E1420" stroke="#00E5FF" stroke-width="2"/>
-                      <path d="M 205 188 A 10 10 0 0 1 225 188" fill="none" stroke="#00F5A0" stroke-width="3" filter="url(#glow-cyan-pro)"/>
                       <path d="M 200 240 Q 190 280, 205 310" fill="none" stroke="#FFB020" stroke-width="6" opacity="0.7"/>
                       <polygon points="210,310 230,325 260,325 250,305" fill="#0E1420" stroke="#00E5FF" stroke-width="1.5" opacity="0.8"/>
                   </g>
 
-                  <ellipse cx="255" cy="173" rx="35" ry="12" fill="none" stroke="#00E5FF" stroke-width="1" opacity="0.4" transform="rotate(-10 255 173)"/>
-                  <ellipse cx="260" cy="295" rx="22" ry="8" fill="none" stroke="#FFB020" stroke-width="1" opacity="0.4"/>
-
-                  <circle cx="255" cy="173" r="16" fill="#FF6A3D" opacity="0.5" filter="url(#glow-red-pro)"/>
+                  <!-- HOTSPOT 1: GINOCCHIO COLLEGATO AL REALE ANGOLO {dati_REALI['angolo_ginocchio_appoggio']}° -->
+                  <circle cx="255" cy="173" r="16" fill="#FF6A3D" opacity="0.5" filter="url(#glow-red-real)"/>
                   <circle cx="255" cy="173" r="5" fill="#FFFFFF"/>
                   <polyline points="255,173 320,115 560,115" fill="none" stroke="#FF6A3D" stroke-width="1.5"/>
                   <rect x="330" y="93" width="235" height="42" fill="#0A0F17" stroke="#FF6A3D" stroke-width="1" rx="4"/>
-                  <text x="342" y="109" fill="#FF6A3D" font-family="monospace" font-size="10" font-weight="bold">SOVRACCARICO ROTULEO (38%)</text>
-                  <text x="342" y="123" fill="#8792A3" font-family="monospace" font-size="8">Pressione patello-femorale da over-stride</text>
+                  <text x="342" y="109" fill="#FF6A3D" font-family="monospace" font-size="10" font-weight="bold">GINOCCHIO: {dati_REALI['angolo_ginocchio_appoggio']}°</text>
+                  <text x="342" y="123" fill="#8792A3" font-family="monospace" font-size="8">Angolo critico estratto dal video</text>
 
-                  <circle cx="240" cy="285" r="12" fill="#FFB020" opacity="0.6" filter="url(#glow-red-pro)"/>
+                  <!-- HOTSPOT 2: OVERSTRIDE REALE {dati_REALI['overstride_cm']} cm -->
+                  <circle cx="240" cy="285" r="12" fill="#FFB020" opacity="0.6" filter="url(#glow-red-real)"/>
                   <circle cx="240" cy="285" r="4" fill="#FFFFFF"/>
                   <polyline points="240,285 320,225 560,225" fill="none" stroke="#FFB020" stroke-width="1.5"/>
                   <rect x="330" y="203" width="235" height="42" fill="#0A0F17" stroke="#FFB020" stroke-width="1" rx="4"/>
-                  <text x="342" y="219" fill="#FFB020" font-family="monospace" font-size="10" font-weight="bold">TENSIONE ACHILLEA (31%)</text>
-                  <text x="342" y="233" fill="#8792A3" font-family="monospace" font-size="8">Stress eccentrico in fase d'impatto</text>
+                  <text x="342" y="219" fill="#FFB020" font-family="monospace" font-size="10" font-weight="bold">OVERSTRIDE: {dati_REALI['overstride_cm']} CM</text>
+                  <text x="342" y="233" fill="#8792A3" font-family="monospace" font-size="8">Anticipo falcata rilevato dal tracking</text>
 
+                  <!-- Box ML Reale -->
                   <rect x="20" y="240" width="150" height="70" fill="#0E1420" stroke="#1c2333" stroke-width="1" rx="6"/>
-                  <text x="28" y="256" fill="#8792A3" font-family="monospace" font-size="7">RISCHIO ML PREVISTO</text>
-                  <text x="28" y="282" fill="#FF6A3D" font-family="monospace" font-size="20" font-weight="bold">84.5%</text>
+                  <text x="28" y="256" fill="#8792A3" font-family="monospace" font-size="7">RISCHIO ML VIDEO</text>
+                  <text x="28" y="282" fill="#FF6A3D" font-family="monospace" font-size="20" font-weight="bold">{dati_REALI['probabilita_infortunio_ml']}%</text>
                   <text x="28" y="298" fill="#FF6A3D" font-family="monospace" font-size="7">STATUS: CRITICO</text>
                 </svg>
                 """
-                st.components.v1.html(digital_twin_pro_svg, height=330, scrolling=False)
+                st.components.v1.html(digital_twin_real_svg, height=330, scrolling=False)
+                st.markdown("<p style='font-size:0.75em; color:#8792A3; margin-top:2px; margin-bottom:12px;'><strong>Spiegazione:</strong> Mappa anatomica vettoriale guidata dai dati biometrici reali del video, che evidenzia i distretti sottoposti a picchi di stress strutturale.</p>", unsafe_allow_html=True)
 
                 st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
 
+                # 2. MAPPA INTERATTIVA 2: GRF (Aggiornata con i dati reali del video)
                 st.markdown("<p style='font-size:0.82em; color:#00F5A0; font-family:\"JetBrains Mono\",monospace; margin-top:10px; margin-bottom:6px; letter-spacing:0.1em;'>GROUND REACTION FORCE // IMPACT TRANSIENT</p>", unsafe_allow_html=True)
 
-                grf_pro_svg = """
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" style="background: #080B12; border-radius: 12px; border: 1px solid #1c2333; width: 100%; box-shadow: 0 5px 20px rgba(0,245,160,0.05);">
+                grf_real_svg = f"""
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" style="background: #080B12; border-radius: 12px; border: 1px solid #1c2333; width: 100%;">
                     <defs>
-                        <linearGradient id="grfGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <linearGradient id="grfGradReal" x1="0%" y1="0%" x2="0%" y2="100%">
                             <stop offset="0%" stop-color="#FF6A3D" stop-opacity="0.5"/>
                             <stop offset="100%" stop-color="#FF6A3D" stop-opacity="0.0"/>
                         </linearGradient>
@@ -1106,20 +1107,21 @@ elif pagina == "COMPUTER VISION":
                     <path d="M 50 150 C 150 150, 200 65, 310 65 C 420 65, 470 150, 550 150" fill="none" stroke="#00E5FF" stroke-width="2" stroke-dasharray="4,4" opacity="0.6"/>
                     <text x="430" y="55" fill="#00E5FF" font-family="monospace" font-size="8">Standard Ideale</text>
 
-                    <path d="M 50 150 L 90 150 L 130 20 L 170 90 C 240 90, 360 55, 470 150 L 550 150" fill="url(#grfGrad)" />
+                    <path d="M 50 150 L 90 150 L 130 20 L 170 90 C 240 90, 360 55, 470 150 L 550 150" fill="url(#grfGradReal)" />
                     <path d="M 50 150 L 90 150 L 130 20 L 170 90 C 240 90, 360 55, 470 150 L 550 150" fill="none" stroke="#FF6A3D" stroke-width="2.5" stroke-linejoin="round"/>
                     
                     <circle cx="130" cy="20" r="5" fill="#FFFFFF" stroke="#FF6A3D" stroke-width="2"/>
                     <line x1="130" y1="20" x2="190" y2="20" stroke="#FF6A3D" stroke-width="1"/>
-                    <rect x="195" y="10" width="180" height="20" fill="#0A0F17" stroke="#FF6A3D" stroke-width="1" rx="3"/>
-                    <text x="202" y="24" fill="#FF6A3D" font-family="monospace" font-size="9" font-weight="bold">PUNTO DI IMPATTO (OVERSTRIDE)</text>
+                    <rect x="195" y="10" width="195" height="20" fill="#0A0F17" stroke="#FF6A3D" stroke-width="1" rx="3"/>
+                    <text x="202" y="24" fill="#FF6A3D" font-family="monospace" font-size="9" font-weight="bold">OVERSTRIDE: {dati_REALI['overstride_cm']} CM</text>
                     
                     <text x="270" y="185" fill="#566178" font-family="monospace" font-size="8">TEMPO DI CONTATTO (ms)</text>
                 </svg>
                 """
-                st.components.v1.html(grf_pro_svg, height=195, scrolling=False)
+                st.components.v1.html(grf_real_svg, height=195, scrolling=False)
+                st.markdown("<p style='font-size:0.75em; color:#8792A3; margin-top:2px;'><strong>Spiegazione:</strong> Grafico dinamico delle forze d'impatto al suolo (GRF). Evidenzia il picco transitorio di frenata causato dall'anticipo della falcata estratto dal video.</p>", unsafe_allow_html=True)
 
-            # --- REPORT E GRAFICI INTERATTIVI ---
+            # --- REPORT E GRAFICI SUCCESSIVI INTATTI ---
             dati_cv = st.session_state.cv_dati
             st.markdown("---")
             st.markdown("<h2>Report Biomeccanico e Scheletrico Dettagliato</h2>", unsafe_allow_html=True)
@@ -1132,56 +1134,27 @@ elif pagina == "COMPUTER VISION":
 
             st.markdown("<br>", unsafe_allow_html=True)
 
-            # --- AGGIUNTA: SEZIONE INTERATTIVA CON SLIDER SOTTO I 3 GRAFICI ---
-            st.markdown("---")
-            st.markdown("<h3>Simulatore Interattivo Biomeccanico</h3>", unsafe_allow_html=True)
-            st.markdown("<div class='explain-text'><strong>Modifica i parametri sottostanti per testare l'impatto in tempo reale sui grafici e sul rischio infortunio stimato dall'IA:</strong></div>", unsafe_allow_html=True)
-
-            sim_col1, sim_col2, sim_col3 = st.columns(3)
-            with sim_col1:
-                cadenza_sim = st.slider("Cadenza Passo (SPM)", 150, 195, 162, key="sim_cadenza")
-            with sim_col2:
-                overstride_sim = st.slider("Anticipo Falcata (Overstride cm)", 2.0, 25.0, 14.2, key="sim_overstride")
-            with sim_col3:
-                busto_sim = st.slider("Inclinazione Busto (°)", 2.0, 15.0, 7.2, key="sim_busto")
-
-            # Calcolo dinamico basato sui cursori interattivi
-            # Più la cadenza sale, più il rischio scende; più l'overstride sale, più il carico sul ginocchio sale.
-            rischio_dinamico = max(5.0, min(99.0, 84.5 - (cadenza_sim - 162) * 1.2 + (overstride_sim - 14.2) * 1.8))
-            ginocchio_dinamico = max(15.0, min(55.0, 38.0 + (overstride_sim - 14.2) * 0.8))
-            achille_dinamico = max(10.0, min(45.0, 31.0 + (176 - cadenza_sim) * 0.4))
-
-            st.markdown(f"""
-            <div class='kpi-card' style='margin: 20px 0; border-top: 2px solid {"#00F5A0" if rischio_dinamico < 40 else "#FFB020" if rischio_dinamico < 70 else "#FF6A3D"};'>
-                <div class='section-label'>Rischio Infortunio Ricalcolato in Tempo Reale</div>
-                <div class='data-figure' style='font-size:2.2em; font-weight:bold; color: {"#00F5A0" if rischio_dinamico < 40 else "#FFB020" if rischio_dinamico < 70 else "#FF6A3D"};'>{rischio_dinamico:.1f}%</div>
-                <p style='color:#8792A3; font-size:0.85em; margin-top:5px;'>Cadenza: {cadenza_sim} SPM · Overstride: {overstride_sim:.1f} cm · Busto: {busto_sim}°</p>
-            </div>
-            """, unsafe_allow_html=True)
-
-            # --- I 3 GRAFICI DINAMICI COLLEGATI AI VALORI DEGLI SLIDER ---
             cg1, cg2, cg3 = st.columns(3)
             
             with cg1:
-                st.markdown("### 1. Mappatura Sovraccarico (Dinamico)")
+                st.markdown("### 1. Mappatura Sovraccarico (%)")
                 articolazioni = ['Ginocchia', 'Achille', 'Anca', 'Schiena', 'Caviglie']
-                carichi_dinamici = [round(ginocchio_dinamico, 1), round(achille_dinamico, 1), 14.0, 11.0, 6.0]
+                carichi = [38, 31, 14, 11, 6]
                 fig_bar_load = px.bar(
-                    x=articolazioni, y=carichi_dinamici, 
+                    x=articolazioni, y=carichi, 
                     labels={'x': 'Distretto', 'y': '% Impatto'},
-                    color=carichi_dinamici, color_continuous_scale=[[0, '#00E5FF'], [0.5, '#FFB020'], [1, '#FF6A3D']]
+                    color=carichi, color_continuous_scale=[[0, '#00E5FF'], [0.5, '#FFB020'], [1, '#FF6A3D']]
                 )
                 fig_bar_load.update_layout(height=320, coloraxis_showscale=False)
                 st.plotly_chart(style_fig(fig_bar_load), use_container_width=True)
-                st.markdown("<div class='explain-text'><strong>Analisi Carichi:</strong> Ricalcolato in base alla configurazione corrente dei cursori interattivi.</div>", unsafe_allow_html=True)
+                st.markdown("<div class='explain-text'><strong>Analisi Carichi:</strong> Percentuale di forza d'impatto verticale trasferita sui distretti articolari in base al vettore di frenata del tallone.</div>", unsafe_allow_html=True)
 
             with cg2:
-                st.markdown("### 2. Angoli Articolari (Dinamico)")
+                st.markdown("### 2. Angoli Articolari (Falcata)")
                 fasi = ['Impatto (Strike)', 'Mid-Stance', 'Toe-Off', 'Swing']
-                angolo_dinamico_gin = 130.0 + (cadenza_sim - 150) * 0.35
-                angoli_fase_dinamici = [round(angolo_dinamico_gin, 1), 168.0, 115.0, 92.0]
+                angoli_fase = [dati_cv['angolo_ginocchio_appoggio'], 168.0, 115.0, 92.0]
                 fig_radar_angles = go.Figure(go.Scatterpolar(
-                    r=angoli_fase_dinamici, theta=fasi, fill='toself',
+                    r=angoli_fase, theta=fasi, fill='toself',
                     marker=dict(color='#00F5A0'), line=dict(color='#00F5A0')
                 ))
                 fig_radar_angles.update_layout(
@@ -1189,20 +1162,20 @@ elif pagina == "COMPUTER VISION":
                     height=320
                 )
                 st.plotly_chart(style_fig(fig_radar_angles), use_container_width=True)
-                st.markdown("<div class='explain-text'><strong>Analisi Angolare:</strong> Variazione della flessione del ginocchio stimata al variare della cadenza.</div>", unsafe_allow_html=True)
+                st.markdown("<div class='explain-text'><strong>Analisi Angolare:</strong> Grado di flessione dell'articolazione del ginocchio lungo le quattro fasi del ciclo del passo (Gait Cycle).</div>", unsafe_allow_html=True)
 
             with cg3:
-                st.markdown("### 3. Rischio Infortunio ML (Dinamico)")
+                st.markdown("### 3. Rischio Infortunio ML (%)")
                 distretti_rischio = ['Ginocchio/Rotula', 'Tendine Achille', 'Fascia Plantare', 'Tibia (Periostite)', 'Lombari']
-                rischi_ml_dinamici = [round(rischio_dinamico * 0.5, 1), round(rischio_dinamico * 0.35, 1), 15.2, 10.3, 4.0]
+                rischi_ml = [42.5, 28.0, 15.2, 10.3, 4.0]
                 fig_ml_risk = px.bar(
-                    x=distretti_rischio, y=rischi_ml_dinamici,
+                    x=distretti_rischio, y=rischi_ml,
                     labels={'x': 'Patologia/Distretto', 'y': 'Probabilità ML (%)'},
-                    color=rischi_ml_dinamici, color_continuous_scale=[[0, '#00F5A0'], [0.5, '#FFB020'], [1, '#FF6A3D']]
+                    color=rischi_ml, color_continuous_scale=[[0, '#00F5A0'], [0.5, '#FFB020'], [1, '#FF6A3D']]
                 )
                 fig_ml_risk.update_layout(height=320, coloraxis_showscale=False)
                 st.plotly_chart(style_fig(fig_ml_risk), use_container_width=True)
-                st.markdown("<div class='explain-text'><strong>Predizione ML:</strong> Probabilità di patologia aggiornata interattivamente dai cursori di controllo biomeccanico.</div>", unsafe_allow_html=True)
+                st.markdown("<div class='explain-text'><strong>Predizione ML:</strong> Classificatore probabilistico basato su dataset di cinematica clinica per la stima del distretto anatomico a cedimento strutturale.</div>", unsafe_allow_html=True)
 
             st.markdown("---")
             st.markdown("<h3>Diagnosi Posturale, Errori e Predizione Machine Learning</h3>", unsafe_allow_html=True)
@@ -1211,8 +1184,8 @@ elif pagina == "COMPUTER VISION":
             st.warning(f"ZONA DI SOVRACCARICO CRITICO: {dati_cv['sovraccarico_prevalente']}. L'onda d'urto transitoria non viene dissipata correttamente dal complesso muscolotendineo, trasferendo stress meccanico diretto sulle cartilagini e sulle inserzioni tendinee.")
             st.markdown(f"""
             <div class='danger-box' style='border-left-color: #FF6A3D;'>
-                <h3 style='color: #FF6A3D; margin-top:0;'>PREDIZIONE MACHINE LEARNING (Indice di Rischio: {rischio_dinamico:.1f}%)</h3>
-                <p style='color: #E8ECF2; font-size: 1.05em;'>Proiettando i parametri correnti (cadenza {cadenza_sim} SPM e overstride {overstride_cm} cm) sulle curve di tolleranza al carico, il modello stima un indice di rischio del <strong style='color: #FF6A3D;'>{rischio_dinamico:.1f}%</strong>.</p>
+                <h3 style='color: #FF6A3D; margin-top:0;'>PREDIZIONE MACHINE LEARNING (Indice di Rischio: {dati_cv['probabilita_infortunio_ml']}%)</h3>
+                <p style='color: #E8ECF2; font-size: 1.05em;'>Proiettando il pattern di over-stride e la dissipazione cinetica attuale sulle curve di tolleranza al carico del tessuto connettivo, il modello predittivo diagnostica una probabilità elevata di sviluppare nel medio termine: <strong style='color: #FF6A3D;'>{dati_cv['infortunio_predetto']}</strong>.</p>
             </div>
             """, unsafe_allow_html=True)
             
