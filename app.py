@@ -1030,7 +1030,7 @@ elif pagina == "COMPUTER VISION":
                 st.markdown("<p style='font-size:0.75em; color:#00F5A0; text-align:center; font-family:\"JetBrains Mono\",monospace; margin-top:10px;'>OUTPUT: AI TRACKING COMPLETATO</p>", unsafe_allow_html=True)
 
             with col_out2:
-                dati_ REALI = st.session_state.cv_dati
+                dati_REALI = st.session_state.cv_dati
                 
                 # 1. MAPPA INTERATTIVA 1: DIGITAL TWIN (Aggiornata con i dati reali del video)
                 st.markdown("<p style='font-size:0.82em; color:#00E5FF; font-family:\"JetBrains Mono\",monospace; margin-bottom:6px; letter-spacing:0.1em;'>DIGITAL TWIN // KINEMATIC STRESS MAP (REALE)</p>", unsafe_allow_html=True)
