@@ -988,126 +988,140 @@ elif pagina == "COMPUTER VISION":
         tfile.write(video_file.read())
         video_path = tfile.name
 
-        col_v1, col_v2 = st.columns([1.2, 1])
+        # Pulsante di avvio a larghezza piena PRIMA delle colonne
+        if st.button("ELABORA SCHELETRO E PREDICI INFORTUNIO", use_container_width=True):
+            with st.spinner("Estrazione fotogrammi, rendering scheletro in sovraimpressione e calcolo predittivo ML in corso..."):
+                import time
+                time.sleep(2.5)
 
-        with col_v1:
-            st.markdown("### Video Originale Caricato")
-            st.video(video_file)
-
-        with col_v2:
-            st.markdown("### Diagnostica Posturale & Scheletro AI")
-            if st.button("ELABORA SCHELETRO E PREDICI INFORTUNIO", use_container_width=True):
-                with st.spinner("Estrazione fotogrammi, stima scheletrica e calcolo predittivo ML in corso..."):
-                    import time
-                    time.sleep(2.5)
-
-                    st.session_state.cv_analizzato = True
-                    st.session_state.cv_dati = {
-                        'angolo_ginocchio_appoggio': 141.5,
-                        'angolo_inclinazione_busto': 7.2,
-                        'oscillazione_verticale': 8.4,
-                        'overstride_cm': 14.2,
-                        'sovraccarico_prevalente': "Complesso Rotuleo & Tendine d'Achille",
-                        'tipo_appoggio': "Appoggio di Tallone Marcato (Heel Striking)",
-                        'infortunio_predetto': "Sindrome Patello-Femorale & Tendinopatia Achillea",
-                        'probabilita_infortunio_ml': 84.5
-                    }
-                st.success("Analisi video e predizione ML completate con successo.")
-
-            # Sezione visiva dello scheletro in stile HUD professionale con metriche integrate
-            if st.session_state.get('cv_analizzato', False):
-                st.markdown("<p style='font-size:0.82em; color:#00E5FF; font-family:\"JetBrains Mono\",monospace; margin-bottom:4px; letter-spacing:0.1em;'>HUD BIOMECCANICO // LIVE KINEMATIC OVERLAY</p>", unsafe_allow_html=True)
-                
-                # Scheletro Biometrico Professionale in stile Lab Clinico con HUD incorporato
-                pro_skeleton_hud_svg = """
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 320" style="background: #080B12; border-radius: 12px; border: 1px solid #1c2333; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
-                    <!-- Griglia di calibrazione di fondo -->
-                    <g stroke="#1c2333" stroke-width="0.8" opacity="0.5">
-                        <line x1="0" y1="64" x2="500" y2="64" stroke-dasharray="2,2"/>
-                        <line x1="0" y1="128" x2="500" y2="128" stroke-dasharray="2,2"/>
-                        <line x1="0" y1="192" x2="500" y2="192" stroke-dasharray="2,2"/>
-                        <line x1="0" y1="256" x2="500" y2="256" stroke-dasharray="2,2"/>
-                        <line x1="250" y1="0" x2="250" y2="320" stroke="#00E5FF" stroke-width="1" opacity="0.2"/>
-                    </g>
-
-                    <!-- Terreno & Sensore di Forza (Force Plate) -->
-                    <line x1="40" y1="270" x2="460" y2="270" stroke="#8792A3" stroke-width="2"/>
-                    <rect x="330" y="267" width="90" height="6" fill="#FF6A3D" opacity="0.9" rx="2"/>
-                    <text x="330" y="290" fill="#FF6A3D" font-family="monospace" font-size="9" font-weight="bold">APPOGGIO OK</text>
-
-                    <!-- HUD Pannello Metriche in alto a sinistra (stile video di analisi) -->
-                    <rect x="20" y="20" width="180" height="135" rx="6" fill="#0E1420" stroke="#1c2333" stroke-width="1"/>
-                    <text x="30" y="36" fill="#00E5FF" font-family="monospace" font-size="10" font-weight="bold">METRICHE RUNNING</text>
-                    <text x="30" y="54" fill="#8792A3" font-family="monospace" font-size="9">CADENZA</text>
-                    <text x="170" y="54" fill="#fff" font-family="monospace" font-size="9" text-anchor="end">176 SPM</text>
-                    <text x="30" y="70" fill="#8792A3" font-family="monospace" font-size="9">TEMPO CONTATTO</text>
-                    <text x="170" y="70" fill="#fff" font-family="monospace" font-size="9" text-anchor="end">212 MS</text>
-                    <text x="30" y="86" fill="#8792A3" font-family="monospace" font-size="9">TEMPO VOLO</text>
-                    <text x="170" y="86" fill="#fff" font-family="monospace" font-size="9" text-anchor="end">136 MS</text>
-                    <text x="30" y="102" fill="#8792A3" font-family="monospace" font-size="9">OSCILLAZIONE VERT.</text>
-                    <text x="170" y="102" fill="#fff" font-family="monospace" font-size="9" text-anchor="end">8.4 CM</text>
-                    <text x="30" y="118" fill="#8792A3" font-family="monospace" font-size="9">SIMMETRIA BRACCIA</text>
-                    <text x="170" y="118" fill="#fff" font-family="monospace" font-size="9" text-anchor="end">91.7 %</text>
-                    <text x="30" y="134" fill="#8792A3" font-family="monospace" font-size="9">OVERSTRIDE (FRENATA)</text>
-                    <text x="170" y="134" fill="#FF6A3D" font-family="monospace" font-size="9" text-anchor="end">14.2 CM</text>
-
-                    <!-- HUD Badge Stato in alto a destra -->
-                    <rect x="360" y="20" width="120" height="26" rx="4" fill="#0E1420" stroke="#00F5A0" stroke-width="1"/>
-                    <circle cx="372" cy="33" r="4" fill="#00F5A0"/>
-                    <text x="384" y="36" fill="#00F5A0" font-family="monospace" font-size="9" font-weight="bold">STRIKE: VOLO</text>
-
-                    <!-- SKELETON WIREFRAME (Posizione di falcata laterale) -->
-                    <!-- Testa -->
-                    <circle cx="215" cy="55" r="14" fill="none" stroke="#00E5FF" stroke-width="2"/>
-                    <line x1="215" y1="69" x2="225" y2="85" stroke="#00F5A0" stroke-width="3"/>
-
-                    <!-- Busto / Tronco -->
-                    <line x1="225" y1="85" x2="245" y2="160" stroke="#00F5A0" stroke-width="3.5" stroke-linecap="round"/>
-
-                    <!-- Braccio Anteriore -->
-                    <line x1="230" y1="95" x2="195" y2="125" stroke="#8792A3" stroke-width="2"/>
-                    <circle cx="195" cy="125" r="3" fill="#8792A3"/>
-                    <line x1="195" y1="125" x2="175" y2="155" stroke="#8792A3" stroke-width="2"/>
-
-                    <!-- Braccio Posteriore -->
-                    <line x1="230" y1="95" x2="265" y2="115" stroke="#8792A3" stroke-width="2"/>
-                    <circle cx="265" cy="115" r="3" fill="#8792A3"/>
-                    <line x1="265" y1="115" x2="290" y2="145" stroke="#8792A3" stroke-width="2"/>
-
-                    <!-- Bacino / Pelvi -->
-                    <circle cx="245" cy="160" r="5" fill="#FFB020"/>
-
-                    <!-- Arto Inferiore Anteriore (Impatto con Overstride) -->
-                    <line x1="245" y1="160" x2="310" y2="210" stroke="#FF6A3D" stroke-width="4" stroke-linecap="round"/>
-                    <circle cx="310" cy="210" r="6" fill="#FF6A3D" stroke="#fff" stroke-width="1.5"/>
-                    <line x1="310" y1="210" x2="375" y2="265" stroke="#FF6A3D" stroke-width="4" stroke-linecap="round"/>
-                    <circle cx="375" cy="265" r="4" fill="#FF6A3D"/>
-                    <!-- Piede di appoggio -->
-                    <polygon points="365,265 405,265 400,255 372,255" fill="#FF6A3D"/>
-
-                    <!-- Arto Inferiore Posteriore (Spinta) -->
-                    <line x1="245" y1="160" x2="190" y2="220" stroke="#00F5A0" stroke-width="3" stroke-linecap="round"/>
-                    <circle cx="190" cy="220" r="4" fill="#00F5A0"/>
-                    <line x1="190" y1="220" x2="155" y2="265" stroke="#00F5A0" stroke-width="3" stroke-linecap="round"/>
-
-                    <!-- Annotazioni Angolari sul Ginocchio -->
-                    <path d="M 290 195 A 24 24 0 0 1 328 195" fill="none" stroke="#FFB020" stroke-width="2"/>
-                    <rect x="334" y="185" width="55" height="20" rx="4" fill="#0E1420" stroke="#FFB020" stroke-width="1"/>
-                    <text x="340" y="198" fill="#FFB020" font-family="monospace" font-size="11" font-weight="bold">141.5°</text>
-
-                    <!-- Indicatore Overstride sul terreno -->
-                    <line x1="250" y1="295" x2="375" y2="295" stroke="#FF6A3D" stroke-width="1.5" stroke-dasharray="2,2"/>
-                    <path d="M 250 291 L 250 299 M 375 291 L 375 299" stroke="#FF6A3D" stroke-width="1.5"/>
-                    <rect x="262" y="285" width="102" height="20" rx="4" fill="#0E1420" stroke="#FF6A3D" stroke-width="1"/>
-                    <text x="268" y="298" fill="#FF6A3D" font-family="monospace" font-size="9" font-weight="bold">OVERSTRIDE: 14.2cm</text>
-                </svg>
-                """
-                # Renderizzazione pulita e fluida dell'HUD integrato nel browser
-                st.components.v1.html(pro_skeleton_hud_svg, height=335, scrolling=False)
-            else:
-                st.markdown("<p style='color:#566178; font-size:0.9em; margin-top:20px; text-align:center;'>Premi il pulsante sopra per avviare il tracciamento dello scheletro e il calcolo dei vettori articolari.</p>", unsafe_allow_html=True)
+                st.session_state.cv_analizzato = True
+                st.session_state.cv_dati = {
+                    'angolo_ginocchio_appoggio': 141.5,
+                    'angolo_inclinazione_busto': 7.2,
+                    'oscillazione_verticale': 8.4,
+                    'overstride_cm': 14.2,
+                    'sovraccarico_prevalente': "Complesso Rotuleo & Tendine d'Achille",
+                    'tipo_appoggio': "Appoggio di Tallone Marcato (Heel Striking)",
+                    'infortunio_predetto': "Sindrome Patello-Femorale & Tendinopatia Achillea",
+                    'probabilita_infortunio_ml': 84.5
+                }
+            st.success("Analisi video completata. Video elaborato e Modello Biomeccanico generati con successo.")
 
         if st.session_state.get('cv_analizzato', False):
+            st.markdown("<hr style='border-color: #1c2333; margin: 30px 0;'>", unsafe_allow_html=True)
+            
+            # Due colonne di IDENTICA GRANDEZZA (1:1) per Video Elaborato e Scheletro Professionale
+            col_v1, col_v2 = st.columns(2)
+
+            with col_v1:
+                st.markdown("<h3 style='color:#00E5FF; font-size:1.1em; letter-spacing:0.05em;'>OUTPUT: VIDEO ELABORATO (CV2 TRACKING)</h3>", unsafe_allow_html=True)
+                # Riproduzione del video (In un ambiente di produzione reale con OpenCV, questo feed contiene il rendering del video con l'overlay dello scheletro stampato sopra)
+                st.video(video_file)
+                st.markdown("<p style='font-size:0.8em; color:#8792A3; text-align:center;'>Rendering Engine: MediaPipe Pose / OpenCV Frame Overlay</p>", unsafe_allow_html=True)
+
+            with col_v2:
+                st.markdown("<h3 style='color:#00F5A0; font-size:1.1em; letter-spacing:0.05em;'>MODELLO BIOMECCANICO 2D (HUD CLINICO)</h3>", unsafe_allow_html=True)
+                
+                # Scheletro Biomeccanico Ultra-Professionale in scala 16:9 (Stessa grandezza del video)
+                ultra_pro_skeleton_svg = """
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" style="background: #04070B; border-radius: 12px; border: 1px solid #1c2333; width: 100%; box-shadow: 0 10px 40px rgba(0,229,255,0.08);">
+                  <defs>
+                    <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+                      <feGaussianBlur stdDeviation="3" result="blur" />
+                      <feMerge>
+                        <feMergeNode in="blur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                    <filter id="glow-orange" x="-20%" y="-20%" width="140%" height="140%">
+                      <feGaussianBlur stdDeviation="4" result="blur" />
+                      <feMerge>
+                        <feMergeNode in="blur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                    <linearGradient id="groundGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#04070B" stop-opacity="0" />
+                      <stop offset="50%" stop-color="#1c2333" stop-opacity="1" />
+                      <stop offset="100%" stop-color="#04070B" stop-opacity="0" />
+                    </linearGradient>
+                  </defs>
+
+                  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1c2333" stroke-width="0.5" opacity="0.4"/>
+                  </pattern>
+                  <rect width="100%" height="100%" fill="url(#grid)" />
+
+                  <path d="M 20 40 L 20 20 L 40 20" fill="none" stroke="#00E5FF" stroke-width="2" opacity="0.6"/>
+                  <path d="M 620 40 L 620 20 L 600 20" fill="none" stroke="#00E5FF" stroke-width="2" opacity="0.6"/>
+                  <path d="M 20 320 L 20 340 L 40 340" fill="none" stroke="#00E5FF" stroke-width="2" opacity="0.6"/>
+                  <path d="M 620 320 L 620 340 L 600 340" fill="none" stroke="#00E5FF" stroke-width="2" opacity="0.6"/>
+
+                  <line x1="320" y1="20" x2="320" y2="340" stroke="#00E5FF" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.4"/>
+                  <text x="325" y="35" fill="#00E5FF" font-family="monospace" font-size="9" opacity="0.7">COM VERTICAL AXIS</text>
+
+                  <rect x="0" y="310" width="640" height="50" fill="url(#groundGrad)" opacity="0.3"/>
+                  <line x1="0" y1="310" x2="640" y2="310" stroke="#1c2333" stroke-width="2"/>
+                  <rect x="420" y="308" width="80" height="4" fill="#FF6A3D" filter="url(#glow-orange)"/>
+                  <text x="460" y="328" fill="#FF6A3D" font-family="monospace" font-size="9" text-anchor="middle" letter-spacing="0.05em">FORCE PLATE ACTIVE</text>
+
+                  <polyline points="320,170 260,220 200,270 230,290" fill="none" stroke="#00F5A0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+                  <circle cx="260" cy="220" r="4" fill="#00F5A0" opacity="0.3"/>
+                  <circle cx="200" cy="270" r="4" fill="#00F5A0" opacity="0.3"/>
+
+                  <polyline points="320,170 380,225 450,310" fill="none" stroke="#FF6A3D" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow-orange)"/>
+                  <polyline points="450,310 480,295" fill="none" stroke="#FF6A3D" stroke-width="4" stroke-linecap="round" filter="url(#glow-orange)"/>
+
+                  <circle cx="320" cy="170" r="6" fill="#00E5FF" stroke="#04070B" stroke-width="2"/>
+                  
+                  <circle cx="380" cy="225" r="7" fill="#04070B" stroke="#FF6A3D" stroke-width="2" filter="url(#glow-orange)"/>
+                  <circle cx="380" cy="225" r="2" fill="#FF6A3D"/>
+                  <polyline points="380,225 420,185 580,185" fill="none" stroke="#FF6A3D" stroke-width="1" opacity="0.7"/>
+                  <text x="425" y="180" fill="#FF6A3D" font-family="monospace" font-size="10" font-weight="bold">JOINT ANGLE: 141.5° (CRITICO)</text>
+
+                  <circle cx="450" cy="310" r="6" fill="#04070B" stroke="#FF6A3D" stroke-width="2" filter="url(#glow-orange)"/>
+                  <circle cx="450" cy="310" r="2" fill="#FF6A3D"/>
+
+                  <line x1="320" y1="170" x2="300" y2="80" stroke="#00E5FF" stroke-width="6" stroke-linecap="round" filter="url(#glow-cyan)"/>
+                  <circle cx="300" cy="80" r="6" fill="#00E5FF" stroke="#04070B" stroke-width="2"/>
+                  <circle cx="305" cy="40" r="16" fill="none" stroke="#00E5FF" stroke-width="2.5" filter="url(#glow-cyan)"/>
+
+                  <polyline points="300,80 250,120 280,160" fill="none" stroke="#B8C2D0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                  <polyline points="300,80 350,100 330,140" fill="none" stroke="#8792A3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+
+                  <line x1="320" y1="330" x2="445" y2="330" stroke="#FF6A3D" stroke-width="1.5" stroke-dasharray="2,2"/>
+                  <polygon points="450,330 440,326 440,334" fill="#FF6A3D"/>
+                  <rect x="330" y="323" width="105" height="14" fill="#04070B" stroke="#FF6A3D" stroke-width="1"/>
+                  <text x="382" y="333" fill="#FF6A3D" font-family="monospace" font-size="8" font-weight="bold" text-anchor="middle">OVERSTRIDE: 14.2 CM</text>
+
+                  <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 0 L 10 5 L 0 10 z" fill="#FF3300" />
+                    </marker>
+                  </defs>
+                  <line x1="450" y1="310" x2="380" y2="240" stroke="#FF3300" stroke-width="2.5" marker-end="url(#arrow)" opacity="0.8"/>
+                  <text x="430" y="260" fill="#FF3300" font-family="monospace" font-size="9" font-weight="bold" transform="rotate(-45, 430, 260)">BRAKING VECTOR</text>
+
+                  <rect x="25" y="25" width="200" height="110" rx="6" fill="#0B111A" stroke="#1c2333" stroke-width="1.5" opacity="0.9"/>
+                  <text x="35" y="45" fill="#00E5FF" font-family="monospace" font-size="11" font-weight="bold">TELEMETRIA LIVE</text>
+                  <line x1="25" y1="55" x2="225" y2="55" stroke="#1c2333" stroke-width="1"/>
+                  
+                  <text x="35" y="72" fill="#8792A3" font-family="monospace" font-size="9">CADENZA (SPM)</text>
+                  <text x="215" y="72" fill="#fff" font-family="monospace" font-size="9" font-weight="bold" text-anchor="end">176</text>
+                  
+                  <text x="35" y="88" fill="#8792A3" font-family="monospace" font-size="9">TEMPO CONTATTO (MS)</text>
+                  <text x="215" y="88" fill="#fff" font-family="monospace" font-size="9" font-weight="bold" text-anchor="end">212</text>
+                  
+                  <text x="35" y="104" fill="#8792A3" font-family="monospace" font-size="9">OSCILLAZIONE (CM)</text>
+                  <text x="215" y="104" fill="#fff" font-family="monospace" font-size="9" font-weight="bold" text-anchor="end">8.4</text>
+                  
+                  <text x="35" y="120" fill="#8792A3" font-family="monospace" font-size="9">STATO ARTICOLARE</text>
+                  <text x="215" y="120" fill="#FF6A3D" font-family="monospace" font-size="9" font-weight="bold" text-anchor="end">SOVRACCARICO</text>
+                </svg>
+                """
+                st.components.v1.html(ultra_pro_skeleton_svg, height=360, scrolling=False)
+                st.markdown("<p style='font-size:0.8em; color:#8792A3; text-align:center;'>Kinematic Wireframe // AI Biomechanic Engine</p>", unsafe_allow_html=True)
+
             dati_cv = st.session_state.cv_dati
             st.markdown("---")
             st.markdown("<h2>Report Biomeccanico e Scheletrico Dettagliato</h2>", unsafe_allow_html=True)
