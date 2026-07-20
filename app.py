@@ -116,7 +116,7 @@ st.markdown("""
         font-family: 'Inter', sans-serif !important;
     }
     
-    /* Rimuove qualsiasi sfondo bianco dai selectbox e dropdown */
+    /* Sfondi dropdown e selettori scuri */
     .stSelectbox div[data-baseweb="select"] > div, 
     .stMultiSelect div[data-baseweb="select"] > div,
     div[data-baseweb="select"] > div {
@@ -136,6 +136,34 @@ st.markdown("""
     div[data-baseweb="popover"] li:hover, ul[role="listbox"] li:hover { 
         background-color: #1c2740 !important; 
         color: #ffffff !important; 
+    }
+
+    /* CUSTOM STYLING PER LE TABS (SOSTITUZIONE BIANCO CON TEMA SCURO / CYAN) */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+        background-color: var(--bg);
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 4px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        height: 42px;
+        background-color: var(--panel) !important;
+        border-radius: 8px 8px 0px 0px !important;
+        border: 1px solid var(--line) !important;
+        color: var(--text-dim) !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-weight: 600 !important;
+        padding: 0 16px !important;
+    }
+    .stTabs [data-baseweb="tab"]:hover {
+        background-color: #162032 !important;
+        color: var(--cyan) !important;
+    }
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(0, 245, 160, 0.05)) !important;
+        border-color: var(--cyan) !important;
+        color: var(--cyan) !important;
+        box-shadow: 0 -2px 10px rgba(0, 229, 255, 0.15);
     }
 
     /* FILE UPLOADER SCURO */
@@ -1026,7 +1054,6 @@ elif pagina == "COMPUTER VISION":
         tfile.write(video_file.read())
         video_path = tfile.name
 
-        # Pulsante di avvio immediato
         if not st.session_state.get('cv_analizzato', False):
             if st.button("ELABORA SCHELETRO E PREDICI INFORTUNIO", use_container_width=True):
                 with st.spinner("Estrazione fotogrammi, analisi vettoriale e calcolo predittivo ML in corso..."):
@@ -1046,7 +1073,6 @@ elif pagina == "COMPUTER VISION":
                     }
                 st.rerun()
 
-        # Visualizzazione post-analisi
         if st.session_state.get('cv_analizzato', False):
             st.success("Analisi video completata. Video elaborato e Modelli Generativi caricati con successo.")
             st.markdown("---")
@@ -1069,7 +1095,6 @@ elif pagina == "COMPUTER VISION":
             with col_out2:
                 dati_REALI = st.session_state.cv_dati
                 
-                # 1. MAPPA INTERATTIVA 1: DIGITAL TWIN
                 st.markdown("<p style='font-size:0.82em; color:#00E5FF; font-family:\"JetBrains Mono\",monospace; margin-bottom:6px; letter-spacing:0.1em;'>DIGITAL TWIN // KINEMATIC STRESS MAP (REALE)</p>", unsafe_allow_html=True)
 
                 digital_twin_real_svg = f"""
@@ -1120,9 +1145,6 @@ elif pagina == "COMPUTER VISION":
 
                 st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
 
-                # 2. MAPPA INTERATTIVA 2: GRF
-                st.markdown("<p style='font-size:0.82em; color:#00F5A0; font-family:\"JetBrains Mono\",monospace; margin-top:10px; margin-bottom:6px; letter-spacing:0.1em;'>GROUND REACTION FORCE // IMPACT TRANSIENT</p>", unsafe_allow_html=True)
-
                 grf_real_svg = f"""
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" style="background: #080B12; border-radius: 12px; border: 1px solid #1c2333; width: 100%;">
                     <defs>
@@ -1154,7 +1176,6 @@ elif pagina == "COMPUTER VISION":
                 st.components.v1.html(grf_real_svg, height=195, scrolling=False)
                 st.markdown("<p style='font-size:0.75em; color:#8792A3; margin-top:2px;'><strong>Spiegazione:</strong> Grafico dinamico delle forze d'impatto al suolo (GRF). Evidenzia il picco transitorio di frenata causato dall'anticipo della falcata estratto dal video.</p>", unsafe_allow_html=True)
 
-            # --- REPORT E GRAFICI SUCCESSIVI INTATTI ---
             dati_cv = st.session_state.cv_dati
             st.markdown("---")
             st.markdown("<h2>Report Biomeccanico e Scheletrico Dettagliato</h2>", unsafe_allow_html=True)
