@@ -1088,6 +1088,7 @@ elif pagina == "COMPUTER VISION":
     else:
         st.info("Suggerimento: Carica un video registrato lateralmente per attivare l'estrazione dello scheletro, i grafici di analisi biomeccanica e la predizione clinica basata su Machine Learning.")
         # ---------------------------------------------------------
+# ---------------------------------------------------------
 # PAGINA 6: COMPUTER VISION & BIOMECHANIC AI (CON SCHELETRO E SIMULAZIONE DI CORSA)
 # ---------------------------------------------------------
 elif pagina == "COMPUTER VISION":
@@ -1137,64 +1138,57 @@ elif pagina == "COMPUTER VISION":
                     }
                 st.success("Analisi video e predizione ML completate con successo.")
 
+            # --- SOTTO LA SCRITTA 'Diagnostica Posturale & Scheletro AI' (nella colonna di destra) ---
+            if st.session_state.get('cv_analizzato', False):
+                st.markdown("<p style='font-size:0.88em; color:#8792A3; margin-top:10px;'>Wireframe cinematico estratto dal fotogramma di impatto:</p>", unsafe_allow_html=True)
+                
+                # Scheletro Biometrico Realistico posizionato esattamente sotto la scritta
+                skeleton_widget_svg = """
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" style="background: #0E1420; border-radius: 10px; border: 1px solid #1c2333; width: 100%;">
+                    <!-- Griglia di riferimento biomeccanico -->
+                    <g stroke="#1c2333" stroke-width="1" opacity="0.4">
+                        <line x1="0" y1="60" x2="400" y2="60" stroke-dasharray="2,2"/>
+                        <line x1="0" y1="120" x2="400" y2="120" stroke-dasharray="2,2"/>
+                        <line x1="0" y1="180" x2="400" y2="180" stroke-dasharray="2,2"/>
+                        <line x1="200" y1="0" x2="200" y2="240" stroke="#00E5FF" stroke-width="1" opacity="0.2"/>
+                    </g>
+                    <!-- Terreno / Ground -->
+                    <line x1="30" y1="200" x2="370" y2="200" stroke="#8792A3" stroke-width="2"/>
+
+                    <!-- Scheletro Corsa (Pose Estimation Wireframe Mini) -->
+                    <!-- Testa -->
+                    <circle cx="180" cy="55" r="12" fill="none" stroke="#00E5FF" stroke-width="2"/>
+                    <!-- Tronco / Busto -->
+                    <line x1="180" y1="67" x2="195" y2="130" stroke="#00F5A0" stroke-width="3"/>
+                    <!-- Braccia -->
+                    <line x1="185" y1="75" x2="150" y2="100" stroke="#B8C2D0" stroke-width="2"/>
+                    <line x1="150" y1="100" x2="130" y2="130" stroke="#B8C2D0" stroke-width="2"/>
+                    <line x1="185" y1="75" x2="220" y2="95" stroke="#B8C2D0" stroke-width="2"/>
+                    <line x1="220" y1="95" x2="240" y2="125" stroke="#B8C2D0" stroke-width="2"/>
+                    <!-- Bacino -->
+                    <circle cx="195" cy="130" r="4" fill="#FFB020"/>
+                    <!-- Coscia Anteriore (Impatto) -->
+                    <line x1="195" y1="130" x2="250" y2="170" stroke="#FF6A3D" stroke-width="3"/>
+                    <circle cx="250" cy="170" r="4" fill="#FF6A3D"/>
+                    <!-- Tibia Anteriore (Overstride) -->
+                    <line x1="250" y1="170" x2="300" y2="200" stroke="#FF6A3D" stroke-width="3"/>
+                    <!-- Piede (Tallone) -->
+                    <polygon points="290,200 315,200 310,192 295,192" fill="#FF6A3D"/>
+                    <!-- Gamba Posteriore -->
+                    <line x1="195" y1="130" x2="140" y2="175" stroke="#00F5A0" stroke-width="2.5"/>
+                    <line x1="140" y1="175" x2="115" y2="200" stroke="#00F5A0" stroke-width="2.5"/>
+
+                    <!-- Indicatore Angolo -->
+                    <path d="M 235 162 A 18 18 0 0 1 255 152" fill="none" stroke="#FFB020" stroke-width="2"/>
+                    <text x="260" y="150" fill="#FFB020" font-family="monospace" font-size="10" font-weight="bold">141.5°</text>
+                    <!-- Indicatore Overstride -->
+                    <line x1="200" y1="205" x2="300" y2="205" stroke="#FF6A3D" stroke-width="1.5" stroke-dasharray="2,2"/>
+                    <text x="210" y="222" fill="#FF6A3D" font-family="monospace" font-size="9" font-weight="bold">OVERSTRIDE RILEVATO</text>
+                </svg>
+                """
+                st.markdown(skeleton_widget_svg, unsafe_allow_html=True)
+
         if st.session_state.get('cv_analizzato', False):
-            # --- SEZIONE VISUALIZZAZIONE SCHELETRO E SIMULAZIONE DI CORSA ---
-            st.markdown("---")
-            st.markdown("### Scheletro Biometrico & Simulazione Cinetica di Corsa")
-            st.markdown("<div class='explain-text'><strong>Kinematic Wireframe:</strong> Rappresentazione geometrica dei punti articolari estratti dal fotogramma di impatto (Strike). I vettori colorati evidenziano l'asse del busto, l'angolo di flessione del ginocchio e la leva di anticipo del piede rispetto al baricentro (Overstride).</div>", unsafe_allow_html=True)
-
-            # Canvas SVG animato/interattivo per simulare lo scheletro della corsa in tempo reale
-            skeleton_svg = """
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 350" style="background: #0E1420; border-radius: 12px; border: 1px solid #1c2333;">
-                <!-- Griglia di riferimento biomeccanico -->
-                <g stroke="#1c2333" stroke-width="1" opacity="0.5">
-                    <line x1="0" y1="87" x2="800" y2="87" stroke-dasharray="4,4"/>
-                    <line x1="0" y1="175" x2="800" y2="175" stroke-dasharray="4,4"/>
-                    <line x1="0" y1="262" x2="800" y2="262" stroke-dasharray="4,4"/>
-                    <line x1="400" y1="0" x2="400" y2="350" stroke="#00E5FF" stroke-width="1" opacity="0.3"/>
-                </g>
-                <text x="410" y="20" fill="#00E5FF" font-family="monospace" font-size="11">LINEA BARICENTRO VERTICALE</text>
-
-                <!-- Terreno / Ground -->
-                <line x1="50" y1="290" x2="750" y2="290" stroke="#8792A3" stroke-width="2"/>
-
-                <!-- Scheletro Corsa (Pose Estimation Wireframe) -->
-                <!-- Testa -->
-                <circle cx="365" cy="85" r="16" fill="none" stroke="#00E5FF" stroke-width="2.5"/>
-                <!-- Tronco / Busto (inclinato a 7.2°) -->
-                <line x1="365" y1="101" x2="390" y2="190" stroke="#00F5A0" stroke-width="3.5"/>
-                <!-- Spalla e Braccio Anteriore -->
-                <line x1="375" y1="115" x2="330" y2="150" stroke="#B8C2D0" stroke-width="2.5"/>
-                <line x1="330" y1="150" x2="300" y2="190" stroke="#B8C2D0" stroke-width="2.5"/>
-                <!-- Spalla e Braccio Posteriore -->
-                <line x1="375" y1="115" x2="425" y2="140" stroke="#B8C2D0" stroke-width="2.5"/>
-                <line x1="425" y1="140" x2="450" y2="180" stroke="#B8C2D0" stroke-width="2.5"/>
-                <!-- Bacino / Anca -->
-                <circle cx="390" cy="190" r="5" fill="#FFB020"/>
-                <!-- Coscia Anteriore (Fase di impatto / Strike) -->
-                <line x1="390" y1="190" x2="470" y2="245" stroke="#FF6A3D" stroke-width="4"/>
-                <circle cx="470" cy="245" r="5" fill="#FF6A3D"/>
-                <!-- Tibia Anteriore (Evidenziazione Overstride) -->
-                <line x1="470" y1="245" x2="540" y2="290" stroke="#FF6A3D" stroke-width="4"/>
-                <!-- Piede (Appoggio di Tallone) -->
-                <polygon points="530,290 565,290 560,280 535,280" fill="#FF6A3D"/>
-                <!-- Coscia Posteriore (Spinta / Toe-off) -->
-                <line x1="390" y1="190" x2="300" y2="250" stroke="#00F5A0" stroke-width="3"/>
-                <line x1="300" y1="250" x2="260" y2="285" stroke="#00F5A0" stroke-width="3"/>
-
-                <!-- Indicatori di Angolo e Vettori di Forza -->
-                <!-- Arco angolo ginocchio -->
-                <path d="M 455 230 A 25 25 0 0 1 485 230" fill="none" stroke="#FFB020" stroke-width="2"/>
-                <text x="495" y="235" fill="#FFB020" font-family="monospace" font-size="12" font-weight="bold">141.5° (Critico)</text>
-
-                <!-- Vettore Overstride -->
-                <line x1="400" y1="295" x2="540" y2="295" stroke="#FF6A3D" stroke-width="2" stroke-dasharray="3,3"/>
-                <text x="430" y="315" fill="#FF6A3D" font-family="monospace" font-size="11" font-weight="bold">OVERSTRIDE: 14.2 cm DAVANTI AL BARICENTRO</text>
-            </svg>
-            """
-            st.markdown(skeleton_svg, unsafe_allow_html=True)
-            st.markdown("<br>", unsafe_allow_html=True)
-
             dati_cv = st.session_state.cv_dati
             st.markdown("---")
             st.markdown("<h2>Report Biomeccanico e Scheletrico Dettagliato</h2>", unsafe_allow_html=True)
