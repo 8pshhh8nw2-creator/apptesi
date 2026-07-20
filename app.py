@@ -15,10 +15,10 @@ import os
 
 warnings.filterwarnings('ignore')
 
-st.set_page_config(page_title="RUNAI | Performance Intelligence", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="RUN AI | Performance Intelligence", layout="wide", initial_sidebar_state="expanded")
 
 # =========================================================
-#  DESIGN SYSTEM — RUNAI (SPORT TECH RUN)
+#  DESIGN SYSTEM — RUN AI (SPORT TECH RUN)
 # =========================================================
 st.markdown("""
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -101,36 +101,47 @@ st.markdown("""
         background: linear-gradient(90deg, var(--cyan), transparent);
     }
 
-    /* CARD HOME EVolute */
-    .home-hero-card {
-        background: linear-gradient(135deg, #0E1420 0%, #131d31 100%);
-        border: 1px solid rgba(0, 229, 255, 0.2);
-        border-radius: 16px;
-        padding: 40px;
+    /* NUOVA COVER / HOME ULTRA IMPATTANTE */
+    .home-hero-container {
+        background: linear-gradient(135deg, #0a0f1d 0%, #111a2e 50%, #080b12 100%);
+        border: 1px solid rgba(0, 229, 255, 0.25);
+        border-radius: 20px;
+        padding: 50px 40px;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+        margin-bottom: 25px;
     }
-    .home-hero-card::after {
+    .home-hero-container::before {
         content: "";
         position: absolute;
-        bottom: 0; right: 0; width: 250px; height: 250px;
-        background: radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%);
+        top: -50px; right: -50px; width: 350px; height: 350px;
+        background: radial-gradient(circle, rgba(0,229,255,0.12) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .home-hero-container::after {
+        content: "";
+        position: absolute;
+        bottom: -50px; left: -50px; width: 350px; height: 350px;
+        background: radial-gradient(circle, rgba(0,245,160,0.08) 0%, transparent 70%);
         pointer-events: none;
     }
 
     .feature-card-home {
         background: var(--panel);
         border: 1px solid var(--line);
-        border-radius: 12px;
-        padding: 22px;
+        border-radius: 14px;
+        padding: 24px;
         height: 100%;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        overflow: hidden;
     }
     .feature-card-home:hover {
         border-color: var(--cyan);
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0,229,255,0.08);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,229,255,0.12);
+        background: linear-gradient(145deg, #0E1420 0%, #131c2e 100%);
     }
 
     .explain-text {
@@ -363,7 +374,7 @@ with st.sidebar:
     st.markdown("""
         <div style='display:flex; align-items:center; gap:10px; margin-bottom:2px;'>
             <div style='width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg, #00E5FF, #00F5A0); display:flex; align-items:center; justify-content:center; font-family:"Space Grotesk",sans-serif; font-weight:800; color:#04121a; font-size:1.1em;'>R</div>
-            <h1 style='color: white; text-align: left; font-size: 1.55em; font-family:"Space Grotesk",sans-serif; font-weight:700; margin:0; letter-spacing:-0.03em;'>RUNAI</h1>
+            <h1 style='color: white; text-align: left; font-size: 1.55em; font-family:"Space Grotesk",sans-serif; font-weight:700; margin:0; letter-spacing:-0.03em;'>RUN AI</h1>
         </div>
     """, unsafe_allow_html=True)
     st.markdown("<p style='color: #566178; font-size: 0.78em; margin-top: 2px; margin-bottom: 22px; font-family:\"JetBrains Mono\",monospace; letter-spacing:0.1em; text-transform:uppercase;'>Performance Intelligence System</p>", unsafe_allow_html=True)
@@ -422,30 +433,38 @@ else:
     df = df_full
 
 # ---------------------------------------------------------
-# PAGINA 0: HOME / LANDING PAGE (REDESIGNED & IMPATTANTE)
+# PAGINA 0: HOME / LANDING PAGE (REDESIGNED ULTRA IMPATTANTE)
 # ---------------------------------------------------------
 if pagina == "HOME":
     st.markdown("<div class='telemetry-bar'></div>", unsafe_allow_html=True)
     
-    # Hero Card Principale d'Impatto
+    # Hero Card Principale d'Impatto Cinematografica
     st.markdown("""
-    <div class="home-hero-card">
-        <div class="app-kicker"><span class="dot"></span>MASTER THESIS PROJECT // ANDREA LAZZARI</div>
-        <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 3em; font-weight: 700; color: #fff; margin: 10px 0 15px 0; letter-spacing: -0.03em; line-height: 1.1;">
-            RUNAI <span style="color: #00E5FF;">PERFORMANCE INTELLIGENCE</span>
-        </h1>
-        <p style="color: #8792A3; font-size: 1.15em; max-width: 750px; line-height: 1.6; margin-bottom: 25px;">
-            Piattaforma di Sport Data Science e Machine Learning avanzata. Unisce metriche IoT, wearable analytics e computer vision per trasformare i dati grezzi in decisioni strategiche di allenamento e prevenzione infortuni.
-        </p>
-        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-            <span style="background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.3); color: #00E5FF; padding: 6px 14px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.8em;">#DataDriven</span>
-            <span style="background: rgba(0,245,160,0.1); border: 1px solid rgba(0,245,160,0.3); color: #00F5A0; padding: 6px 14px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.8em;">#MachineLearning</span>
-            <span style="background: rgba(255,176,32,0.1); border: 1px solid rgba(255,176,32,0.3); color: #FFB020; padding: 6px 14px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.8em;">#SportsAnalytics</span>
+    <div class="home-hero-container">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px;">
+            <div>
+                <div class="app-kicker"><span class="dot"></span>MASTER THESIS PROJECT // ANDREA LAZZARI</div>
+                <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 3.2em; font-weight: 700; color: #fff; margin: 12px 0 16px 0; letter-spacing: -0.03em; line-height: 1.08;">
+                    RUN <span style="background: linear-gradient(90deg, #00E5FF, #00F5A0); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AI</span> <span style="font-weight: 400; font-size: 0.7em; color: var(--text-dim); display: block; margin-top: 4px;">PERFORMANCE INTELLIGENCE</span>
+                </h1>
+                <p style="color: #94A3B8; font-size: 1.15em; max-width: 680px; line-height: 1.6; margin-bottom: 25px;">
+                    La piattaforma di Sport Data Science e Machine Learning di nuova generazione. Sfrutta modelli predittivi avanzati, telemetria wearable e computer vision per ottimizzare i carichi e prevenire gli infortuni.
+                </p>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <span style="background: rgba(0,229,255,0.12); border: 1px solid rgba(0,229,255,0.4); color: #00E5FF; padding: 6px 14px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.8em; font-weight: 600;">⚡ Real-Time Telemetry</span>
+                    <span style="background: rgba(0,245,160,0.12); border: 1px solid rgba(0,245,160,0.4); color: #00F5A0; padding: 6px 14px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.8em; font-weight: 600;">🛡️ Injury Prevention ML</span>
+                    <span style="background: rgba(255,176,32,0.12); border: 1px solid rgba(255,176,32,0.4); color: #FFB020; padding: 6px 14px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.8em; font-weight: 600;">👁️ OpenPose Vision</span>
+                </div>
+            </div>
+            <div style="background: rgba(14, 20, 32, 0.85); border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 16px; padding: 22px; min-width: 260px; backdrop-filter: blur(10px);">
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.75em; color: #00F5A0; margin-bottom: 12px; letter-spacing: 0.1em;">SYSTEM STATUS: ONLINE</div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9em;"><span style="color: #8792A3;">Algoritmi ML</span><strong style="color: #fff;">5 Attivi</strong></div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9em;"><span style="color: #8792A3;">Accuratezza</span><strong style="color: #00E5FF;">99.2%</strong></div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.9em;"><span style="color: #8792A3;">Dataset Storico</span><strong style="color: #fff;">90 Giorni</strong></div>
+            </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
-
-    st.markdown("<br>", unsafe_allow_html=True)
 
     # Metriche Globali in Primo Piano
     col_m1, col_m2, col_m3, col_m4 = st.columns(4)
@@ -455,9 +474,9 @@ if pagina == "HOME":
     col_m4.metric("Accuratezza Predittiva", "99.2%", "OpenPose & RF")
 
     st.markdown("<br>", unsafe_allow_html=True)
-    st.subheader("Core Modules & Architettura della Piattaforma")
+    st.subheader("Architettura e Moduli della Piattaforma")
 
-    # Griglia Feature Cards Interattive
+    # Griglia Feature Cards Interattive Avanzate
     col_c1, col_c2, col_c3 = st.columns(3)
     
     with col_c1:
@@ -830,7 +849,7 @@ elif pagina == "ANALISI PREDITTIVA ML":
 
     st.markdown("""
     <div class='info-box'>
-    <h3>Come opera il Machine Learning in RUNAI?</h3>
+    <h3>Come opera il Machine Learning in RUN AI?</h3>
     <p style='color: #B8C2D0; font-family:"Inter",sans-serif;'>Il sistema analizza i tuoi dati storici mediante algoritmi di classificazione, regressione e clustering non supervisionato per individuare pattern invisibili e stimare con precisione la tua risposta biologica agli stimoli.</p>
     </div>
     """, unsafe_allow_html=True)
@@ -1073,7 +1092,7 @@ elif pagina == "CONSIGLIO FINALE":
         st.markdown("<br>---<br>", unsafe_allow_html=True)
         
         st.subheader("Generazione Report per Coach / Export")
-        report_testo = f"""--- RUNAI PERFORMANCE REPORT ---
+        report_testo = f"""--- RUN AI PERFORMANCE REPORT ---
 Status: {tit}
 Distanza Consigliata: {distanza_consigliata:.1f} km (Target: {distanza_target} km)
 Indice Rischio: {risk_score:.0f}%
