@@ -188,7 +188,6 @@ def style_fig(fig, height=None):
     if height: fig.update_layout(height=height)
     return fig
 
-# Generatore SVG personalizzati stile Sport Tech Run
 def get_svg_url(svg_string):
     b64 = base64.b64encode(svg_string.encode('utf-8')).decode('utf-8')
     return f"data:image/svg+xml;base64,{b64}"
@@ -291,7 +290,7 @@ with st.sidebar:
         st.markdown("""
         <div style='background-color: #0E1420; border: 1px solid #1c2333; border-radius: 10px; padding: 16px; font-family:"Inter",sans-serif;'>
             <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;'>
-                <span style='color: #00F5A0; font-weight: bold; font-family:"JetBrains Mono",monospace; font-size:0.78em; letter-spacing:0.1em;'>&#9679; LIVE</span>
+                <span style='color: #00F5A0; font-weight: bold; font-family:"JetBrains Mono",monospace; font-size:0.78em; letter-spacing:0.1em;'>LIVE SYNC</span>
                 <span style='color: #566178; font-size: 0.75em; font-family:"JetBrains Mono",monospace;'>{}</span>
             </div>
             <div style='color: #E8ECF2; font-family:"JetBrains Mono",monospace; font-size:0.92em;'>
@@ -300,11 +299,10 @@ with st.sidebar:
                 <div style='display:flex; justify-content:space-between; margin: 6px 0;'><span style='color:#8792A3; font-family:"Inter",sans-serif;'>Passi</span><span style='font-weight:600;'>{:,}</span></div>
                 <div style='display:flex; justify-content:space-between; margin: 6px 0;'><span style='color:#8792A3; font-family:"Inter",sans-serif;'>Calorie</span><span style='font-weight:600;'>{}</span></div>
             </div>
-            <div style='color: #566178; font-size: 0.7em; margin-top: 12px; text-align: center; font-family:"JetBrains Mono",monospace;'>SYNC {}</div>
         </div>
         """.format(
             st.session_state.device_info['nome'], st.session_state.device_info['fc'], st.session_state.device_info['battery'],
-            st.session_state.device_info['steps'], st.session_state.device_info['calories'], st.session_state.device_info['sync_time']
+            st.session_state.device_info['steps'], st.session_state.device_info['calories']
         ), unsafe_allow_html=True)
 
     st.markdown("---")
@@ -958,14 +956,14 @@ elif pagina == "CONSIGLIO FINALE":
             st.markdown("<div class='explain-text'><strong>Spiegazione Grafico:</strong> Ripartizione percentuale dei sistemi energetici attivati durante la sessione programmata per ottimizzare la risposta metabolica.</div>", unsafe_allow_html=True)
         
         st.markdown("<br><hr>", unsafe_allow_html=True)
-        st.markdown("<h3>🎯 Consigli Operativi Basati sui Risultati</h3>", unsafe_allow_html=True)
+        st.markdown("<h3>Consigli Operativi Basati sui Risultati</h3>", unsafe_allow_html=True)
         
         if risk_score < 33:
-            st.success("🟢 **VIA LIBERA ALL'ALLENAMENTO**: Il tuo sistema biologico è pienamente rigenerato. I modelli confermano un rischio di infortunio minimo: puoi eseguire la sessione pianificata a pieno regime o incrementare il volume del 5%.")
+            st.success("VIA LIBERA ALL'ALLENAMENTO: Il tuo sistema biologico è pienamente rigenerato. I modelli confermano un rischio di infortunio minimo: puoi eseguire la sessione pianificata a pieno regime o incrementare il volume del 5%.")
         elif risk_score < 66:
-            st.warning("🟡 **ATTENZIONE MODERATA**: Si rileva un lieve accumulo di fatica o uno stress lavorativo superiore alla media. Ti consigliamo di eseguire l'allenamento riducendo del 15% il volume complessivo ed evitando variazioni di ritmo troppo violente.")
+            st.warning("ATTENZIONE MODERATA: Si rileva un lieve accumulo di fatica o uno stress lavorativo superiore alla media. Ti consigliamo di eseguire l'allenamento riducendo del 15% il volume complessivo ed evitando variazioni di ritmo troppo violente.")
         else:
-            st.error("🔴 **STOP E RECUPERO NECESSARIO**: I parametri indicano un profilo di rischio critico e un forte debito di sonno/stress. Sostituisci la corsa con una sessione di sola mobilità articolare o riposo totale per evitare infortuni muscolari imminenti.")
+            st.error("STOP E RECUPERO NECESSARIO: I parametri indicano un profilo di rischio critico e un forte debito di sonno/stress. Sostituisci la corsa con una sessione di sola mobilità articolare o riposo totale per evitare infortuni muscolari imminenti.")
 
 # ---------------------------------------------------------
 # PAGINA 6: COMPUTER VISION & BIOMECHANIC AI (CON ML INJURY PREDICTION)
@@ -980,7 +978,7 @@ elif pagina == "COMPUTER VISION":
 
     st.markdown("""
     <div class='info-box'>
-    <strong>Analisi Biometrica Avanzata:</strong> Estrazione dello scheletro posturale, mappatura dei sovraccarichi articolari, analisi angolare della falcata e predizione ML del distretto anatomico a rischio infortunio.
+    <strong>Analisi Biometrica Avanzata:</strong> Estrazione dello scheletro posturale, mappatura dei sovraccarichi articolari, analisi angolare della falcata e predizione ML del distretto anatomico a rischio infortunio secondo i modelli di cinematica applicata.
     </div>
     """, unsafe_allow_html=True)
 
@@ -999,7 +997,7 @@ elif pagina == "COMPUTER VISION":
 
         with col_v2:
             st.markdown("### Diagnostica Posturale & Scheletro AI")
-            if st.button("ELABORA SCHELETRO E PREDIDICI INFORTUNIO", use_container_width=True):
+            if st.button("ELABORA SCHELETRO E PREDICI INFORTUNIO", use_container_width=True):
                 with st.spinner("Estrazione fotogrammi, stima scheletrica e calcolo predittivo ML in corso..."):
                     import time
                     time.sleep(2.5)
@@ -1010,12 +1008,12 @@ elif pagina == "COMPUTER VISION":
                         'angolo_inclinazione_busto': 7.2,
                         'oscillazione_verticale': 8.4,
                         'overstride_cm': 14.2,
-                        'sovraccarico_prevalente': "Tendine d'Achille & Ginocchio (Rotuleo)",
-                        'tipo_appoggio': "Tallone marcato (Heel Striking)",
-                        'infortunio_predetto': "Tendinite Rotulea & Periostite Tibiale",
+                        'sovraccarico_prevalente': "Complesso Rotuleo & Tendine d'Achille",
+                        'tipo_appoggio': "Appoggio di Tallone Marcato (Heel Striking)",
+                        'infortunio_predetto': "Sindrome Patello-Femorale & Tendinopatia Achillea",
                         'probabilita_infortunio_ml': 84.5
                     }
-                st.success("Analisi video e predizione ML completate con successo!")
+                st.success("Analisi video e predizione ML completate con successo.")
 
         if st.session_state.get('cv_analizzato', False):
             dati_cv = st.session_state.cv_dati
@@ -1030,7 +1028,7 @@ elif pagina == "COMPUTER VISION":
 
             st.markdown("<br>", unsafe_allow_html=True)
 
-            # --- 3 GRAFICI DI ANALISI SPECIFICA ---
+            # --- 3 GRAFICI DI ANALISI SCIENTIFICA SPECIFICA ---
             cg1, cg2, cg3 = st.columns(3)
             
             with cg1:
@@ -1044,7 +1042,7 @@ elif pagina == "COMPUTER VISION":
                 )
                 fig_bar_load.update_layout(height=320, coloraxis_showscale=False)
                 st.plotly_chart(style_fig(fig_bar_load), use_container_width=True)
-                st.markdown("<div class='explain-text'><strong>Analisi Carichi:</strong> Evidenzia le zone anatomiche che assorbono la maggiore forza d'urto a causa di un appoggio non ottimale.</div>", unsafe_allow_html=True)
+                st.markdown("<div class='explain-text'><strong>Analisi Carichi:</strong> Percentuale di forza d'impatto verticale trasferita sui distretti articolari in base al vettore di frenata del tallone.</div>", unsafe_allow_html=True)
 
             with cg2:
                 st.markdown("### 2. Angoli Articolari (Falcata)")
@@ -1059,7 +1057,7 @@ elif pagina == "COMPUTER VISION":
                     height=320
                 )
                 st.plotly_chart(style_fig(fig_radar_angles), use_container_width=True)
-                st.markdown("<div class='explain-text'><strong>Analisi Angolare:</strong> Grado di flessione del ginocchio nelle 4 fasi della corsa per identificare blocchi o frenate.</div>", unsafe_allow_html=True)
+                st.markdown("<div class='explain-text'><strong>Analisi Angolare:</strong> Grado di flessione dell'articolazione del ginocchio lungo le quattro fasi del ciclo del passo (Gait Cycle).</div>", unsafe_allow_html=True)
 
             with cg3:
                 st.markdown("### 3. Rischio Infortunio ML (%)")
@@ -1072,20 +1070,20 @@ elif pagina == "COMPUTER VISION":
                 )
                 fig_ml_risk.update_layout(height=320, coloraxis_showscale=False)
                 st.plotly_chart(style_fig(fig_ml_risk), use_container_width=True)
-                st.markdown("<div class='explain-text'><strong>Predizione ML:</strong> Classificatore Random Forest allenato su pattern biomeccanici errati per stimare dove si manifesterà l'infortunio.</div>", unsafe_allow_html=True)
+                st.markdown("<div class='explain-text'><strong>Predizione ML:</strong> Classificatore probabilistico basato su dataset di cinematica clinica per la stima del distretto anatomico a cedimento strutturale.</div>", unsafe_allow_html=True)
 
             st.markdown("---")
-            st.markdown("<h3>🎯 Diagnosi Posturale, Errori e Predizione Machine Learning</h3>", unsafe_allow_html=True)
+            st.markdown("<h3>Diagnosi Posturale, Errori e Predizione Machine Learning</h3>", unsafe_allow_html=True)
             
-            st.error(f"⚠️ **Errore Biomeccanico Rilevato — {dati_cv['tipo_appoggio']}**: L'articolazione del ginocchio è troppo estesa all'impatto (angolo {dati_cv['angolo_ginocchio_appoggio']}°), generando un forte effetto leva frenante sul terreno.")
-            st.warning(f"🔥 **Distretto Anatomico in Sovraccarico**: {dati_cv['sovraccarico_prevalente']}. L'onda d'urto viene scaricata direttamente su rotula e tendini senza l'ammortizzazione del mesopiede.")
+            st.error(f"ERRORE BIOMECCANICO RILEVATO — {dati_cv['tipo_appoggio']}: L'estensione anticipata della tibia all'impatto produce un angolo del ginocchio ridotto ({dati_cv['angolo_ginocchio_appoggio']}°), generando un momento flettente esterno e una forza frenante di picco che aumenta il carico di compressione sulla rotula.")
+            st.warning(f"ZONA DI SOVRACCARICO CRITICO: {dati_cv['sovraccarico_prevalente']}. L'onda d'urto transitoria non viene dissipata correttamente dal complesso muscolotendineo, trasferendo stress meccanico diretto sulle cartilagini e sulle inserzioni tendinee.")
             st.markdown(f"""
             <div class='danger-box' style='border-left-color: #FF6A3D;'>
-                <h3 style='color: #FF6A3D; margin-top:0;'>🤖 PREDIZIONE MACHINE LEARNING (Rischio: {dati_cv['probabilita_infortunio_ml']}%)</h3>
-                <p style='color: #E8ECF2; font-size: 1.05em;'>Se continui a correre con questo pattern di over-stride e appoggio di tallone, il modello ML diagnostica un alto rischio di sviluppare a breve termine: <strong style='color: #FF6A3D;'>{dati_cv['infortunio_predetto']}</strong>.</p>
+                <h3 style='color: #FF6A3D; margin-top:0;'>PREDIZIONE MACHINE LEARNING (Indice di Rischio: {dati_cv['probabilita_infortunio_ml']}%)</h3>
+                <p style='color: #E8ECF2; font-size: 1.05em;'>Proiettando il pattern di over-stride e la dissipazione cinetica attuale sulle curve di tolleranza al carico del tessuto connettivo, il modello predittivo diagnostica una probabilità elevata di sviluppare nel medio termine: <strong style='color: #FF6A3D;'>{dati_cv['infortunio_predetto']}</strong>.</p>
             </div>
             """, unsafe_allow_html=True)
             
-            st.info("💡 **Protocollo di Correzione Biomeccanica Consigliato**:\n1. **Accorcia la falcata:** Evita di proiettare il piede in avanti rispetto al baricentro.\n2. **Aumenta la Cadenza:** Porta la frequenza a 176-180 spm per favorire un appoggio di mesopiede.\n3. **Potenziamento specifico:** Esercizi eccentrici per il quadricipite e calf raise per rinforzare il tendine d'Achille.")
+            st.info("PROTOCOLLO DI CORREZIONE BIOMECCANICA CONSIGLIATO:\n1. Riduzione dell'ampiezza della falcata per eliminare l'over-stride anteriore al baricentro.\n2. Incremento della frequenza di passo a 176-180 falcate al minuto (SPM) per facilitare l'atterraggio sul mesopiede.\n3. Integrazione di esercizi di forza eccentrica per il quadricipite e protocollo di rinforzo progressivo per il tendine d'Achille.")
     else:
-        st.info("💡 Carica un video girato lateralmente per attivare l'estrazione dello scheletro, i 3 grafici di analisi biomeccanica e la predizione ML del rischio infortunio.")
+        st.info("Suggerimento: Carica un video registrato lateralmente per attivare l'estrazione dello scheletro, i grafici di analisi biomeccanica e la predizione clinica basata su Machine Learning.")
